@@ -12,6 +12,11 @@ namespace PowerPoint
 {
     public partial class Form1 : Form
     {
+        private const string LINE_PROPERTY = "IsLine";
+        private const string RECTANGLE_PROPERTY = "IsRectangle";
+        private const string CIRCLE_PROPERTY = "IsCircle";
+        private const string POINTER_PROPERTY = "IsPointer";
+        private const string CHECKED_PROPERTY = "Checked";
         Model _model;
         PresentationModel _presentationModel;
         Panel _panel = new DoubleBufferedPanel();
@@ -37,7 +42,10 @@ namespace PowerPoint
             _panel.Paint += PaintPanel;
             Controls.Add(_panel);
 
-            _lineToolStripButton.DataBindings.Add("Checked", presentationModel, "IsLine");
+            _lineToolStripButton.DataBindings.Add(CHECKED_PROPERTY, presentationModel, LINE_PROPERTY);
+            _rectangleToolStripButton.DataBindings.Add(CHECKED_PROPERTY, presentationModel, RECTANGLE_PROPERTY);
+            _circleToolStripButton.DataBindings.Add(CHECKED_PROPERTY, presentationModel, CIRCLE_PROPERTY);
+            _pointerToolStripButton.DataBindings.Add(CHECKED_PROPERTY, presentationModel, POINTER_PROPERTY);
 
         }
 
@@ -61,29 +69,24 @@ namespace PowerPoint
         void ClickLineToolStripButton(object sender, EventArgs e)
         {
             _presentationModel.PressLineButton();
-            ShowClickToolStripButton();
         }
 
         // ToolStrip 的 Rectangle 按鈕
         void ClickRectangleToolStripButton(object sender, EventArgs e)
         {
             _presentationModel.PressRectangleButton();
-            ShowClickToolStripButton();
         }
 
         // ToolStrip 的 Circle 按鈕
         void ClickCircleToolStripButton(object sender, EventArgs e)
         {
             _presentationModel.PressCircleButton();
-            ShowClickToolStripButton();
         }
 
-        // 顯示 ToolStrip 的 button 選取狀況
-        void ShowClickToolStripButton()
+        // ToolStrip 的 Pointer 按鈕
+        private void ClickPointerToolStripButton(object sender, EventArgs e)
         {
-            _lineToolStripButton.Checked = _presentationModel.IsLineChecked();
-            _rectangleToolStripButton.Checked = _presentationModel.IsRectangleChecked();
-            _circleToolStripButton.Checked = _presentationModel.IsCircleChecked();
+            _presentationModel.PressPointerButton();
         }
 
         // 畫出所有在 list 的圖形
@@ -126,17 +129,15 @@ namespace PowerPoint
         // 放掉滑鼠左鍵
         public void HandleCanvasReleased(object sender, MouseEventArgs e)
         {
-            _presentationModel.ReleasePointer();
             Cursor = _presentationModel.GetPointerShape();
-            ShowClickToolStripButton();
             _model.ReleasePointer(e.X, e.Y);
+            _presentationModel.ReleasePointer();
         }
 
         // 滑鼠移動
         public void HandleCanvasMoved(object sender, MouseEventArgs e)
         {
             _model.MovePointer(e.X, e.Y);
-            //Cursor = Cursors.Cross;
         }
     }
 }

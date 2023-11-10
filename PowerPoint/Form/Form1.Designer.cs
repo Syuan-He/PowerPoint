@@ -43,9 +43,10 @@ namespace PowerPoint
             this._slide1 = new System.Windows.Forms.Button();
             this._slide2 = new System.Windows.Forms.Button();
             this._toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this._lineToolStripButton = new ToolStripBindableButton();
-            this._rectangleToolStripButton = new ToolStripBindableButton();
-            this._circleToolStripButton = new ToolStripBindableButton();
+            this._lineToolStripButton = new PowerPoint.ToolStripBindingButton();
+            this._rectangleToolStripButton = new PowerPoint.ToolStripBindingButton();
+            this._circleToolStripButton = new PowerPoint.ToolStripBindingButton();
+            this._pointerToolStripButton = new PowerPoint.ToolStripBindingButton();
             ((System.ComponentModel.ISupportInitialize)(this._infoDataGridView)).BeginInit();
             this._infoGroupBox.SuspendLayout();
             this._menuStrip1.SuspendLayout();
@@ -182,7 +183,8 @@ namespace PowerPoint
             this._toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this._lineToolStripButton,
             this._rectangleToolStripButton,
-            this._circleToolStripButton});
+            this._circleToolStripButton,
+            this._pointerToolStripButton});
             this._toolStrip1.Location = new System.Drawing.Point(0, 27);
             this._toolStrip1.Name = "_toolStrip1";
             this._toolStrip1.Size = new System.Drawing.Size(861, 27);
@@ -218,6 +220,16 @@ namespace PowerPoint
             this._circleToolStripButton.Size = new System.Drawing.Size(29, 24);
             this._circleToolStripButton.Text = "CircleToolStripButton";
             this._circleToolStripButton.Click += new System.EventHandler(this.ClickCircleToolStripButton);
+            // 
+            // _pointerToolStripButton
+            // 
+            this._pointerToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this._pointerToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("_pointerToolStripButton.Image")));
+            this._pointerToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this._pointerToolStripButton.Name = "_pointerToolStripButton";
+            this._pointerToolStripButton.Size = new System.Drawing.Size(29, 24);
+            this._pointerToolStripButton.Text = "toolStripBindingButton1";
+            this._pointerToolStripButton.Click += new System.EventHandler(this.ClickPointerToolStripButton);
             // 
             // Form1
             // 
@@ -258,9 +270,10 @@ namespace PowerPoint
         private System.Windows.Forms.DataGridViewTextBoxColumn _shape;
         private System.Windows.Forms.DataGridViewTextBoxColumn _information;
         private System.Windows.Forms.ToolStrip _toolStrip1;
-        private System.Windows.Forms.ToolStripButton _lineToolStripButton;
-        private System.Windows.Forms.ToolStripButton _rectangleToolStripButton;
-        private System.Windows.Forms.ToolStripButton _circleToolStripButton;
+        private ToolStripBindingButton _lineToolStripButton;
+        private ToolStripBindingButton _rectangleToolStripButton;
+        private ToolStripBindingButton _circleToolStripButton;
+        private ToolStripBindingButton _pointerToolStripButton;
     }
 }
 

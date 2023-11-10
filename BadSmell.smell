@@ -185,110 +185,18 @@
     <div class="data">
       <Data id="ReviewPalData">
         <CodeReview xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-          <Reviews>
-            <Smell>
-              <Id>1</Id>
-              <SmellType>Unresolved warnings(忽視警告)-函式 PressPointer 缺乏註解</SmellType>
-              <HashCode>PowerPoint\PowerPoint.IState.cs.Unresolved warnings(忽視警告)-函式 PressPointer 缺乏註解.11</HashCode>
-              <Severity>Red</Severity>
-              <Weight>1</Weight>
-              <Project>PowerPoint\PowerPoint</Project>
-              <File>IState.cs</File>
-              <Line>11</Line>
-              <StartLine>0</StartLine>
-              <StartCol>0</StartCol>
-              <EndLine>0</EndLine>
-              <EndCol>0</EndCol>
-              <Comment />
-              <Auto>false</Auto>
-            </Smell>
-            <Smell>
-              <Id>2</Id>
-              <SmellType>Unresolved warnings(忽視警告)-函式 MovePointer 缺乏註解</SmellType>
-              <HashCode>PowerPoint\PowerPoint.IState.cs.Unresolved warnings(忽視警告)-函式 MovePointer 缺乏註解.13</HashCode>
-              <Severity>Red</Severity>
-              <Weight>1</Weight>
-              <Project>PowerPoint\PowerPoint</Project>
-              <File>IState.cs</File>
-              <Line>13</Line>
-              <StartLine>0</StartLine>
-              <StartCol>0</StartCol>
-              <EndLine>0</EndLine>
-              <EndCol>0</EndCol>
-              <Comment />
-              <Auto>false</Auto>
-            </Smell>
-            <Smell>
-              <Id>3</Id>
-              <SmellType>Unresolved warnings(忽視警告)-函式 ReleasePointer 缺乏註解</SmellType>
-              <HashCode>PowerPoint\PowerPoint.IState.cs.Unresolved warnings(忽視警告)-函式 ReleasePointer 缺乏註解.15</HashCode>
-              <Severity>Red</Severity>
-              <Weight>1</Weight>
-              <Project>PowerPoint\PowerPoint</Project>
-              <File>IState.cs</File>
-              <Line>15</Line>
-              <StartLine>0</StartLine>
-              <StartCol>0</StartCol>
-              <EndLine>0</EndLine>
-              <EndCol>0</EndCol>
-              <Comment />
-              <Auto>false</Auto>
-            </Smell>
-            <Smell>
-              <Id>4</Id>
-              <SmellType>Lack of comments(缺乏註解)</SmellType>
-              <HashCode>11 PowerPoint.IState.PressPointer()</HashCode>
-              <Severity>Red</Severity>
-              <Weight>1</Weight>
-              <Project>PowerPoint</Project>
-              <File>IState.cs</File>
-              <Line>11</Line>
-              <StartLine>0</StartLine>
-              <StartCol>0</StartCol>
-              <EndLine>0</EndLine>
-              <EndCol>0</EndCol>
-              <Comment>PowerPoint.IState.PressPointer()</Comment>
-              <Auto>false</Auto>
-            </Smell>
-            <Smell>
-              <Id>5</Id>
-              <SmellType>Lack of comments(缺乏註解)</SmellType>
-              <HashCode>13 PowerPoint.IState.MovePointer()</HashCode>
-              <Severity>Red</Severity>
-              <Weight>1</Weight>
-              <Project>PowerPoint</Project>
-              <File>IState.cs</File>
-              <Line>13</Line>
-              <StartLine>0</StartLine>
-              <StartCol>0</StartCol>
-              <EndLine>0</EndLine>
-              <EndCol>0</EndCol>
-              <Comment>PowerPoint.IState.MovePointer()</Comment>
-              <Auto>false</Auto>
-            </Smell>
-            <Smell>
-              <Id>6</Id>
-              <SmellType>Lack of comments(缺乏註解)</SmellType>
-              <HashCode>15 PowerPoint.IState.ReleasePointer()</HashCode>
-              <Severity>Red</Severity>
-              <Weight>1</Weight>
-              <Project>PowerPoint</Project>
-              <File>IState.cs</File>
-              <Line>15</Line>
-              <StartLine>0</StartLine>
-              <StartCol>0</StartCol>
-              <EndLine>0</EndLine>
-              <EndCol>0</EndCol>
-              <Comment>PowerPoint.IState.ReleasePointer()</Comment>
-              <Auto>false</Auto>
-            </Smell>
-          </Reviews>
+          <Reviews />
           <HashCodeIgnoreList />
           <HashCodeRequestIgnoreList />
           <AnalysisFileManager>
             <AnalysisFiles>
               <AnalysisFile>
-                <RelativePath>DoubleBufferedPanel.cs</RelativePath>
+                <RelativePath>Form\DoubleBufferedPanel.cs</RelativePath>
+                <ProjectName>PowerPoint</ProjectName>
+                <AnalysisFileType>Model</AnalysisFileType>
+              </AnalysisFile>
+              <AnalysisFile>
+                <RelativePath>Form\DrawingPointer.cs</RelativePath>
                 <ProjectName>PowerPoint</ProjectName>
                 <AnalysisFileType>Model</AnalysisFileType>
               </AnalysisFile>
@@ -303,7 +211,17 @@
                 <AnalysisFileType>Designer</AnalysisFileType>
               </AnalysisFile>
               <AnalysisFile>
+                <RelativePath>Form\IState.cs</RelativePath>
+                <ProjectName>PowerPoint</ProjectName>
+                <AnalysisFileType>Model</AnalysisFileType>
+              </AnalysisFile>
+              <AnalysisFile>
                 <RelativePath>Form\PresentationModel.cs</RelativePath>
+                <ProjectName>PowerPoint</ProjectName>
+                <AnalysisFileType>Model</AnalysisFileType>
+              </AnalysisFile>
+              <AnalysisFile>
+                <RelativePath>Form\ToolStripBindableButton.cs</RelativePath>
                 <ProjectName>PowerPoint</ProjectName>
                 <AnalysisFileType>Model</AnalysisFileType>
               </AnalysisFile>
@@ -314,11 +232,6 @@
               </AnalysisFile>
               <AnalysisFile>
                 <RelativePath>InfoGridView.cs</RelativePath>
-                <ProjectName>PowerPoint</ProjectName>
-                <AnalysisFileType>Model</AnalysisFileType>
-              </AnalysisFile>
-              <AnalysisFile>
-                <RelativePath>IState.cs</RelativePath>
                 <ProjectName>PowerPoint</ProjectName>
                 <AnalysisFileType>Model</AnalysisFileType>
               </AnalysisFile>
@@ -363,6 +276,11 @@
                 <AnalysisFileType>Model</AnalysisFileType>
               </AnalysisFile>
               <AnalysisFile>
+                <RelativePath>PointPointer.cs</RelativePath>
+                <ProjectName>PowerPoint</ProjectName>
+                <AnalysisFileType>Model</AnalysisFileType>
+              </AnalysisFile>
+              <AnalysisFile>
                 <RelativePath>Program.cs</RelativePath>
                 <ProjectName>PowerPoint</ProjectName>
                 <AnalysisFileType>Designer</AnalysisFileType>
@@ -389,7 +307,7 @@
               </AnalysisFile>
             </AnalysisFiles>
           </AnalysisFileManager>
-          <ProductionLoc>1245</ProductionLoc>
+          <ProductionLoc>1383</ProductionLoc>
           <TestLoc>0</TestLoc>
         </CodeReview>
       </Data>

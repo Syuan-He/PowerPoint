@@ -1,5 +1,6 @@
 ﻿using System.Windows.Forms;
 using System.ComponentModel;
+using System.Collections.Generic;
 
 namespace PowerPoint
 {
@@ -10,13 +11,18 @@ namespace PowerPoint
         private const string LINE_PROPERTY = "IsLine";
         private const string RECTANGLE_PROPERTY = "IsRectangle";
         private const string CIRCLE_PROPERTY = "IsCircle";
+        private const string POINTER_PROPERTY = "IsPointer";
+        private const int LINE_NUMBER = 0;
+        private const int RECTANGLE_NUMBER = 1;
+        private const int CIRCLE_NUMBER = 2;
+        private const int POINTER_NUMBER = 3;
+
         Model _model;
 
-        bool _isLine = false;
-        bool _isRectangle = false;
-        bool _isCircle = false;
+        bool[] _booleanToolStripList = { false, false, false, true };
+        string[] _stringToolStripList = { ShapeType.LINE, ShapeType.RECTANGLE, ShapeType.CIRCLE, null };
         string _shapeType = null;
-
+        
         public PresentationModel(Model model)
         {
             this._model = model;
@@ -26,7 +32,7 @@ namespace PowerPoint
         {
             get
             {
-                return _isLine;
+                return _booleanToolStripList[LINE_NUMBER];
             }
         }
 
@@ -34,7 +40,7 @@ namespace PowerPoint
         {
             get
             {
-                return _isRectangle;
+                return _booleanToolStripList[RECTANGLE_NUMBER];
             }
         }
 
@@ -42,59 +48,69 @@ namespace PowerPoint
         {
             get
             {
-                return _isCircle;
+                return _booleanToolStripList[CIRCLE_NUMBER];
+            }
+        }
+
+        public bool IsPointer
+        {
+            get
+            {
+                return _booleanToolStripList[POINTER_NUMBER];
             }
         }
 
         // 按下 toolStrip 的 Line 按鍵
         public void PressLineButton()
         {
-            if (_shapeType != ShapeType.LINE)
-            {
-                _shapeType = ShapeType.LINE;
-                SetFalse();
-                _isLine = true;
-            }
-            else
-            {
-                _shapeType = null;
-                _isLine = false;
-            }
+            PressToolStrip(LINE_NUMBER);
             NotifyPropertyChanged();
         }
 
         // 按下 toolStrip 的 Rectangle 按鍵
         public void PressRectangleButton()
         {
-            if (_shapeType != ShapeType.RECTANGLE)
-            {
-                _shapeType = ShapeType.RECTANGLE;
-                SetFalse();
-                _isRectangle = true;
-            }
-            else
-            {
-                _shapeType = null;
-                _isRectangle = false;
-            }
+            PressToolStrip(RECTANGLE_NUMBER);
             NotifyPropertyChanged();
         }
 
-        // 按下 toolStrip 的 Line 按鍵
+        // 按下 toolStrip 的 Circle 按鍵
         public void PressCircleButton()
         {
-            if (_shapeType != ShapeType.CIRCLE)
+            PressToolStrip(CIRCLE_NUMBER);
+            NotifyPropertyChanged();
+        }
+        
+        // 按下 toolStrip 的 Pointer 按鍵
+        public void PressPointerButton()
+        {
+            if (!_booleanToolStripList[POINTER_NUMBER])
             {
-                _shapeType = ShapeType.CIRCLE;
                 SetFalse();
-                _isCircle = true;
+                _booleanToolStripList[POINTER_NUMBER] = true;
+            }
+            _shapeType = null;
+            _model.SetPoint();
+            NotifyPropertyChanged();
+        }
+
+        // ToolStrip 按下繪製圖形按鍵，統一會用到的反應
+        void PressToolStrip(int codeNumber)
+        {
+            if (_booleanToolStripList[codeNumber])
+            {
+                _shapeType = null;
+                _booleanToolStripList[codeNumber] = false;
+                _booleanToolStripList[POINTER_NUMBER] = true;
+                _model.SetPoint();
             }
             else
             {
-                _shapeType = null;
-                _isCircle = false;
+                _shapeType = _stringToolStripList[codeNumber];
+                SetFalse();
+                _booleanToolStripList[codeNumber] = true;
+                _model.SetDrawing();
             }
-            NotifyPropertyChanged();
         }
 
         // 按下滑鼠左鍵時，依據 ToolStrip 的選取狀況，決定要拉什麼圖
@@ -109,9 +125,7 @@ namespace PowerPoint
         // 放掉滑鼠左鍵時，設 shapeType 為 null (鼠標設回 Default )，ToolStrip 的選取因此皆為 false
         public void ReleasePointer()
         {
-            _shapeType = null;
-            NotifyPropertyChanged();
-            SetFalse();
+            PressPointerButton();
         }
 
         // 傳回鼠標當下應該要有的樣子(形狀)
@@ -124,24 +138,6 @@ namespace PowerPoint
             return Cursors.Default;
         }
 
-        // 確認是否為畫線模式
-        public bool IsLineChecked()
-        {
-            return _isLine;
-        }
-
-        // 確認是否為畫矩形模式
-        public bool IsRectangleChecked()
-        {
-            return _isRectangle;
-        }
-
-        // 確認是否為畫圓圈模式
-        public bool IsCircleChecked()
-        {
-            return _isCircle;
-        }
-
         // 讓 model 畫圖
         public void Draw(System.Drawing.Graphics graphics)
         {
@@ -151,7 +147,7 @@ namespace PowerPoint
             _model.Draw(new WindowsFormsGraphicsAdaptor(graphics));
         }
 
-        // obviser
+        // 通知 ToolBar 相關 bool 變數改變
         void NotifyPropertyChanged(string propertyName)
         {
             if (PropertyChanged != null)
@@ -166,14 +162,16 @@ namespace PowerPoint
             NotifyPropertyChanged(LINE_PROPERTY);
             NotifyPropertyChanged(RECTANGLE_PROPERTY);
             NotifyPropertyChanged(CIRCLE_PROPERTY);
+            NotifyPropertyChanged(POINTER_PROPERTY);
         }
 
         // 統一設 ToolBar 相關 bool 變數為 false
         void SetFalse()
         {
-            _isLine = false;
-            _isRectangle = false;
-            _isCircle = false;
+            for (int i = 0; i < _booleanToolStripList.Length; i++)
+            {
+                _booleanToolStripList[i] = false;
+            }
         }
     }
 }

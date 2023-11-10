@@ -126,6 +126,15 @@
   <metadata name="_information.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <metadata name="_delete.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="_shape.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="_information.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
   <metadata name="_menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
@@ -167,6 +176,19 @@
         1yKaggqGPgX1EhojqXsqTLaC3iZTyOqaHtEsDb1hmUp2p/RYirlQjRRzufxX0eNPepXrNx3UTEvvcr+C
         g5qraSnKVfKghktYgzpVAyhMii1o80rH7AG4dVn2ANy6LHsAbl2U1+sPYumfWD7nfkAAAAAASUVORK5C
         YII=
+</value>
+  </data>
+  <data name="_pointerToolStripButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAGESURBVHhe7ZDRioQwEAT9/5/2KFgPH/q41Z2e9MgWFIIm
+        E1PbfoNt236dzuUbnC//hAglAXAq3wCv59uoyx9OpDQATqM8AE7iG+D1fBt1YeUUbAFwAtYAmE5JgL/e
+        HyZTFgDUN0ymNACo75hKeQBQazCR1gCYhiUAqHWYhi0AqLWYhDUAqPWYwrIAmIA9AKg9mEBLAFD7cDVt
+        AUDtxZVEBMBVtAYAtR9X0R4A1AxcwZIAoOZgN8sCgJqFnUQGwC6WBgA1D7tYHgDUTOwgIgCouegmPgA6
+        iQkAajY6iQoAaj66iAsA6gx0MCoAVhMZANQ5WE1sAFBnYSXRAUCdh1WMDYAVxAcAdebhp4wIAOpc/JQx
+        AUCdjZ8wKgCo8/EujwmAdxgXANQ/4B3aA6j9lV6lNYDa6/AKbQHUPpdXsAdQ691ewRpArXV7FVsAte5s
+        CpYAas3ZJEoDqG9nEykLoN6fTaUkwH8mYw+Qji3AFCwBJlEeYBqlASZSEmAyt/7+KZff933/ARRmwzS5
+        oL7vAAAAAElFTkSuQmCC
 </value>
   </data>
 </root>
