@@ -27,7 +27,6 @@ namespace PowerPoint
             _model = model;
             _presentationModel = presentationModel;
             _model._modelChanged += HandlePanelChanged;
-            _model._shapesChanged += HandleGridViewChanged;
 
             _panel.BackColor = System.Drawing.SystemColors.Window;
             _panel.Location = new System.Drawing.Point(150, 48);
@@ -46,7 +45,7 @@ namespace PowerPoint
             _rectangleToolStripButton.DataBindings.Add(CHECKED_PROPERTY, presentationModel, RECTANGLE_PROPERTY);
             _circleToolStripButton.DataBindings.Add(CHECKED_PROPERTY, presentationModel, CIRCLE_PROPERTY);
             _pointerToolStripButton.DataBindings.Add(CHECKED_PROPERTY, presentationModel, POINTER_PROPERTY);
-
+            _infoDataGridView.DataSource = _model.GetInfoDataGridView();
         }
 
         // 資訊顯示的新增按鍵
@@ -54,7 +53,6 @@ namespace PowerPoint
         {
             _model.PressInfoAdd(_shapeComboBox.Text);
             //_presentationModel.ReleasePointer();
-            //ShowClickToolStripButton();
         }
 
         // 資訊顯示的刪除按鍵
@@ -62,7 +60,6 @@ namespace PowerPoint
         {
             _model.PressDelete(e.ColumnIndex, e.RowIndex);
             //_presentationModel.ReleasePointer();
-            //ShowClickToolStripButton();
         }
         
         // ToolStrip 的 Line 按鈕
@@ -98,13 +95,6 @@ namespace PowerPoint
         // 通知 panel modelChange (observer's function)
         public void HandlePanelChanged()
         {
-            _panel.Invalidate(true);
-        }
-
-        // 通知 DataGridView modelChange (observer's function)
-        public void HandleGridViewChanged()
-        {
-            _infoDataGridView.DataSource = _model.GetInfoDataGridView();
             _panel.Invalidate(true);
         }
 

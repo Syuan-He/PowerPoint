@@ -15,6 +15,7 @@ namespace PowerPoint
         int _y1;
         int _x2;
         int _y2;
+        bool isSelect = false;
 
         public Line(Point point1, Point point2)
         {
@@ -23,6 +24,8 @@ namespace PowerPoint
             _x2 = point2.X;
             _y2 = point2.Y;
             AdjustPoint();
+            _shapeType = GetShapeName();
+            _info = GetInfo();
         }
 
         //取得圖形物件的型態資料

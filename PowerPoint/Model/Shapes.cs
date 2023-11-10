@@ -4,13 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.ComponentModel;
 
 namespace PowerPoint
 {
     class Shapes
     {
         private const string DELETE_STRING = "刪除";
-        private List<Shape> _shapes = new List<Shape>();
+        BindingList<Shape> _shapes = new BindingList<Shape>();
+
+        public BindingList<Shape> ShapeList
+        {
+            get
+            {
+                return _shapes;
+            }
+        }
 
         // 為 list 創建新的 shape
         public void CreateShape(string shapeType, Point point1, Point point2)
@@ -29,19 +38,8 @@ namespace PowerPoint
         // 從 list 移除要刪除的物件
         public void Remove(int index)
         {
-            _shapes.RemoveAt(index);
-        }
-
-        // 取得 list 的 GridView
-        public List<InfoGridView> GetListGridView()
-        {
-            List<InfoGridView> gridViewList = _shapes.Select(item => new InfoGridView
-            { 
-                _delete = DELETE_STRING,
-                _shape = item.GetShapeName(),
-                _information = item.GetInfo() }).ToList();
-
-            return gridViewList;
+            if (index >= 0 && index < _shapes.Count())
+                _shapes.RemoveAt(index);
         }
 
         // 繪製所有存在 list 的圖形

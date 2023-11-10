@@ -33,7 +33,7 @@ namespace PowerPoint
                 return;
             }
             _shapes.CreateShape(shapeType, PANEL_WIDTH, PANEL_HEIGHT);
-            NotifyListChanged();
+            NotifyModelChanged();
         }
 
         // 按下資訊顯示的刪除按鍵
@@ -42,7 +42,7 @@ namespace PowerPoint
             if (columnIndex == 0 && rowIndex >= 0)
             {
                 _shapes.Remove(rowIndex);
-                NotifyListChanged();
+                NotifyModelChanged();
             }
         }
 
@@ -76,11 +76,10 @@ namespace PowerPoint
             _pointer.ReleasePointer(x2, y2);
         }
 
-        // 為 DrawingPointer 開的創建新圖形 function
+        // DrawingPointer(state pattern) 創建新圖形要用的 function
         public void CreateShape(string shapeType, Point point1, Point point2)
         {
             _shapes.CreateShape(shapeType, point1, point2);
-            NotifyListChanged();
         }
 
         // 繪製圖形
@@ -98,17 +97,10 @@ namespace PowerPoint
                 _modelChanged();
         }
 
-        // 通知 model 要重新繪製 DataGridView
-        void NotifyListChanged()
-        {
-            if (_shapesChanged != null)
-                _shapesChanged();
-        }
-
         //回傳 Shapes 裡 list 的資訊，給資訊顯示的 _infoDataGridView 用
-        public List<InfoGridView> GetInfoDataGridView()
+        public System.ComponentModel.BindingList<Shape> GetInfoDataGridView()
         {
-            return _shapes.GetListGridView();
+            return _shapes.ShapeList;
         }
     }
 }

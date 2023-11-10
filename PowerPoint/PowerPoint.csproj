@@ -62,7 +62,6 @@
     <Compile Include="Form\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="InfoGridView.cs" />
     <Compile Include="Model\IGraphics.cs" />
     <Compile Include="Model\Line.cs" />
     <Compile Include="Model\Model.cs" />
