@@ -116,16 +116,23 @@ namespace PowerPoint
         // 按下滑鼠左鍵時，依據 ToolStrip 的選取狀況，決定要拉什麼圖
         public void PressPointer(int x1, int y1)
         {
-            if (_shapeType != null)
-            {
-                _model.PressPointer(_shapeType, x1, y1);
-            }
+            _model.PressPointer(_shapeType, x1, y1);
         }
 
         // 放掉滑鼠左鍵時，設 shapeType 為 null (鼠標設回 Default )，ToolStrip 的選取因此皆為 false
         public void ReleasePointer()
         {
-            PressPointerButton();
+            if (_shapeType != null)
+                PressPointerButton();
+        }
+
+        // 按下刪除鍵
+        public void PressDelete(KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                _model.PressDeleteKey();
+            }
         }
 
         // 傳回鼠標當下應該要有的樣子(形狀)

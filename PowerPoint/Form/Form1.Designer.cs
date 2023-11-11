@@ -31,6 +31,7 @@ namespace PowerPoint
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this._infoDataGridView = new System.Windows.Forms.DataGridView();
+            this._delete = new System.Windows.Forms.DataGridViewButtonColumn();
             this._shape = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this._information = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this._infoGroupBox = new System.Windows.Forms.GroupBox();
@@ -40,13 +41,11 @@ namespace PowerPoint
             this._infoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._slide1 = new System.Windows.Forms.Button();
-            this._slide2 = new System.Windows.Forms.Button();
             this._toolStrip1 = new System.Windows.Forms.ToolStrip();
             this._lineToolStripButton = new PowerPoint.ToolStripBindingButton();
             this._rectangleToolStripButton = new PowerPoint.ToolStripBindingButton();
             this._circleToolStripButton = new PowerPoint.ToolStripBindingButton();
             this._pointerToolStripButton = new PowerPoint.ToolStripBindingButton();
-            this._delete = new System.Windows.Forms.DataGridViewButtonColumn();
             ((System.ComponentModel.ISupportInitialize)(this._infoDataGridView)).BeginInit();
             this._infoGroupBox.SuspendLayout();
             this._menuStrip1.SuspendLayout();
@@ -69,6 +68,19 @@ namespace PowerPoint
             this._infoDataGridView.Size = new System.Drawing.Size(291, 507);
             this._infoDataGridView.TabIndex = 2;
             this._infoDataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ClickInfoDataGridViewCellContent);
+            // 
+            // _delete
+            // 
+            this._delete.DataPropertyName = "_delete";
+            this._delete.HeaderText = "刪除";
+            this._delete.MinimumWidth = 6;
+            this._delete.Name = "_delete";
+            this._delete.ReadOnly = true;
+            this._delete.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this._delete.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this._delete.Text = "刪除";
+            this._delete.UseColumnTextForButtonValue = true;
+            this._delete.Width = 66;
             // 
             // _shape
             // 
@@ -146,19 +158,11 @@ namespace PowerPoint
             // 
             // _slide1
             // 
-            this._slide1.Location = new System.Drawing.Point(0, 30);
+            this._slide1.Location = new System.Drawing.Point(0, 57);
             this._slide1.Name = "_slide1";
             this._slide1.Size = new System.Drawing.Size(144, 108);
             this._slide1.TabIndex = 3;
             this._slide1.UseVisualStyleBackColor = true;
-            // 
-            // _slide2
-            // 
-            this._slide2.Location = new System.Drawing.Point(0, 144);
-            this._slide2.Name = "_slide2";
-            this._slide2.Size = new System.Drawing.Size(144, 108);
-            this._slide2.TabIndex = 4;
-            this._slide2.UseVisualStyleBackColor = true;
             // 
             // _toolStrip1
             // 
@@ -214,32 +218,19 @@ namespace PowerPoint
             this._pointerToolStripButton.Text = "toolStripBindingButton1";
             this._pointerToolStripButton.Click += new System.EventHandler(this.ClickPointerToolStripButton);
             // 
-            // _delete
-            // 
-            this._delete.DataPropertyName = "_delete";
-            this._delete.HeaderText = "刪除";
-            this._delete.MinimumWidth = 6;
-            this._delete.Name = "_delete";
-            this._delete.ReadOnly = true;
-            this._delete.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this._delete.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this._delete.Text = "刪除";
-            this._delete.UseColumnTextForButtonValue = true;
-            this._delete.Width = 66;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1158, 617);
             this.Controls.Add(this._toolStrip1);
-            this.Controls.Add(this._slide2);
             this.Controls.Add(this._slide1);
             this.Controls.Add(this._infoGroupBox);
             this.Controls.Add(this._menuStrip1);
             this.MainMenuStrip = this._menuStrip1;
             this.Name = "Form1";
             this.Text = "HW2";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.PressKey);
             ((System.ComponentModel.ISupportInitialize)(this._infoDataGridView)).EndInit();
             this._infoGroupBox.ResumeLayout(false);
             this._menuStrip1.ResumeLayout(false);
@@ -261,7 +252,6 @@ namespace PowerPoint
         private System.Windows.Forms.ToolStripMenuItem _infoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem _aboutToolStripMenuItem;
         private System.Windows.Forms.Button _slide1;
-        private System.Windows.Forms.Button _slide2;
         private System.Windows.Forms.DataGridViewTextBoxColumn _shape;
         private System.Windows.Forms.DataGridViewTextBoxColumn _information;
         private System.Windows.Forms.ToolStrip _toolStrip1;

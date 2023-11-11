@@ -11,22 +11,17 @@ namespace PowerPoint
     public abstract class Shape : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        protected string _shapeType;
-        protected string _info;
+        
         public string ShapeName
         {
-            get
-            {
-                return _shapeType;
-            }
+            get;
+            set;
         }
 
         public string Information
         {
-            get
-            {
-                return _info;
-            }
+            get;
+            set;
         }
 
         // 取得圖形物件的型態資料
@@ -38,8 +33,17 @@ namespace PowerPoint
         // 設定圖形終點
         public abstract void SetEndPoint(Point endPoint);
 
+        // 移動圖形
+        public abstract void SetMove(int offsetX, int offsetY);
+
+        // 檢查是否被選取
+        public abstract bool IsSelect(int x1, int y1);
+
         // 繪製該圖形
         public abstract void Draw(IGraphics graphics);
+
+        // 繪製選取外框
+        public abstract void DrawSelectFrame(IGraphics graphics);
 
         // observer
         protected void NotifyPropertyChanged(string propertyName)

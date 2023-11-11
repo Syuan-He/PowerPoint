@@ -49,6 +49,7 @@ namespace PowerPoint
         // 放掉滑鼠左鍵時
         public void ReleasePointer(int x2, int y2)
         {
+            _isPressed = false;
             _model.CreateShape(_hint.GetShapeName(), new Point(_firstPointX, _firstPointY), new Point(x2, y2));
             _model.NotifyModelChanged();
         }

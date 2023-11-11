@@ -10,7 +10,6 @@ namespace PowerPoint
 {
     class Shapes
     {
-        private const string DELETE_STRING = "刪除";
         BindingList<Shape> _shapes = new BindingList<Shape>();
 
         public BindingList<Shape> ShapeList
@@ -42,11 +41,37 @@ namespace PowerPoint
                 _shapes.RemoveAt(index);
         }
 
+        // 尋找被選取的 shape
+        public int FindSelectItem(int x1, int y1)
+        {
+            int index = (int)Enumerable.LongCount<Shape>(_shapes) - 1;
+            for (; index >= 0; index--)
+            {
+                if (_shapes[index].IsSelect(x1, y1))
+                    return index;
+            }
+            return --index;
+        }
+
+        // 移動選取的圖形
+        public void MoveSelectedShape(int index, int x1, int y1)
+        {
+            if (index >= 0 && index < _shapes.Count())
+                _shapes[index].SetMove(x1, y1);
+        }
+
         // 繪製所有存在 list 的圖形
         public void Draw(IGraphics graphics)
         {
             foreach (Shape aShape in _shapes)
                 aShape.Draw(graphics);
+        }
+
+        // 繪製選取外框
+        public void DrawSelectFrame(IGraphics graphics, int index)
+        {
+            if (index >= 0 && index < _shapes.Count())
+                _shapes[index].DrawSelectFrame(graphics);
         }
     }
 }

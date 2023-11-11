@@ -46,6 +46,9 @@ namespace PowerPoint
             _circleToolStripButton.DataBindings.Add(CHECKED_PROPERTY, presentationModel, CIRCLE_PROPERTY);
             _pointerToolStripButton.DataBindings.Add(CHECKED_PROPERTY, presentationModel, POINTER_PROPERTY);
             _infoDataGridView.DataSource = _model.GetInfoDataGridView();
+            _infoDataGridView.Columns[1].HeaderText = "形狀";
+            _infoDataGridView.Columns[2].HeaderText = "資訊";
+            _slide1.Paint += PaintSlide;
         }
 
         // 資訊顯示的新增按鍵
@@ -92,10 +95,17 @@ namespace PowerPoint
             _presentationModel.Draw(e.Graphics);
         }
 
+        // 在小畫面畫出所有在 list 的縮圖
+        void PaintSlide(object sender, PaintEventArgs e)
+        {
+
+        }
+
         // 通知 panel modelChange (observer's function)
         public void HandlePanelChanged()
         {
             _panel.Invalidate(true);
+            _slide1.Invalidate(true);
         }
 
         // 鼠標進入 panel
@@ -119,15 +129,21 @@ namespace PowerPoint
         // 放掉滑鼠左鍵
         public void HandleCanvasReleased(object sender, MouseEventArgs e)
         {
-            Cursor = _presentationModel.GetPointerShape();
             _model.ReleasePointer(e.X, e.Y);
             _presentationModel.ReleasePointer();
+            Cursor = _presentationModel.GetPointerShape();
         }
 
         // 滑鼠移動
         public void HandleCanvasMoved(object sender, MouseEventArgs e)
         {
             _model.MovePointer(e.X, e.Y);
+        }
+
+        // 按下鍵盤
+        private void PressKey(object sender, KeyEventArgs e)
+        {
+            _presentationModel.PressDelete(e);
         }
     }
 }

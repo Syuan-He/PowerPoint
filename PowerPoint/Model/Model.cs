@@ -11,13 +11,12 @@ namespace PowerPoint
     {
         public event ModelChangedEventHandler _modelChanged;
         public delegate void ModelChangedEventHandler();
-        public event ListChangedEventHandler _shapesChanged;
-        public delegate void ListChangedEventHandler();
 
         const int PANEL_WIDTH = 710;
         const int PANEL_HEIGHT = 568;
-
+        private const int NOT_IN_LIST = -1;
         Shapes _shapes = new Shapes();
+        int _selectedIndex = NOT_IN_LIST;
 
         IState _pointer;
         public Model()
@@ -46,6 +45,13 @@ namespace PowerPoint
             }
         }
 
+        // 按下鍵盤 delete 鍵
+        public void PressDeleteKey()
+        {
+            _shapes.Remove(_selectedIndex);
+            NotifyModelChanged();
+        }
+
         // pointer 進入 point 模式
         public void SetPoint()
         {
@@ -56,6 +62,8 @@ namespace PowerPoint
         public void SetDrawing()
         {
             _pointer = new DrawingPointer(this);
+            _selectedIndex = NOT_IN_LIST;
+            NotifyModelChanged();
         }
 
         // 按下滑鼠左鍵
@@ -82,6 +90,27 @@ namespace PowerPoint
             _shapes.CreateShape(shapeType, point1, point2);
         }
 
+        // PointPointer 搜尋重疊要用的 function
+        public bool FindSelectShape(int x1, int y1)
+        {
+            _selectedIndex = _shapes.FindSelectItem(x1, y1);
+            NotifyModelChanged();
+            return _selectedIndex != NOT_IN_LIST;
+        }
+
+        // 移動選取的圖形
+        public void MoveShape(int x1, int y1)
+        {
+            _shapes.MoveSelectedShape(_selectedIndex, x1, y1);
+            NotifyModelChanged();
+        }
+
+        // 繪製選取外框
+        public void DrawSelectFrame(IGraphics graphics)
+        {
+            _shapes.DrawSelectFrame(graphics, _selectedIndex);
+        }
+        
         // 繪製圖形
         public void Draw(IGraphics graphics)
         {

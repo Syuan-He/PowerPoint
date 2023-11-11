@@ -10,7 +10,9 @@ namespace PowerPoint
     class Circle : Shape
     {
         private const string INFO_FORMAT = "({0}, {1}), ({2}, {3})";
-
+        private const int HALF = 2;
+        private const int DIAMETER = 10;
+        private const int RADIUS = 5;
         int _x1;
         int _y1;
         int _x2;
@@ -23,8 +25,8 @@ namespace PowerPoint
             _x2 = point2.X;
             _y2 = point2.Y;
             AdjustPoint();
-            _shapeType = GetShapeName();
-            _info = GetInfo();
+            ShapeName = GetShapeName();
+            Information = GetInfo();
         }
 
         //取得圖形物件的型態資料
@@ -44,6 +46,28 @@ namespace PowerPoint
         {
             _x2 = point2.X;
             _y2 = point2.Y;
+            Information = GetInfo();
+        }
+
+        // 移動圖形
+        public override void SetMove(int offsetX, int offsetY)
+        {
+            _x1 += offsetX;
+            _x2 += offsetX;
+            _y1 += offsetY;
+            _y2 += offsetY;
+        }
+
+        // 檢查是否被選取
+        public override bool IsSelect(int x1, int y1)
+        {
+            if (
+                Math.Abs((_x1 + _x2) / HALF - x1) < Math.Abs(_x1 - _x2) / HALF &&
+                Math.Abs((_y1 + _y2) / HALF - y1) < Math.Abs(_y1 - _y2) / HALF)
+            {
+                return true;
+            }
+            return false;
         }
 
         //調整傳入的 point 的座標，使第一個 point 的座標在左上，第二個在右下
@@ -72,6 +96,26 @@ namespace PowerPoint
                 Math.Min(_y1, _y2),
                 Math.Abs(_x2 - _x1),
                 Math.Abs(_y2 - _y1));
+        }
+
+        // 繪製選取外框
+        public override void DrawSelectFrame(IGraphics graphics)
+        {
+            graphics.DrawRectangle(
+                Math.Min(_x1, _x2),
+                Math.Min(_y1, _y2),
+                Math.Abs(_x2 - _x1),
+                Math.Abs(_y2 - _y1));
+
+            graphics.DrawEllipse(_x1 - RADIUS, _y1 - RADIUS, DIAMETER, DIAMETER);
+            graphics.DrawEllipse(_x2 - RADIUS, _y1 - RADIUS, DIAMETER, DIAMETER);
+            graphics.DrawEllipse(_x1 - RADIUS, _y2 - RADIUS, DIAMETER, DIAMETER);
+            graphics.DrawEllipse(_x2 - RADIUS, _y2 - RADIUS, DIAMETER, DIAMETER);
+
+            graphics.DrawEllipse((_x1 + _x2) / HALF - RADIUS, _y1 - RADIUS, DIAMETER, DIAMETER);
+            graphics.DrawEllipse((_x1 + _x2) / HALF - RADIUS, _y2 - RADIUS, DIAMETER, DIAMETER);
+            graphics.DrawEllipse(_x1 - RADIUS, (_y1 + _y2) / HALF - RADIUS, DIAMETER, DIAMETER);
+            graphics.DrawEllipse(_x2 - RADIUS, (_y1 + _y2) / HALF - RADIUS, DIAMETER, DIAMETER);
         }
     }
 }
