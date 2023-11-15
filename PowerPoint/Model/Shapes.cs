@@ -44,7 +44,7 @@ namespace PowerPoint
         // 尋找被選取的 shape
         public int FindSelectItem(int x1, int y1)
         {
-            int index = (int)Enumerable.LongCount<Shape>(_shapes) - 1;
+            int index = _shapes.Count - 1;
             for (; index >= 0; index--)
             {
                 if (_shapes[index].IsSelect(x1, y1))
@@ -65,6 +65,13 @@ namespace PowerPoint
         {
             foreach (Shape aShape in _shapes)
                 aShape.Draw(graphics);
+        }
+
+        // 繪製所有存在 list 的圖形的縮圖
+        public void DrawSlide(IGraphics graphics, Size panelSize, Size slideSize)
+        {
+            foreach (Shape aShape in _shapes)
+                aShape.DrawSlide(graphics, panelSize, slideSize);
         }
 
         // 繪製選取外框

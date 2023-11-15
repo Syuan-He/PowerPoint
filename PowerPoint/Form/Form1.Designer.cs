@@ -227,6 +227,7 @@ namespace PowerPoint
             this.Controls.Add(this._slide1);
             this.Controls.Add(this._infoGroupBox);
             this.Controls.Add(this._menuStrip1);
+            this.KeyPreview = true;
             this.MainMenuStrip = this._menuStrip1;
             this.Name = "Form1";
             this.Text = "HW2";

@@ -46,14 +46,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form\DrawingPointer.cs" />
+    <Compile Include="Model\DrawingPointer.cs" />
     <Compile Include="Form\ToolStripBindableButton.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Form\DoubleBufferedPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Form\IState.cs" />
+    <Compile Include="Model\IState.cs" />
     <Compile Include="Model\Circle.cs" />
     <Compile Include="Model\Factory.cs" />
     <Compile Include="Form\Form1.cs">
@@ -67,7 +67,7 @@
     <Compile Include="Model\Model.cs" />
     <Compile Include="Form\PresentationModel.cs" />
     <Compile Include="Form\WindowsFormsGraphicsAdaptor.cs" />
-    <Compile Include="Form\PointPointer.cs" />
+    <Compile Include="Model\PointPointer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\Rectangle.cs" />

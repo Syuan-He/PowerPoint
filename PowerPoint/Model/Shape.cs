@@ -42,6 +42,9 @@ namespace PowerPoint
         // 繪製該圖形
         public abstract void Draw(IGraphics graphics);
 
+        // 繪製該圖形的縮圖
+        public abstract void DrawSlide(IGraphics graphics, Size panelSize, Size slideSize);
+
         // 繪製選取外框
         public abstract void DrawSelectFrame(IGraphics graphics);
 

@@ -127,9 +127,9 @@ namespace PowerPoint
         }
 
         // 按下刪除鍵
-        public void PressDelete(KeyEventArgs e)
+        public void PressDelete(Keys code)
         {
-            if (e.KeyCode == Keys.Delete)
+            if (code == Keys.Delete)
             {
                 _model.PressDeleteKey();
             }
@@ -152,6 +152,12 @@ namespace PowerPoint
             // 而Adaptor又直接使用graphics，這樣DoubleBuffer才能正確運作
             // 因此，Adaptor不能重複使用，每次都要重新new
             _model.Draw(new WindowsFormsGraphicsAdaptor(graphics));
+        }
+
+        // 讓 model 畫縮圖
+        public void DrawSlide(System.Drawing.Graphics graphics)
+        {
+            _model.DrawSlide(new WindowsFormsGraphicsAdaptor(graphics));
         }
 
         // 通知 ToolBar 相關 bool 變數改變

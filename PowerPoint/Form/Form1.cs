@@ -98,7 +98,7 @@ namespace PowerPoint
         // 在小畫面畫出所有在 list 的縮圖
         void PaintSlide(object sender, PaintEventArgs e)
         {
-
+            _presentationModel.DrawSlide(e.Graphics);
         }
 
         // 通知 panel modelChange (observer's function)
@@ -143,7 +143,7 @@ namespace PowerPoint
         // 按下鍵盤
         private void PressKey(object sender, KeyEventArgs e)
         {
-            _presentationModel.PressDelete(e);
+            _presentationModel.PressDelete(e.KeyCode);
         }
     }
 }

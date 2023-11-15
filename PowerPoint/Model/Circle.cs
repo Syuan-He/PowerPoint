@@ -46,7 +46,6 @@ namespace PowerPoint
         {
             _x2 = point2.X;
             _y2 = point2.Y;
-            Information = GetInfo();
         }
 
         // 移動圖形
@@ -56,6 +55,8 @@ namespace PowerPoint
             _x2 += offsetX;
             _y1 += offsetY;
             _y2 += offsetY;
+            Information = GetInfo();
+            NotifyPropertyChanged("Information");
         }
 
         // 檢查是否被選取
@@ -96,6 +97,16 @@ namespace PowerPoint
                 Math.Min(_y1, _y2),
                 Math.Abs(_x2 - _x1),
                 Math.Abs(_y2 - _y1));
+        }
+
+        // 繪製該圖形的縮圖
+        public override void DrawSlide(IGraphics graphics, Size panelSize, Size slideSize)
+        {
+            graphics.DrawEllipse(
+                Math.Min(_x1, _x2) * slideSize.Width / panelSize.Width,
+                Math.Min(_y1, _y2) * slideSize.Height / panelSize.Height,
+                Math.Abs(_x2 - _x1) * slideSize.Width / panelSize.Width,
+                Math.Abs(_y2 - _y1) * slideSize.Height / panelSize.Height);
         }
 
         // 繪製選取外框

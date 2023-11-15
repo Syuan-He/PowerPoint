@@ -14,11 +14,14 @@ namespace PowerPoint
 
         const int PANEL_WIDTH = 710;
         const int PANEL_HEIGHT = 568;
+
         private const int NOT_IN_LIST = -1;
+        private const int SLIDE_WIDTH = 144;
+        private const int SLIDE_HEIGHT = 108;
         Shapes _shapes = new Shapes();
         int _selectedIndex = NOT_IN_LIST;
-
         IState _pointer;
+
         public Model()
         {
             _pointer = new PointPointer(this);
@@ -41,6 +44,8 @@ namespace PowerPoint
             if (columnIndex == 0 && rowIndex >= 0)
             {
                 _shapes.Remove(rowIndex);
+                if (_selectedIndex == rowIndex)
+                    _selectedIndex = NOT_IN_LIST;
                 NotifyModelChanged();
             }
         }
@@ -49,6 +54,7 @@ namespace PowerPoint
         public void PressDeleteKey()
         {
             _shapes.Remove(_selectedIndex);
+            _selectedIndex = NOT_IN_LIST;
             NotifyModelChanged();
         }
 
@@ -117,6 +123,13 @@ namespace PowerPoint
             graphics.ClearAll();
             _shapes.Draw(graphics);
             _pointer.Draw(graphics);
+        }
+
+        // 繪製圖縮
+        public void DrawSlide(IGraphics graphics)
+        {
+            graphics.ClearAll();
+            _shapes.DrawSlide(graphics, new Size(PANEL_WIDTH, PANEL_HEIGHT), new Size(SLIDE_WIDTH, SLIDE_HEIGHT));
         }
 
         // 通知 model 要重新繪製 panel
