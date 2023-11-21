@@ -65,7 +65,7 @@ namespace PowerPoint
             this._infoDataGridView.RowHeadersVisible = false;
             this._infoDataGridView.RowHeadersWidth = 62;
             this._infoDataGridView.RowTemplate.Height = 27;
-            this._infoDataGridView.Size = new System.Drawing.Size(291, 507);
+            this._infoDataGridView.Size = new System.Drawing.Size(77, 504);
             this._infoDataGridView.TabIndex = 2;
             this._infoDataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ClickInfoDataGridViewCellContent);
             // 
@@ -100,10 +100,10 @@ namespace PowerPoint
             this._infoGroupBox.Controls.Add(this._shapeComboBox);
             this._infoGroupBox.Controls.Add(this._infoDataGridView);
             this._infoGroupBox.Dock = System.Windows.Forms.DockStyle.Right;
-            this._infoGroupBox.Location = new System.Drawing.Point(861, 27);
+            this._infoGroupBox.Location = new System.Drawing.Point(1075, 30);
             this._infoGroupBox.Name = "_infoGroupBox";
             this._infoGroupBox.Padding = new System.Windows.Forms.Padding(3, 62, 3, 3);
-            this._infoGroupBox.Size = new System.Drawing.Size(297, 590);
+            this._infoGroupBox.Size = new System.Drawing.Size(83, 587);
             this._infoGroupBox.TabIndex = 1;
             this._infoGroupBox.TabStop = false;
             this._infoGroupBox.Text = "資訊顯示";
@@ -138,7 +138,7 @@ namespace PowerPoint
             this._infoToolStripMenuItem});
             this._menuStrip1.Location = new System.Drawing.Point(0, 0);
             this._menuStrip1.Name = "_menuStrip1";
-            this._menuStrip1.Size = new System.Drawing.Size(1158, 27);
+            this._menuStrip1.Size = new System.Drawing.Size(1158, 30);
             this._menuStrip1.TabIndex = 2;
             this._menuStrip1.Text = "menuStrip1";
             // 
@@ -147,7 +147,7 @@ namespace PowerPoint
             this._infoToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this._aboutToolStripMenuItem});
             this._infoToolStripMenuItem.Name = "_infoToolStripMenuItem";
-            this._infoToolStripMenuItem.Size = new System.Drawing.Size(53, 23);
+            this._infoToolStripMenuItem.Size = new System.Drawing.Size(53, 26);
             this._infoToolStripMenuItem.Text = "說明";
             // 
             // _aboutToolStripMenuItem
@@ -172,9 +172,9 @@ namespace PowerPoint
             this._rectangleToolStripButton,
             this._circleToolStripButton,
             this._pointerToolStripButton});
-            this._toolStrip1.Location = new System.Drawing.Point(0, 27);
+            this._toolStrip1.Location = new System.Drawing.Point(0, 30);
             this._toolStrip1.Name = "_toolStrip1";
-            this._toolStrip1.Size = new System.Drawing.Size(861, 27);
+            this._toolStrip1.Size = new System.Drawing.Size(1075, 31);
             this._toolStrip1.TabIndex = 5;
             this._toolStrip1.Text = "toolStrip1";
             // 
@@ -184,7 +184,7 @@ namespace PowerPoint
             this._lineToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("_lineToolStripButton.Image")));
             this._lineToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this._lineToolStripButton.Name = "_lineToolStripButton";
-            this._lineToolStripButton.Size = new System.Drawing.Size(29, 24);
+            this._lineToolStripButton.Size = new System.Drawing.Size(29, 28);
             this._lineToolStripButton.Text = "LineToolStripButton";
             this._lineToolStripButton.Click += new System.EventHandler(this.ClickLineToolStripButton);
             // 
@@ -194,7 +194,7 @@ namespace PowerPoint
             this._rectangleToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("_rectangleToolStripButton.Image")));
             this._rectangleToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this._rectangleToolStripButton.Name = "_rectangleToolStripButton";
-            this._rectangleToolStripButton.Size = new System.Drawing.Size(29, 24);
+            this._rectangleToolStripButton.Size = new System.Drawing.Size(29, 28);
             this._rectangleToolStripButton.Text = "RecatangleToolStripButton";
             this._rectangleToolStripButton.Click += new System.EventHandler(this.ClickRectangleToolStripButton);
             // 
@@ -204,7 +204,7 @@ namespace PowerPoint
             this._circleToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("_circleToolStripButton.Image")));
             this._circleToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this._circleToolStripButton.Name = "_circleToolStripButton";
-            this._circleToolStripButton.Size = new System.Drawing.Size(29, 24);
+            this._circleToolStripButton.Size = new System.Drawing.Size(29, 28);
             this._circleToolStripButton.Text = "CircleToolStripButton";
             this._circleToolStripButton.Click += new System.EventHandler(this.ClickCircleToolStripButton);
             // 
@@ -214,7 +214,7 @@ namespace PowerPoint
             this._pointerToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("_pointerToolStripButton.Image")));
             this._pointerToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this._pointerToolStripButton.Name = "_pointerToolStripButton";
-            this._pointerToolStripButton.Size = new System.Drawing.Size(29, 24);
+            this._pointerToolStripButton.Size = new System.Drawing.Size(29, 28);
             this._pointerToolStripButton.Text = "toolStripBindingButton1";
             this._pointerToolStripButton.Click += new System.EventHandler(this.ClickPointerToolStripButton);
             // 

@@ -125,7 +125,7 @@ namespace PowerPoint
             _pointer.Draw(graphics);
         }
 
-        // 繪製圖縮
+        // 繪製縮圖
         public void DrawSlide(IGraphics graphics)
         {
             graphics.ClearAll();
@@ -139,7 +139,7 @@ namespace PowerPoint
                 _modelChanged();
         }
 
-        //回傳 Shapes 裡 list 的資訊，給資訊顯示的 _infoDataGridView 用
+        //回傳 Shapes 的 BindingList ，給資訊顯示的 _infoDataGridView 用
         public System.ComponentModel.BindingList<Shape> GetInfoDataGridView()
         {
             return _shapes.ShapeList;
