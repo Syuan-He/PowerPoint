@@ -7,17 +7,16 @@ using System.Drawing;
 
 namespace PowerPoint
 {
-    class Circle : Shape
+    public class Circle : Shape
     {
         private const string INFO_FORMAT = "({0}, {1}), ({2}, {3})";
-        private const int HALF = 2;
         private const string INFORMATION_PROPERTY = "Information";
         int _x1;
         int _y1;
         int _x2;
         int _y2;
 
-        public Circle(Point point1, Point point2)
+        public Circle(Coordinate point1, Coordinate point2)
         {
             _x1 = point1.X;
             _y1 = point1.Y;
@@ -41,7 +40,7 @@ namespace PowerPoint
         }
 
         //設定圖形終點
-        public override void SetEndPoint(Point point2)
+        public override void SetEndPoint(Coordinate point2)
         {
             _x2 = point2.X;
             _y2 = point2.Y;
@@ -62,12 +61,24 @@ namespace PowerPoint
         public override bool IsSelect(int x1, int y1)
         {
             if (
-                Math.Abs((_x1 + _x2) / HALF - x1) < Math.Abs(_x1 - _x2) / HALF &&
-                Math.Abs((_y1 + _y2) / HALF - y1) < Math.Abs(_y1 - _y2) / HALF)
+                IsInnerInX(x1) &&
+                IsInnerInY(y1))
             {
                 return true;
             }
             return false;
+        }
+
+        // 檢查是否X軸在範圍內
+        bool IsInnerInX(int x1)
+        {
+            return Math.Max(_x1, _x2) >= x1 && Math.Min(_x1, _x2) <= x1;
+        }
+
+        // 檢查是否Y軸在範圍內
+        bool IsInnerInY(int y1)
+        {
+            return Math.Max(_y1, _y2) >= y1 && Math.Min(_y1, _y2) <= y1;
         }
 
         //調整傳入的 point 的座標，使第一個 point 的座標在左上，第二個在右下
@@ -96,16 +107,6 @@ namespace PowerPoint
                 Math.Min(_y1, _y2),
                 Math.Abs(_x2 - _x1),
                 Math.Abs(_y2 - _y1));
-        }
-
-        // 繪製該圖形的縮圖
-        public override void DrawSlide(IGraphics graphics, Size panelSize, Size slideSize)
-        {
-            graphics.DrawEllipse(
-                Math.Min(_x1, _x2) * slideSize.Width / panelSize.Width,
-                Math.Min(_y1, _y2) * slideSize.Height / panelSize.Height,
-                Math.Abs(_x2 - _x1) * slideSize.Width / panelSize.Width,
-                Math.Abs(_y2 - _y1) * slideSize.Height / panelSize.Height);
         }
 
         // 繪製選取外框

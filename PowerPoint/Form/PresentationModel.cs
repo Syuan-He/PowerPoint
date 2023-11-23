@@ -17,6 +17,11 @@ namespace PowerPoint
         private const int CIRCLE_NUMBER = 2;
         private const int POINTER_NUMBER = 3;
 
+        private const int SLIDE_WIDTH = 144;
+        private const int SLIDE_HEIGHT = 108;
+        const int PANEL_WIDTH = 710;
+        const int PANEL_HEIGHT = 568;
+
         Model _model;
 
         bool[] _booleanToolStripList = { false, false, false, true };
@@ -151,13 +156,13 @@ namespace PowerPoint
             // graphics物件是Paint事件帶進來的，只能在當次Paint使用
             // 而Adaptor又直接使用graphics，這樣DoubleBuffer才能正確運作
             // 因此，Adaptor不能重複使用，每次都要重新new
-            _model.Draw(new WindowsFormsGraphicsAdaptor(graphics));
+            _model.Draw(new WindowsFormsGraphicsAdaptor(graphics), true);
         }
 
         // 讓 model 畫縮圖
         public void DrawSlide(System.Drawing.Graphics graphics)
         {
-            _model.DrawSlide(new WindowsFormsGraphicsAdaptor(graphics));
+            _model.Draw(new SlideAdaptor(graphics, new Coordinate(PANEL_WIDTH, PANEL_HEIGHT), new Coordinate(SLIDE_WIDTH, SLIDE_HEIGHT)), false);
         }
 
         // 通知 ToolBar 相關 bool 變數改變

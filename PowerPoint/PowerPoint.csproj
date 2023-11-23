@@ -46,16 +46,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\DrawingPointer.cs" />
+    <Compile Include="Model\Coordinate.cs" />
+    <Compile Include="Model\StatePattern\DrawingPointer.cs" />
     <Compile Include="Form\ToolStripBindableButton.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Form\DoubleBufferedPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Model\IState.cs" />
-    <Compile Include="Model\Circle.cs" />
-    <Compile Include="Model\Factory.cs" />
+    <Compile Include="Model\StatePattern\IState.cs" />
+    <Compile Include="Model\Shape\Circle.cs" />
+    <Compile Include="Model\Shape\Factory.cs" />
     <Compile Include="Form\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -63,17 +64,18 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Model\IGraphics.cs" />
-    <Compile Include="Model\Line.cs" />
+    <Compile Include="Model\Shape\Line.cs" />
     <Compile Include="Model\Model.cs" />
     <Compile Include="Form\PresentationModel.cs" />
     <Compile Include="Form\WindowsFormsGraphicsAdaptor.cs" />
-    <Compile Include="Model\PointPointer.cs" />
+    <Compile Include="Model\StatePattern\PointPointer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Model\Rectangle.cs" />
-    <Compile Include="Model\Shape.cs" />
+    <Compile Include="Model\Shape\Rectangle.cs" />
+    <Compile Include="Model\Shape\Shape.cs" />
     <Compile Include="Model\Shapes.cs" />
     <Compile Include="ShapeType.cs" />
+    <Compile Include="Form\SlideAdaptor.cs" />
     <EmbeddedResource Include="Form\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

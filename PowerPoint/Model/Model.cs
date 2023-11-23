@@ -16,8 +16,6 @@ namespace PowerPoint
         const int PANEL_HEIGHT = 568;
 
         private const int NOT_IN_LIST = -1;
-        private const int SLIDE_WIDTH = 144;
-        private const int SLIDE_HEIGHT = 108;
         Shapes _shapes = new Shapes();
         int _selectedIndex = NOT_IN_LIST;
         IState _pointer;
@@ -91,7 +89,7 @@ namespace PowerPoint
         }
 
         // DrawingPointer(state pattern) 創建新圖形要用的 function
-        public void CreateShape(string shapeType, Point point1, Point point2)
+        public void CreateShape(string shapeType, Coordinate point1, Coordinate point2)
         {
             _shapes.CreateShape(shapeType, point1, point2);
         }
@@ -116,20 +114,16 @@ namespace PowerPoint
         {
             _shapes.DrawSelectFrame(graphics, _selectedIndex);
         }
-        
+
         // 繪製圖形
-        public void Draw(IGraphics graphics)
+        public void Draw(IGraphics graphics, bool isPanel)
         {
             graphics.ClearAll();
             _shapes.Draw(graphics);
-            _pointer.Draw(graphics);
-        }
-
-        // 繪製縮圖
-        public void DrawSlide(IGraphics graphics)
-        {
-            graphics.ClearAll();
-            _shapes.DrawSlide(graphics, new Size(PANEL_WIDTH, PANEL_HEIGHT), new Size(SLIDE_WIDTH, SLIDE_HEIGHT));
+            if (isPanel)
+            {
+                _pointer.Draw(graphics);
+            }
         }
 
         // 通知 model 要重新繪製 panel

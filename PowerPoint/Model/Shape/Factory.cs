@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,8 +10,14 @@ namespace PowerPoint
 {
     public class Factory
     {
+        Random _randomPosition;
+        public Factory(Random random)
+        {
+            _randomPosition = random;
+        }
+
         //實作 Shape 的 Simple Factory
-        public static Shape GenerateShape(string type, Point point1, Point point2)
+        public static Shape GenerateShape(string type, Coordinate point1, Coordinate point2)
         {
             switch (type)
             {
@@ -25,17 +32,21 @@ namespace PowerPoint
         }
 
         // 用多載實作能產生隨機位子的 Shape 的 Simple Factory
-        public static Shape GenerateShape(string type, int width, int height)
+        public Shape GenerateShape(string type, int width, int height)
         {
             return GenerateShape(type, CreateRandomPoint(width, height), CreateRandomPoint(width, height));
         }
 
         // 產生一個位子隨機的點
-        public static Point CreateRandomPoint(int width, int height)
+        Coordinate CreateRandomPoint(int width, int height)
         {
-            Random randomPosition = new Random(Guid.NewGuid().GetHashCode());
-            Point point = new Point(randomPosition.Next(width), randomPosition.Next(height));
-            return point;
+            return new Coordinate(CreateRandomNumber(width), CreateRandomNumber(height));
+        }
+
+        // 產生隨機數
+        int CreateRandomNumber(int maxNumber)
+        {
+            return _randomPosition.Next(maxNumber);
         }
     }
 }

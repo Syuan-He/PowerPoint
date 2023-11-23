@@ -29,7 +29,7 @@ namespace PowerPoint
                 {
                     _firstPointX = x1;
                     _firstPointY = y1;
-                    _hint = Factory.GenerateShape(shapeType, new Point(x1, y1), new Point(x1, y1));
+                    _hint = Factory.GenerateShape(shapeType, new Coordinate(x1, y1), new Coordinate(x1, y1));
                     _isPressed = true;
                     _model.NotifyModelChanged();
                 }
@@ -41,7 +41,7 @@ namespace PowerPoint
         {
             if (_isPressed)
             {
-                _hint.SetEndPoint(new Point(x2, y2));
+                _hint.SetEndPoint(new Coordinate(x2, y2));
                 _model.NotifyModelChanged();
             }
         }
@@ -50,7 +50,7 @@ namespace PowerPoint
         public void ReleasePointer(int x2, int y2)
         {
             _isPressed = false;
-            _model.CreateShape(_hint.GetShapeName(), new Point(_firstPointX, _firstPointY), new Point(x2, y2));
+            _model.CreateShape(_hint.GetShapeName(), new Coordinate(_firstPointX, _firstPointY), new Coordinate(x2, y2));
             _model.NotifyModelChanged();
         }
 

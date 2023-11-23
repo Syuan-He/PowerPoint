@@ -31,7 +31,7 @@ namespace PowerPoint
         public abstract string GetInfo();
 
         // 設定圖形終點
-        public abstract void SetEndPoint(Point endPoint);
+        public abstract void SetEndPoint(Coordinate endPoint);
 
         // 移動圖形
         public abstract void SetMove(int offsetX, int offsetY);
@@ -41,9 +41,6 @@ namespace PowerPoint
 
         // 繪製該圖形
         public abstract void Draw(IGraphics graphics);
-
-        // 繪製該圖形的縮圖
-        public abstract void DrawSlide(IGraphics graphics, Size panelSize, Size slideSize);
 
         // 繪製選取外框
         public abstract void DrawSelectFrame(IGraphics graphics);
