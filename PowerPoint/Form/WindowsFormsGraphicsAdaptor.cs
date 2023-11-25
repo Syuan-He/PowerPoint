@@ -7,7 +7,7 @@ using System.Drawing;
 
 namespace PowerPoint
 {
-    class WindowsFormsGraphicsAdaptor : IGraphics
+    public class WindowsFormsGraphicsAdaptor : IGraphics
     {
         private const int HALF = 2;
         private const int DIAMETER = 10;

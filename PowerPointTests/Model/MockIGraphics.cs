@@ -6,20 +6,30 @@ using System.Threading.Tasks;
 
 namespace PowerPoint.Tests
 {
-    class MockGraphics : IGraphics
+    class MockIGraphics : IGraphics
     {
         public int _x1;
         public int _y1;
         public int _x2;
         public int _y2;
-        public int _countDrawLine = 0;
-        public int _countDrawRectangle = 0;
-        public int _countDrawCircle = 0;
-        public int _countDrawSelectFrame = 0;
+        public int _countDrawLine;
+        public int _countDrawRectangle;
+        public int _countDrawCircle;
+        public int _countDrawSelectFrame;
+        public int _countClear;
+
+        public MockIGraphics()
+        {
+            _countDrawLine = 0;
+            _countDrawRectangle = 0;
+            _countDrawCircle = 0;
+            _countDrawSelectFrame = 0;
+        }
 
         // 清理畫面
         public void ClearAll()
         {
+            _countClear++;
         }
 
         // 畫圓圈

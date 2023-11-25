@@ -11,11 +11,6 @@ namespace PowerPoint.Tests
         private const string INFO_FORMAT = "({0}, {1}), ({2}, {3})";
         private const string INFORMATION_PROPERTY = "Information";
 
-        public int _countDraw;
-        public int _countDrawSelectFrame;
-        public int _countGetInfo;
-        public int _countGetShapeName;
-        public int _coountIsSelect;
         public int _countSetEndPoint;
         public int _countSetMove;
 
@@ -24,19 +19,17 @@ namespace PowerPoint.Tests
         public int _x2;
         public int _y2;
 
-        public MockShape(Coordinate point1, Coordinate point2)
+        public string _shapeType;
+
+        public MockShape(string shapeType, Coordinate point1, Coordinate point2)
         {
-            _countDraw = 0;
-            _countDrawSelectFrame = 0;
-            _countGetInfo = 0;
-            _countGetShapeName = 0;
-            _coountIsSelect = 0;
             _countSetEndPoint = 0;
             _countSetMove = 0;
             _x1 = point1.X;
             _y1 = point1.Y;
             _x2 = point2.X;
             _y2 = point2.Y;
+            _shapeType = shapeType;
             ShapeName = GetShapeName();
             Information = GetInfo();
         }
@@ -44,33 +37,41 @@ namespace PowerPoint.Tests
         // Draw
         public override void Draw(IGraphics graphics)
         {
-            _countDraw++;
+            switch (_shapeType)
+            {
+                case ShapeType.LINE:
+                    graphics.DrawLine(_x1, _y1, _x2, _y2);
+                    break;
+                case ShapeType.RECTANGLE:
+                    graphics.DrawRectangle(_x1, _y1, _x2 - _x1, _y2 - _y1);
+                    break;
+                case ShapeType.CIRCLE:
+                    graphics.DrawEllipse(_x1, _y1, _x2 - _x1, _y2 - _y1);
+                    break;
+            }
         }
 
         // DrawSelectFrame
         public override void DrawSelectFrame(IGraphics graphics)
         {
-            _countDrawSelectFrame++;
+            graphics.DrawSelectFrame(_x1, _y1, _x2, _y2);
         }
 
         // GetInfo
         public override string GetInfo()
         {
-            _countGetInfo++;
             return string.Format(INFO_FORMAT, _x1, _y1, _x2, _y2);
         }
 
         // GetShapeName
         public override string GetShapeName()
         {
-            _countGetShapeName++;
-            return "testName";
+            return _shapeType;
         }
 
         // IsSelect
         public override bool IsSelect(int x1, int y1)
         {
-            _coountIsSelect++;
             if (IsInnerInX(x1) && IsInnerInY(y1))
             {
                 return true;

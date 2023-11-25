@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace PowerPoint
 {
-    interface IState
+    public interface IState
     {
         // 按下滑鼠左鍵時
-        void PressPointer(string shapeType, int x1, int y1);
+        void PressPointer(int x1, int y1);
 
         // 滑鼠移動
         void MovePointer(int x2, int y2);

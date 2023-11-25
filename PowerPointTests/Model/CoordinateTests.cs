@@ -63,5 +63,14 @@ namespace PowerPoint.Tests
             _coordinate.Y = 48349;
             Assert.AreEqual(_coordinatePrivate.GetFieldOrProperty("Y"), _coordinate.Y);
         }
+
+        // Test ToString
+        [TestMethod()]
+        public void TestToString()
+        {
+            Assert.AreEqual(
+                String.Format("({0}, {1})", INITIAL_X, INITIAL_Y),
+                _coordinate.ToString());
+        }
     }
 }

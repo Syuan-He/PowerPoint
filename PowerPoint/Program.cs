@@ -16,7 +16,7 @@ namespace PowerPoint
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Model model = new Model();
+            Model model = new Model(new Factory(new Random(Guid.NewGuid().GetHashCode())));
             PresentationModel presentationModel = new PresentationModel(model);
             Application.Run(new Form1(presentationModel, model));
         }

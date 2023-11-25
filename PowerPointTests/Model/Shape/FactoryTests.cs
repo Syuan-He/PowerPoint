@@ -38,10 +38,10 @@ namespace PowerPoint.Tests
         [TestMethod()]
         public void TestGenerateShapeWithCoordinates()
         {
-            Assert.IsNull(Factory.GenerateShape("", _point1, _point2));
-            Assert.IsInstanceOfType(Factory.GenerateShape(ShapeType.LINE, _point1, _point2), typeof(Line));
-            Assert.IsInstanceOfType(Factory.GenerateShape(ShapeType.RECTANGLE, _point1, _point2), typeof(Rectangle));
-            Assert.IsInstanceOfType(Factory.GenerateShape(ShapeType.CIRCLE, _point1, _point2), typeof(Circle));
+            Assert.IsNull(_factory.GenerateShape("", _point1, _point2));
+            Assert.IsInstanceOfType(_factory.GenerateShape(ShapeType.LINE, _point1, _point2), typeof(Line));
+            Assert.IsInstanceOfType(_factory.GenerateShape(ShapeType.RECTANGLE, _point1, _point2), typeof(Rectangle));
+            Assert.IsInstanceOfType(_factory.GenerateShape(ShapeType.CIRCLE, _point1, _point2), typeof(Circle));
         }
 
         // Test Generate Shape With Panel Size

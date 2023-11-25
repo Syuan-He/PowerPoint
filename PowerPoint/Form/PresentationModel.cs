@@ -22,14 +22,15 @@ namespace PowerPoint
         const int PANEL_WIDTH = 710;
         const int PANEL_HEIGHT = 568;
 
-        Model _model;
+        IModel _model;
 
         bool[] _booleanToolStripList = { false, false, false, true };
         string[] _stringToolStripList = { ShapeType.LINE, ShapeType.RECTANGLE, ShapeType.CIRCLE, null };
-        string _shapeType = null;
+        string _shapeType;
         
-        public PresentationModel(Model model)
+        public PresentationModel(IModel model)
         {
+            _shapeType = null;
             this._model = model;
         }
         
@@ -124,13 +125,6 @@ namespace PowerPoint
             _model.PressPointer(_shapeType, x1, y1);
         }
 
-        // 放掉滑鼠左鍵時，設 shapeType 為 null (鼠標設回 Default )，ToolStrip 的選取因此皆為 false
-        public void ReleasePointer()
-        {
-            if (_shapeType != null)
-                PressPointerButton();
-        }
-
         // 按下刪除鍵
         public void PressDelete(Keys code)
         {
@@ -153,9 +147,6 @@ namespace PowerPoint
         // 讓 model 畫圖
         public void Draw(System.Drawing.Graphics graphics)
         {
-            // graphics物件是Paint事件帶進來的，只能在當次Paint使用
-            // 而Adaptor又直接使用graphics，這樣DoubleBuffer才能正確運作
-            // 因此，Adaptor不能重複使用，每次都要重新new
             _model.Draw(new WindowsFormsGraphicsAdaptor(graphics), true);
         }
 

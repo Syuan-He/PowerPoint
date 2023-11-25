@@ -130,7 +130,7 @@ namespace PowerPoint
         public void HandleCanvasReleased(object sender, MouseEventArgs e)
         {
             _model.ReleasePointer(e.X, e.Y);
-            _presentationModel.ReleasePointer();
+            _presentationModel.PressPointerButton();
             Cursor = _presentationModel.GetPointerShape();
         }
 

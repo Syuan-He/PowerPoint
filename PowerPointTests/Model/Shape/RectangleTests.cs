@@ -96,7 +96,7 @@ namespace PowerPoint.Tests
         [TestMethod()]
         public void TestDraw()
         {
-            MockGraphics _graphics = new MockGraphics();
+            MockIGraphics _graphics = new MockIGraphics();
             _rectangle.Draw(_graphics);
             Assert.AreEqual(_rectanglePrivate.GetFieldOrProperty("_x1"), _graphics._x1);
             Assert.AreEqual(_rectanglePrivate.GetFieldOrProperty("_y1"), _graphics._y1);
@@ -108,7 +108,7 @@ namespace PowerPoint.Tests
         [TestMethod()]
         public void TestDrawSelectFrame()
         {
-            MockGraphics _graphics = new MockGraphics();
+            MockIGraphics _graphics = new MockIGraphics();
             _rectangle.DrawSelectFrame(_graphics);
             Assert.AreEqual(_rectanglePrivate.GetFieldOrProperty("_x1"), _graphics._x1);
             Assert.AreEqual(_rectanglePrivate.GetFieldOrProperty("_y1"), _graphics._y1);

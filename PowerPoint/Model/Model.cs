@@ -7,31 +7,36 @@ using System.Drawing;
 
 namespace PowerPoint
 {
-    public class Model
+    public class Model : IModel
     {
         public event ModelChangedEventHandler _modelChanged;
         public delegate void ModelChangedEventHandler();
 
         const int PANEL_WIDTH = 710;
         const int PANEL_HEIGHT = 568;
-
         private const int NOT_IN_LIST = -1;
-        Shapes _shapes = new Shapes();
-        int _selectedIndex = NOT_IN_LIST;
-        IState _pointer;
 
-        public Model()
+        Shapes _shapes;
+        string _shapeType;
+
+        IState _pointer;
+        IFactory _factory;
+
+        bool _isPressed;
+        int _selectedIndex;
+
+        public Model(IFactory factory)
         {
+            _factory = factory;
+            _shapes = new Shapes(factory);
+            _selectedIndex = NOT_IN_LIST;
+            _isPressed = false;
             _pointer = new PointPointer(this);
         }
 
         // 按下資訊顯示的新增按鍵
         public void PressInfoAdd(string shapeType)
         {
-            if (shapeType != ShapeType.LINE && shapeType != ShapeType.RECTANGLE && shapeType != ShapeType.CIRCLE)
-            {
-                return;
-            }
             _shapes.CreateShape(shapeType, PANEL_WIDTH, PANEL_HEIGHT);
             NotifyModelChanged();
         }
@@ -42,8 +47,7 @@ namespace PowerPoint
             if (columnIndex == 0 && rowIndex >= 0)
             {
                 _shapes.Remove(rowIndex);
-                if (_selectedIndex == rowIndex)
-                    _selectedIndex = NOT_IN_LIST;
+                _selectedIndex = NOT_IN_LIST;
                 NotifyModelChanged();
             }
         }
@@ -51,15 +55,19 @@ namespace PowerPoint
         // 按下鍵盤 delete 鍵
         public void PressDeleteKey()
         {
-            _shapes.Remove(_selectedIndex);
-            _selectedIndex = NOT_IN_LIST;
-            NotifyModelChanged();
+            if (_selectedIndex > NOT_IN_LIST)
+            {
+                _shapes.Remove(_selectedIndex);
+                _selectedIndex = NOT_IN_LIST;
+                NotifyModelChanged();
+            }
         }
 
         // pointer 進入 point 模式
         public void SetPoint()
         {
             _pointer = new PointPointer(this);
+            NotifyModelChanged();
         }
 
         // pointer 進入 drawing 模式
@@ -73,25 +81,39 @@ namespace PowerPoint
         // 按下滑鼠左鍵
         public void PressPointer(string shapeType, int x1, int y1)
         {
-            _pointer.PressPointer(shapeType, x1, y1);
+            _isPressed = true;
+            _shapeType = shapeType;
+            _pointer.PressPointer(x1, y1);
         }
 
         // 滑鼠移動時
         public void MovePointer(int x2, int y2)
         {
-            _pointer.MovePointer(x2, y2);
+            if (_isPressed)
+            {
+                _pointer.MovePointer(x2, y2);
+                NotifyModelChanged();
+            }
         }
 
         // 放開滑鼠左鍵
         public void ReleasePointer(int x2, int y2)
         {
+            _isPressed = false;
             _pointer.ReleasePointer(x2, y2);
+        }
+
+        // 為 DrawingPointer 創建 hint
+        public Shape CreateHint(int x1, int y1)
+        {
+            return _factory.GenerateShape(_shapeType, new Coordinate(x1, y1), new Coordinate(x1, y1));
         }
 
         // DrawingPointer(state pattern) 創建新圖形要用的 function
         public void CreateShape(string shapeType, Coordinate point1, Coordinate point2)
         {
             _shapes.CreateShape(shapeType, point1, point2);
+            NotifyModelChanged();
         }
 
         // PointPointer 搜尋重疊要用的 function
@@ -106,7 +128,6 @@ namespace PowerPoint
         public void MoveShape(int x1, int y1)
         {
             _shapes.MoveSelectedShape(_selectedIndex, x1, y1);
-            NotifyModelChanged();
         }
 
         // 繪製選取外框
@@ -120,7 +141,7 @@ namespace PowerPoint
         {
             graphics.ClearAll();
             _shapes.Draw(graphics);
-            if (isPanel)
+            if (_isPressed && isPanel)
             {
                 _pointer.Draw(graphics);
             }
