@@ -14,9 +14,9 @@ namespace PowerPoint.Tests
         private const int WIDTH = 123;
         private const int HEIGHT = 465;
         Coordinate _point1 = new Coordinate(123, 456);
-        Coordinate _point2 = new Coordinate(456, 79);
+        Coordinate _point2 = new Coordinate(456, 796);
 
-        MockIGraphics _mockGraphics;
+        MockIGraphics _graphics;
         MockFactory _mockFactory;
         Shapes _shapes;
         PrivateObject _shapesPrivate;
@@ -45,8 +45,26 @@ namespace PowerPoint.Tests
             Assert.AreEqual(_shapes.ShapeList, _shapesPrivate.GetFieldOrProperty("_shapeList"));
         }
 
-        // Test CreateShape With Coordinates
+        // Test CreateShape
         [TestMethod()]
+        public void TestCreateShape()
+        {
+            _shapeList = (IList<Shape>)_shapesPrivate.GetFieldOrProperty("_shapeList");
+
+            _shapes.CreateShape(null);
+            Assert.AreEqual(0, _shapeList.Count());
+
+            _shapes.CreateShape(new Line(_point1, _point2));
+            Assert.AreEqual(1, _shapeList.Count());
+
+            Assert.AreEqual(ShapeType.LINE, _shapeList[0].ShapeName);
+            Assert.AreEqual(
+                String.Format("{0}, {1}", _point1.ToString(), _point2.ToString()),
+                _shapeList[0].Information);
+        }
+
+            // Test CreateShape With Coordinates
+            [TestMethod()]
         public void TestCreateShapeWithCoordinates()
         {
             _shapes.CreateShape(ShapeType.LINE, _point1, _point2);
@@ -54,7 +72,7 @@ namespace PowerPoint.Tests
 
             Assert.AreEqual(ShapeType.LINE, _shapeList[0].ShapeName);
             Assert.AreEqual(
-                String.Format("({0}, {1}), ({2}, {3})", _point1.X, _point1.Y, _point2.X, _point2.Y),
+                String.Format("{0}, {1}", _point1.ToString(), _point2.ToString()),
                 _shapeList[0].Information);
         }
 
@@ -122,27 +140,35 @@ namespace PowerPoint.Tests
             _shapeList = (IList<Shape>)_shapesPrivate.GetFieldOrProperty("_shapeList");
             _shapes.MoveSelectedShape(-1, 1, 1);
             _shapes.MoveSelectedShape(6, 1, 1);
-            foreach (MockShape mockShape in _shapeList)
-            {
-                Assert.AreEqual(0, mockShape._countSetMove);
-            }
+            
             _shapes.MoveSelectedShape(0, 1, 1);
-            Assert.AreEqual(1, ((MockShape)_shapeList[0])._countSetMove);
+            Assert.AreEqual("(1, 2), (3, 4)", _shapeList[0].Information);
             _shapes.MoveSelectedShape(5, 1, 1);
-            Assert.AreEqual(1, ((MockShape)_shapeList[5])._countSetMove);
+            Assert.AreEqual("(21, 22), (23, 24)", _shapeList[5].Information);
 
+        }
+
+        // Test GetAtSelectedCorner
+        [TestMethod]
+        public void TestGetAtSelectedCorner()
+        {
+            AddListElement();
+            Assert.AreEqual(-1, _shapes.GetAtSelectedCorner(-1, 2, 3));
+            Assert.AreEqual(8, _shapes.GetAtSelectedCorner(0, 2, 3));
+            Assert.AreEqual(-1, _shapes.GetAtSelectedCorner(1, 12, 5));
+            Assert.AreEqual(-1, _shapes.GetAtSelectedCorner(9, 2, 3));
         }
 
         // Test Draw
         [TestMethod()]
         public void TestDraw()
         {
-            _mockGraphics = new MockIGraphics();
+            _graphics = new MockIGraphics();
             AddListElement();
-            _shapes.Draw(_mockGraphics);
-            Assert.AreEqual(1, _mockGraphics._countDrawLine);
-            Assert.AreEqual(2, _mockGraphics._countDrawRectangle);
-            Assert.AreEqual(3, _mockGraphics._countDrawCircle);
+            _shapes.Draw(_graphics);
+            Assert.AreEqual(1, _graphics._countDrawLine);
+            Assert.AreEqual(2, _graphics._countDrawRectangle);
+            Assert.AreEqual(3, _graphics._countDrawCircle);
 
         }
 
@@ -150,18 +176,18 @@ namespace PowerPoint.Tests
         [TestMethod()]
         public void TestDrawSelectFrame()
         {
-            _mockGraphics = new MockIGraphics();
+            _graphics = new MockIGraphics();
             AddListElement();
-            _shapes.DrawSelectFrame(_mockGraphics, -1);
-            Assert.AreEqual(0, _mockGraphics._countDrawSelectFrame);
-            _shapes.DrawSelectFrame(_mockGraphics, 0);
-            Assert.AreEqual(1, _mockGraphics._countDrawSelectFrame);
-            Assert.AreEqual(0, _mockGraphics._x1);
-            _shapes.DrawSelectFrame(_mockGraphics, 5);
-            Assert.AreEqual(2, _mockGraphics._countDrawSelectFrame);
-            Assert.AreEqual(20, _mockGraphics._x1);
-            _shapes.DrawSelectFrame(_mockGraphics, 6);
-            Assert.AreEqual(2, _mockGraphics._countDrawSelectFrame);
+            _shapes.DrawSelectFrame(_graphics, -1);
+            Assert.AreEqual(0, _graphics._countDrawSelectFrame);
+            _shapes.DrawSelectFrame(_graphics, 0);
+            Assert.AreEqual(1, _graphics._countDrawSelectFrame);
+            Assert.AreEqual(0, _graphics._x1);
+            _shapes.DrawSelectFrame(_graphics, 5);
+            Assert.AreEqual(2, _graphics._countDrawSelectFrame);
+            Assert.AreEqual(20, _graphics._x1);
+            _shapes.DrawSelectFrame(_graphics, 6);
+            Assert.AreEqual(2, _graphics._countDrawSelectFrame);
         }
     }
 }

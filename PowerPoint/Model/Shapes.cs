@@ -31,18 +31,18 @@ namespace PowerPoint
         public void CreateShape(string shapeType, Coordinate point1, Coordinate point2)
         {
             Shape shape = _factory.GenerateShape(shapeType, point1, point2);
-            AddShape(shape);
+            CreateShape(shape);
         }
 
         // 用多載為 list 創建隨機位子的新 shape
         public void CreateShape(string shapeType, int width, int height)
         {
             Shape shape = _factory.GenerateShape(shapeType, width, height);
-            AddShape(shape);
+            CreateShape(shape);
         }
 
-        // 為 shapeList 加入 shape
-        void AddShape(Shape shape)
+        // 用多載讓 list 能直接加 shape
+        public void CreateShape(Shape shape)
         {
             if (shape != null)
                 _shapeList.Add(shape);
@@ -72,6 +72,22 @@ namespace PowerPoint
         {
             if (index >= 0 && index < _shapeList.Count())
                 _shapeList[index].SetMove(x1, y1);
+        }
+
+        // 確認在哪個頂點上
+        public int GetAtSelectedCorner(int index, int x1, int y1)
+        {
+            if (index >= 0 && index < _shapeList.Count)
+                return _shapeList[index].GetAtCorner(x1, y1);
+            return ShapeInteger.NOT_IN_LIST;
+        }
+
+        // 取得被選取的 shape
+        public Shape GetShape(int index)
+        {
+            if (index >= 0 && index < _shapeList.Count)
+                return _shapeList[index];
+            return null;
         }
 
         // 繪製所有存在 list 的圖形

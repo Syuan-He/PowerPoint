@@ -30,11 +30,11 @@ namespace PowerPoint.Tests
             switch (type)
             {
                 case ShapeType.LINE:
-                    return new MockShape(type, point1, point2);
+                    return new Line(point1, point2);
                 case ShapeType.RECTANGLE:
-                    return new MockShape(type, point1, point2);
+                    return new Rectangle(point1, point2);
                 case ShapeType.CIRCLE:
-                    return new MockShape(type, point1, point2);
+                    return new Circle(point1, point2);
             }
             return null;
         }

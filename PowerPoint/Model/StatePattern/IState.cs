@@ -9,7 +9,7 @@ namespace PowerPoint
     public interface IState
     {
         // 按下滑鼠左鍵時
-        void PressPointer(int x1, int y1);
+        void PressPointer(int x1, int y1, Shape shape);
 
         // 滑鼠移動
         void MovePointer(int x2, int y2);

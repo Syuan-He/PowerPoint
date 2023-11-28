@@ -68,6 +68,8 @@ namespace PowerPoint.Tests
         [TestMethod()]
         public void TestPressLineButton()
         {
+            bool eventRaised = false;
+            _pModel.PropertyChanged += (Object sender, PropertyChangedEventArgs e) => eventRaised = true;
             bool[] _boolList = (bool[])_pModelPrivate.GetField("_booleanToolStripList");
             type = (string)_pModelPrivate.GetField("_shapeType");
             Assert.IsFalse(_boolList[0]);
@@ -79,6 +81,7 @@ namespace PowerPoint.Tests
             Assert.IsTrue(_boolList[0]);
             Assert.IsFalse(_boolList[3]);
             Assert.AreEqual(ShapeType.LINE, type);
+            Assert.IsTrue(eventRaised);
 
             _pModel.PressLineButton();
             type = (string)_pModelPrivate.GetField("_shapeType");
@@ -91,6 +94,8 @@ namespace PowerPoint.Tests
         [TestMethod()]
         public void TestPressRectangleButton()
         {
+            bool eventRaised = false;
+            _pModel.PropertyChanged += (Object sender, PropertyChangedEventArgs e) => eventRaised = true;
             bool[] _boolList = (bool[])_pModelPrivate.GetField("_booleanToolStripList");
             type = (string)_pModelPrivate.GetField("_shapeType");
             Assert.IsFalse(_boolList[1]);
@@ -102,6 +107,7 @@ namespace PowerPoint.Tests
             Assert.IsTrue(_boolList[1]);
             Assert.IsFalse(_boolList[3]);
             Assert.AreEqual(ShapeType.RECTANGLE, type);
+            Assert.IsTrue(eventRaised);
 
             _pModel.PressRectangleButton();
             type = (string)_pModelPrivate.GetField("_shapeType");
@@ -114,6 +120,8 @@ namespace PowerPoint.Tests
         [TestMethod()]
         public void TestPressCircleButton()
         {
+            bool eventRaised = false;
+            _pModel.PropertyChanged += (Object sender, PropertyChangedEventArgs e) => eventRaised = true;
             bool[] _boolList = (bool[])_pModelPrivate.GetField("_booleanToolStripList");
             type = (string)_pModelPrivate.GetField("_shapeType");
             Assert.IsFalse(_boolList[2]);
@@ -125,6 +133,7 @@ namespace PowerPoint.Tests
             Assert.IsTrue(_boolList[2]);
             Assert.IsFalse(_boolList[3]);
             Assert.AreEqual(ShapeType.CIRCLE, type);
+            Assert.IsTrue(eventRaised);
 
             _pModel.PressCircleButton();
             type = (string)_pModelPrivate.GetField("_shapeType");
@@ -137,6 +146,8 @@ namespace PowerPoint.Tests
         [TestMethod()]
         public void TestPressPointerButton()
         {
+            bool eventRaised = false;
+            _pModel.PropertyChanged += (Object sender, PropertyChangedEventArgs e) => eventRaised = true;
             bool[] _boolList = (bool[])_pModelPrivate.GetField("_booleanToolStripList");
             type = (string)_pModelPrivate.GetField("_shapeType");
             Assert.IsFalse(_boolList[0]);
@@ -148,7 +159,8 @@ namespace PowerPoint.Tests
             Assert.IsFalse(_boolList[0]);
             Assert.IsTrue(_boolList[3]);
             Assert.AreEqual(null, type);
-
+            Assert.AreEqual(0, _model._stateNumber);
+            Assert.IsTrue(eventRaised);
 
             _pModel.PressLineButton();
             type = (string)_pModelPrivate.GetField("_shapeType");
@@ -161,6 +173,26 @@ namespace PowerPoint.Tests
             Assert.IsFalse(_boolList[0]);
             Assert.IsTrue(_boolList[3]);
             Assert.AreEqual(null, type);
+        }
+
+        // Test
+        [TestMethod]
+        public void TestPressToolStrip()
+        {
+            _pModel.PressLineButton();
+            Assert.IsTrue(_pModel.IsLine);
+            Assert.IsFalse(_pModel.IsPointer);
+            _pModel.PressLineButton();
+            Assert.IsFalse(_pModel.IsLine);
+            Assert.IsTrue(_pModel.IsPointer);
+            _pModel.PressLineButton();
+            Assert.IsTrue(_pModel.IsLine);
+            _pModel.PressRectangleButton();
+            Assert.IsTrue(_pModel.IsRectangle);
+            Assert.IsFalse(_pModel.IsLine);
+            _pModel.PressCircleButton();
+            Assert.IsTrue(_pModel.IsCircle);
+            Assert.IsFalse(_pModel.IsRectangle);
         }
 
         // Test PressPointer
@@ -199,6 +231,29 @@ namespace PowerPoint.Tests
             Assert.AreEqual(Cursors.Cross, cursor);
         }
 
+        // Test GetCornerCursor
+        [TestMethod]
+        public void TestGetCornerCursor()
+        {
+            Assert.AreEqual(Cursors.Default, _pModelPrivate.Invoke("GetCornerCursor", new object[] { -1 }));
+            Assert.AreEqual(Cursors.SizeNWSE, _pModelPrivate.Invoke("GetCornerCursor", new object[] { 0 }));
+            Assert.AreEqual(Cursors.SizeNWSE, _pModelPrivate.Invoke("GetCornerCursor", new object[] { 8 }));
+            Assert.AreEqual(Cursors.Default, _pModelPrivate.Invoke("GetCornerCursor", new object[] { 9 }));
+        }
+
+        // Test GetPointerShape
+        [TestMethod]
+        public void TestGetPointerShapeWithCoordinate()
+        {
+            _pModel.PressCircleButton();
+            Assert.AreEqual(Cursors.Cross, _pModel.GetPointerShape(0, 0));
+            _pModel.PressPointerButton();
+            Assert.AreEqual(Cursors.Default, _pModel.GetPointerShape(0, 0));
+            Assert.AreEqual(Cursors.SizeNWSE, _pModel.GetPointerShape(1, 1));
+            _model._isHasSelected = false;
+            Assert.AreEqual(Cursors.Default, _pModel.GetPointerShape(1, 1));
+        }
+
         // Test Draw
         [TestMethod()]
         public void TestDraw()
@@ -213,7 +268,7 @@ namespace PowerPoint.Tests
         public void TestDrawSlide()
         {
             Graphics graphics = null;
-            _pModel.DrawSlide(graphics);
+            _pModel.DrawSlide(graphics, new Size(1, 1), new Size(1, 1));
             Assert.IsInstanceOfType(_model._graphics, typeof(SlideAdaptor));
         }
 

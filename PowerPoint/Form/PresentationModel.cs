@@ -1,6 +1,7 @@
 ﻿using System.Windows.Forms;
 using System.ComponentModel;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace PowerPoint
 {
@@ -17,23 +18,20 @@ namespace PowerPoint
         private const int CIRCLE_NUMBER = 2;
         private const int POINTER_NUMBER = 3;
 
-        private const int SLIDE_WIDTH = 144;
-        private const int SLIDE_HEIGHT = 108;
-        const int PANEL_WIDTH = 710;
-        const int PANEL_HEIGHT = 568;
+        string[] _stringToolStripList = { ShapeType.LINE, ShapeType.RECTANGLE, ShapeType.CIRCLE, null };
+        Cursor[] _cornerCursors = { Cursors.SizeNWSE, Cursors.SizeNS, Cursors.SizeNESW, Cursors.SizeWE, Cursors.Default, Cursors.SizeNS, Cursors.SizeNESW, Cursors.SizeWE, Cursors.SizeNWSE };
 
         IModel _model;
 
         bool[] _booleanToolStripList = { false, false, false, true };
-        string[] _stringToolStripList = { ShapeType.LINE, ShapeType.RECTANGLE, ShapeType.CIRCLE, null };
         string _shapeType;
-        
+
         public PresentationModel(IModel model)
         {
             _shapeType = null;
             this._model = model;
         }
-        
+
         public bool IsLine
         {
             get
@@ -86,7 +84,7 @@ namespace PowerPoint
             PressToolStrip(CIRCLE_NUMBER);
             NotifyPropertyChanged();
         }
-        
+
         // 按下 toolStrip 的 Pointer 按鍵
         public void PressPointerButton()
         {
@@ -144,16 +142,45 @@ namespace PowerPoint
             return Cursors.Default;
         }
 
+        // 傳回鼠標當下應該要有的樣子(形狀)
+        public Cursor GetPointerShape(int x1, int y1)
+        {
+            if (_shapeType != null)
+            {
+                return Cursors.Cross;
+            }
+            else if (_model.IsHasSelected())
+            {
+                return GetCornerCursor(_model.GetAtSelectedCorner(x1, y1));
+            }
+            return Cursors.Default;
+        }
+
+        // 取得選取邊緣的鼠標
+        Cursor GetCornerCursor(int index)
+        {
+            if (index >= 0 && index <= ShapeInteger.TOTAL_CORNER)
+            {
+                return _cornerCursors[index];
+            }
+            return Cursors.Default;
+        }
+
         // 讓 model 畫圖
-        public void Draw(System.Drawing.Graphics graphics)
+        public void Draw(Graphics graphics)
         {
             _model.Draw(new WindowsFormsGraphicsAdaptor(graphics), true);
         }
 
         // 讓 model 畫縮圖
-        public void DrawSlide(System.Drawing.Graphics graphics)
+        public void DrawSlide(Graphics graphics, Size panelSize, Size slideSize)
         {
-            _model.Draw(new SlideAdaptor(graphics, new Coordinate(PANEL_WIDTH, PANEL_HEIGHT), new Coordinate(SLIDE_WIDTH, SLIDE_HEIGHT)), false);
+            _model.Draw(
+                new SlideAdaptor(
+                    graphics,
+                    new Coordinate(panelSize.Width, panelSize.Height),
+                    new Coordinate(slideSize.Width, slideSize.Height)),
+                false);
         }
 
         // 通知 ToolBar 相關 bool 變數改變

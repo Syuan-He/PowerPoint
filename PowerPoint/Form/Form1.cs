@@ -19,27 +19,13 @@ namespace PowerPoint
         private const string CHECKED_PROPERTY = "Checked";
         Model _model;
         PresentationModel _presentationModel;
-        Panel _panel = new DoubleBufferedPanel();
 
         public Form1(PresentationModel presentationModel, Model model)
         {
             InitializeComponent();
             _model = model;
             _presentationModel = presentationModel;
-            _model._modelChanged += HandlePanelChanged;
-
-            _panel.BackColor = System.Drawing.SystemColors.Window;
-            _panel.Location = new System.Drawing.Point(150, 48);
-            _panel.Name = "_panel";
-            _panel.Size = new System.Drawing.Size(711, 569);
-            _panel.TabIndex = 6;
-            _panel.MouseEnter += HandleCanvasEnter;
-            _panel.MouseLeave += HandleCanvasLeave;
-            _panel.MouseDown += HandleCanvasPressed;
-            _panel.MouseUp += HandleCanvasReleased;
-            _panel.MouseMove += HandleCanvasMoved;
-            _panel.Paint += PaintPanel;
-            Controls.Add(_panel);
+            _model._panelChanged += HandlePanelChanged;
 
             _lineToolStripButton.DataBindings.Add(CHECKED_PROPERTY, presentationModel, LINE_PROPERTY);
             _rectangleToolStripButton.DataBindings.Add(CHECKED_PROPERTY, presentationModel, RECTANGLE_PROPERTY);
@@ -54,15 +40,13 @@ namespace PowerPoint
         // 資訊顯示的新增按鍵
         void ClickAddButton(object sender, EventArgs e)
         {
-            _model.PressInfoAdd(_shapeComboBox.Text);
-            //_presentationModel.ReleasePointer();
+            _model.PressInfoAdd(_shapeComboBox.Text, _panel.Width, _panel.Height);
         }
 
         // 資訊顯示的刪除按鍵
         void ClickInfoDataGridViewCellContent(object sender, DataGridViewCellEventArgs e)
         {
             _model.PressDelete(e.ColumnIndex, e.RowIndex);
-            //_presentationModel.ReleasePointer();
         }
         
         // ToolStrip 的 Line 按鈕
@@ -98,7 +82,7 @@ namespace PowerPoint
         // 在小畫面畫出所有在 list 的縮圖
         void PaintSlide(object sender, PaintEventArgs e)
         {
-            _presentationModel.DrawSlide(e.Graphics);
+            _presentationModel.DrawSlide(e.Graphics, _panel.Size, _slide1.Size);
         }
 
         // 通知 panel modelChange (observer's function)
@@ -137,6 +121,7 @@ namespace PowerPoint
         // 滑鼠移動
         public void HandleCanvasMoved(object sender, MouseEventArgs e)
         {
+            Cursor = _presentationModel.GetPointerShape(e.X, e.Y);
             _model.MovePointer(e.X, e.Y);
         }
 

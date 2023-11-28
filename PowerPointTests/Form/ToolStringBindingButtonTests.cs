@@ -19,6 +19,8 @@ namespace PowerPoint.Tests
             ToolStripBindingButton button = new ToolStripBindingButton();
             BindingContext context = new BindingContext();
 
+            Assert.IsNotNull(button.BindingContext);
+
             button.BindingContext = context;
 
             Assert.AreEqual(context, button.BindingContext);
@@ -31,6 +33,7 @@ namespace PowerPoint.Tests
             ToolStripBindingButton button = new ToolStripBindingButton();
 
             Assert.IsNotNull(button.DataBindings);
+            Assert.AreEqual(button.DataBindings, button.DataBindings);
         }
     }
 }

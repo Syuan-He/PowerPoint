@@ -24,20 +24,20 @@ namespace PowerPoint
             set;
         }
 
-        // 取得圖形物件的型態資料
-        public abstract string GetShapeName();
-
-        // 取得物件的頂點座標
-        public abstract string GetInfo();
-
         // 設定圖形終點
-        public abstract void SetEndPoint(Coordinate endPoint);
+        public abstract void SetEndPoint(int x2, int y2);
 
         // 移動圖形
         public abstract void SetMove(int offsetX, int offsetY);
 
         // 檢查是否被選取
         public abstract bool IsSelect(int x1, int y1);
+
+        // 確認在哪個頂點上
+        public abstract int GetAtCorner(int x1, int y1);
+
+        //調整傳入的 point 的座標，使第一個 point 的座標在左上，第二個在右下
+        public abstract void AdjustPoint();
 
         // 繪製該圖形
         public abstract void Draw(IGraphics graphics);

@@ -9,11 +9,9 @@ namespace PowerPoint
 {
     public class Model : IModel
     {
-        public event ModelChangedEventHandler _modelChanged;
+        public event ModelChangedEventHandler _panelChanged;
         public delegate void ModelChangedEventHandler();
 
-        const int PANEL_WIDTH = 710;
-        const int PANEL_HEIGHT = 568;
         private const int NOT_IN_LIST = -1;
 
         Shapes _shapes;
@@ -24,6 +22,7 @@ namespace PowerPoint
 
         bool _isPressed;
         int _selectedIndex;
+        Shape _shape;
 
         public Model(IFactory factory)
         {
@@ -31,14 +30,14 @@ namespace PowerPoint
             _shapes = new Shapes(factory);
             _selectedIndex = NOT_IN_LIST;
             _isPressed = false;
-            _pointer = new PointPointer(this);
+            _pointer = new PointPointer(null);
         }
 
         // 按下資訊顯示的新增按鍵
-        public void PressInfoAdd(string shapeType)
+        public void PressInfoAdd(string shapeType, int panelWidth, int panelHeight)
         {
-            _shapes.CreateShape(shapeType, PANEL_WIDTH, PANEL_HEIGHT);
-            NotifyModelChanged();
+            _shapes.CreateShape(shapeType, panelWidth, panelHeight);
+            NotifyPanelChanged();
         }
 
         // 按下資訊顯示的刪除按鍵
@@ -48,7 +47,8 @@ namespace PowerPoint
             {
                 _shapes.Remove(rowIndex);
                 _selectedIndex = NOT_IN_LIST;
-                NotifyModelChanged();
+                SetPoint();
+                NotifyPanelChanged();
             }
         }
 
@@ -59,23 +59,42 @@ namespace PowerPoint
             {
                 _shapes.Remove(_selectedIndex);
                 _selectedIndex = NOT_IN_LIST;
-                NotifyModelChanged();
+                SetPoint();
+                NotifyPanelChanged();
             }
         }
 
-        // pointer 進入 point 模式
+        // pointer 進入 point 模式 (有選取的 shape 就傳進 pointer，GetShape會自動判斷)
         public void SetPoint()
         {
-            _pointer = new PointPointer(this);
-            NotifyModelChanged();
+            _pointer = new PointPointer(_shapes.GetShape(_selectedIndex));
+            NotifyPanelChanged();
         }
 
         // pointer 進入 drawing 模式
         public void SetDrawing()
         {
-            _pointer = new DrawingPointer(this);
+            _pointer = new DrawingPointer();
             _selectedIndex = NOT_IN_LIST;
-            NotifyModelChanged();
+            NotifyPanelChanged();
+        }
+
+        // pointer 進入 scaling 模式 (有選取的 shape 就傳進 pointer，GetShape會自動判斷)
+        public void SetScaling()
+        {
+            _pointer = new ScalingPointer(_shapes.GetShape(_selectedIndex));
+        }
+
+        // 是否有被選取的 shape
+        public bool IsHasSelected()
+        {
+            return _selectedIndex > NOT_IN_LIST;
+        }
+
+        // 判斷是不是位在頂點上
+        public int GetAtSelectedCorner(int x1, int y1)
+        {
+            return _shapes.GetAtSelectedCorner(_selectedIndex, x1, y1);
         }
 
         // 按下滑鼠左鍵
@@ -83,7 +102,20 @@ namespace PowerPoint
         {
             _isPressed = true;
             _shapeType = shapeType;
-            _pointer.PressPointer(x1, y1);
+
+            if (shapeType == null)
+            {
+                if (GetAtSelectedCorner(x1, y1) < 0)
+                {
+                    _selectedIndex = _shapes.FindSelectItem(x1, y1);
+                    _shape = GetSelectShape(_selectedIndex);
+                }
+                else
+                    SetScaling();
+            }
+            else
+                _shape = _factory.GenerateShape(_shapeType, new Coordinate(x1, y1), new Coordinate(x1, y1));
+            _pointer.PressPointer(x1, y1, _shape);
         }
 
         // 滑鼠移動時
@@ -92,7 +124,7 @@ namespace PowerPoint
             if (_isPressed)
             {
                 _pointer.MovePointer(x2, y2);
-                NotifyModelChanged();
+                NotifyPanelChanged();
             }
         }
 
@@ -101,39 +133,19 @@ namespace PowerPoint
         {
             _isPressed = false;
             _pointer.ReleasePointer(x2, y2);
+            if (_shapeType != null)
+            {
+                _shapes.CreateShape(_shape);
+                _shape = null;
+                NotifyPanelChanged();
+            }
+            _pointer = new PointPointer(_shapes.GetShape(_selectedIndex));
         }
 
-        // 為 DrawingPointer 創建 hint
-        public Shape CreateHint(int x1, int y1)
+        // 回傳指定位子的 shape
+        Shape GetSelectShape(int index)
         {
-            return _factory.GenerateShape(_shapeType, new Coordinate(x1, y1), new Coordinate(x1, y1));
-        }
-
-        // DrawingPointer(state pattern) 創建新圖形要用的 function
-        public void CreateShape(string shapeType, Coordinate point1, Coordinate point2)
-        {
-            _shapes.CreateShape(shapeType, point1, point2);
-            NotifyModelChanged();
-        }
-
-        // PointPointer 搜尋重疊要用的 function
-        public bool FindSelectShape(int x1, int y1)
-        {
-            _selectedIndex = _shapes.FindSelectItem(x1, y1);
-            NotifyModelChanged();
-            return _selectedIndex != NOT_IN_LIST;
-        }
-
-        // 移動選取的圖形
-        public void MoveShape(int x1, int y1)
-        {
-            _shapes.MoveSelectedShape(_selectedIndex, x1, y1);
-        }
-
-        // 繪製選取外框
-        public void DrawSelectFrame(IGraphics graphics)
-        {
-            _shapes.DrawSelectFrame(graphics, _selectedIndex);
+            return _shapes.GetShape(index);
         }
 
         // 繪製圖形
@@ -141,17 +153,17 @@ namespace PowerPoint
         {
             graphics.ClearAll();
             _shapes.Draw(graphics);
-            if (_isPressed && isPanel)
+            if (isPanel)
             {
                 _pointer.Draw(graphics);
             }
         }
 
         // 通知 model 要重新繪製 panel
-        public void NotifyModelChanged()
+        void NotifyPanelChanged()
         {
-            if (_modelChanged != null)
-                _modelChanged();
+            if (_panelChanged != null)
+                _panelChanged();
         }
 
         //回傳 Shapes 的 BindingList ，給資訊顯示的 _infoDataGridView 用

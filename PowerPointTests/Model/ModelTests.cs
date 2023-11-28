@@ -46,8 +46,10 @@ namespace PowerPoint.Tests
         public void TestNotifyModelChanged()
         {
             bool eventRaised = false;
-            _model._modelChanged += () => eventRaised = true;
-            _model.NotifyModelChanged();
+            _modelPrivate.Invoke("NotifyPanelChanged");
+            Assert.IsFalse(eventRaised);
+            _model._panelChanged += () => eventRaised = true;
+            _modelPrivate.Invoke("NotifyPanelChanged");
             Assert.IsTrue(eventRaised);
         }
 
@@ -60,9 +62,9 @@ namespace PowerPoint.Tests
         public void TestPressInfoAdd(string type)
         {
             bool eventRaised = false;
-            _model._modelChanged += () => eventRaised = true;
+            _model._panelChanged += () => eventRaised = true;
 
-            _model.PressInfoAdd(type);
+            _model.PressInfoAdd(type, 0, 0);
             Assert.AreEqual(type, _mockFactory._shapeType);
             Assert.IsTrue(eventRaised);
         }
@@ -76,20 +78,24 @@ namespace PowerPoint.Tests
         {
             AddShape();
             bool eventRaised = false;
-            _model._modelChanged += () => eventRaised = true;
-            _model.PressDelete(column, row);
+            _model._panelChanged += () => eventRaised = true;
             Shapes shapes = (Shapes)_modelPrivate.GetFieldOrProperty("_shapes");
+
+            _model.PressDelete(column, row);
+
             Assert.AreEqual(ans, eventRaised);
             Assert.AreEqual(len, shapes.ShapeList.Count());
             Assert.AreEqual(-1, _modelPrivate.GetFieldOrProperty("_selectedIndex"));
+            IState state = (IState)_modelPrivate.GetFieldOrProperty("_pointer");
+            Assert.IsInstanceOfType(state, typeof(PointPointer));
         }
 
         // 替 model 的 shapes 加料
         void AddShape()
         {
-            _model.PressInfoAdd(ShapeType.LINE);
-            _model.PressInfoAdd(ShapeType.RECTANGLE);
-            _model.PressInfoAdd(ShapeType.CIRCLE);
+            _model.PressInfoAdd(ShapeType.LINE, 0, 0);
+            _model.PressInfoAdd(ShapeType.RECTANGLE, 0, 0);
+            _model.PressInfoAdd(ShapeType.CIRCLE, 0, 0);
         }
 
         // Test PressDeleteKey
@@ -102,21 +108,31 @@ namespace PowerPoint.Tests
         {
             AddShape();
             bool eventRaised = false;
-            _model._modelChanged += () => eventRaised = true;
+            _model._panelChanged += () => eventRaised = true;
             _modelPrivate.SetFieldOrProperty("_selectedIndex", row);
-            _model.PressDeleteKey();
             Shapes shapes = (Shapes)_modelPrivate.GetFieldOrProperty("_shapes");
+
+            _model.PressDeleteKey();
+
             Assert.AreEqual(ans, eventRaised);
             Assert.AreEqual(len, shapes.ShapeList.Count());
             Assert.AreEqual(-1, _modelPrivate.GetFieldOrProperty("_selectedIndex"));
+            IState state = (IState)_modelPrivate.GetFieldOrProperty("_pointer");
+            Assert.IsInstanceOfType(state, typeof(PointPointer));
         }
 
         // Test SetPoint
         [TestMethod()]
         public void TestSetPoint()
         {
+            _model.PressInfoAdd(ShapeType.LINE, 0, 0);
+            _modelPrivate.SetField("_selectedIndex", 0);
             _model.SetPoint();
-            Assert.IsInstanceOfType(_modelPrivate.GetFieldOrProperty("_pointer"), typeof(PointPointer));
+            IState state = (IState)_modelPrivate.GetFieldOrProperty("_pointer");
+            Assert.IsInstanceOfType(state, typeof(PointPointer));
+            MockIGraphics graphics = new MockIGraphics();
+            state.Draw(graphics);
+            Assert.AreEqual(1, graphics._countDrawSelectFrame);
         }
 
         // Test SetDrawing
@@ -125,77 +141,68 @@ namespace PowerPoint.Tests
         {
             _model.SetDrawing();
             Assert.IsInstanceOfType(_modelPrivate.GetFieldOrProperty("_pointer"), typeof(DrawingPointer));
+            Assert.AreEqual(-1, _modelPrivate.GetField("_selectedIndex"));
         }
 
-        // Test CreateHint
+        // Test SetScaling
         [TestMethod()]
-        public void TestCreateHint()
+        public void TestSetScaling()
         {
-            _modelPrivate.SetFieldOrProperty("_shapeType", ShapeType.LINE);
-            Shape shape = _model.CreateHint(X1, Y1);
-            Assert.AreEqual(ShapeType.LINE, shape.ShapeName);
-            Assert.AreEqual(String.Format("({0}, {1}), ({0}, {1})", X1, Y1), shape.Information);
-        }
-
-        // Test CreateShape
-        [TestMethod()]
-        public void TestCreateShape()
-        {
-            bool eventRaised = false;
-            _model._modelChanged += () => eventRaised = true;
-
-            _model.CreateShape(ShapeType.LINE, _point1, _point2);
-            Assert.AreEqual(ShapeType.LINE, _mockFactory._shapeType);
-            Assert.AreEqual(_point1, _mockFactory._point1);
-            Assert.AreEqual(_point2, _mockFactory._point2);
-            Assert.IsTrue(eventRaised);
-        }
-
-        // Test FindSelectShape
-        [TestMethod()]
-        [DataRow(0, 1, true)]
-        [DataRow(0, 5, false)]
-        [DataRow(4, 6, true)]
-        [DataRow(11, 1, false)]
-        public void TestFindSelectShape(int x1, int y1, bool ans)
-        {
-            AddShape();
-            bool isFind = _model.FindSelectShape(x1, y1);
-            Assert.AreEqual(ans, isFind);
-        }
-
-        // Test MoveShape
-        [TestMethod()]
-        public void TestMoveShape()
-        {
-            AddShape();
-            _modelPrivate.SetFieldOrProperty("_selectedIndex", 2);
-            _model.MoveShape(1, 1);
-            Shapes shapes = (Shapes)_modelPrivate.GetFieldOrProperty("_shapes");
-            Assert.AreEqual("(9, 10), (11, 12)", shapes.ShapeList[2].Information);
-        }
-
-        // Test DrawSelectFrame
-        [TestMethod()]
-        public void TestDrawSelectFrame()
-        {
-            AddShape();
-            _modelPrivate.SetFieldOrProperty("_selectedIndex", 1);
+            _model.PressInfoAdd(ShapeType.LINE, 0, 0);
+            _modelPrivate.SetField("_selectedIndex", 0);
+            _model.SetScaling();
+            IState state = (IState)_modelPrivate.GetFieldOrProperty("_pointer");
+            Assert.IsInstanceOfType(state, typeof(ScalingPointer));
             MockIGraphics graphics = new MockIGraphics();
-            _model.DrawSelectFrame(graphics);
+            state.Draw(graphics);
             Assert.AreEqual(1, graphics._countDrawSelectFrame);
+        }
+
+        // Test IsHasSelected
+        [TestMethod]
+        [DataRow(false, -1)]
+        [DataRow(true, 0)]
+        public void TestIsHasSelected(bool ans, int index)
+        {
+            _modelPrivate.SetField("_selectedIndex", index);
+            Assert.AreEqual(ans, _model.IsHasSelected());
+        }
+
+        // Test GetAtSelectedCorner
+        [TestMethod]
+        public void TestGetAtSelectedCorner()
+        {
+            _model.PressInfoAdd(ShapeType.LINE, 0, 0);
+            _modelPrivate.SetField("_selectedIndex", 0);
+            Assert.AreEqual(8, _model.GetAtSelectedCorner(2, 3));
+            Assert.AreEqual(-1, _model.GetAtSelectedCorner(9,10));
         }
 
         // Test PressPointer
         [TestMethod()]
         public void TestPressPointer()
         {
+            AddShape();
             SetMockState();
-            _model.PressPointer("", 1, 1);
+
+            _model.PressPointer(null, 1, 1);
             Assert.IsTrue((bool) _modelPrivate.GetField("_isPressed"));
-            Assert.AreEqual("", _modelPrivate.GetField("_shapeType"));
+            Assert.AreEqual(null, _modelPrivate.GetField("_shapeType"));
+            Assert.AreEqual(0, _modelPrivate.GetField("_selectedIndex"));
             Assert.AreEqual(1, _mockState._countPress);
             Assert.AreEqual("(1, 1)", _mockState._point.ToString());
+            Assert.AreEqual(_model.GetInfoDataGridView()[0], _mockState._shape);
+
+            _model.PressPointer(null, 1, 1);
+            Assert.AreEqual(0, _modelPrivate.GetField("_selectedIndex"));
+            Assert.IsInstanceOfType(_modelPrivate.GetField("_pointer"), typeof(ScalingPointer));
+
+            SetMockState();
+            _model.PressPointer(null, 100, 100);
+            Assert.IsInstanceOfType(_modelPrivate.GetField("_pointer"), typeof(MockState));
+
+            _model.PressPointer(ShapeType.CIRCLE, 100, 100);
+            Assert.AreEqual(_mockState._shape.ShapeName, _mockFactory._shapeType);
         }
 
         // 替 model 植入 mockState
@@ -211,7 +218,7 @@ namespace PowerPoint.Tests
         {
             SetMockState();
             bool eventRaised = false;
-            _model._modelChanged += () => eventRaised = true;
+            _model._panelChanged += () => eventRaised = true;
 
             _model.MovePointer(1, 1);
             Assert.IsFalse(eventRaised);
@@ -229,16 +236,29 @@ namespace PowerPoint.Tests
         [TestMethod()]
         public void TestReleasePointer()
         {
+            bool eventRaised = false;
+            _model._panelChanged += () => eventRaised = true;
             SetMockState();
+            _modelPrivate.SetField("_shapeType", null);
+            _modelPrivate.SetField("_shape", new Circle(_point1, _point2));
+
             _model.ReleasePointer(1, 1);
             Assert.IsFalse((bool)_modelPrivate.GetField("_isPressed"));
             Assert.AreEqual(1, _mockState._countRelease);
             Assert.AreEqual("(1, 1)", _mockState._point.ToString());
+            Assert.IsFalse(eventRaised);
+            Assert.AreEqual(0, _model.GetInfoDataGridView().Count);
+
+            _modelPrivate.SetField("_shapeType", ShapeType.CIRCLE);
+
+            _model.ReleasePointer(1, 1);
+            Assert.IsTrue(eventRaised);
+            Assert.AreEqual(1, _model.GetInfoDataGridView().Count);
         }
 
         // Test Draw
         [TestMethod()]
-        [DataRow(true, false, 0)]
+        [DataRow(true, false, 1)]
         [DataRow(true, true, 1)]
         [DataRow(false, true, 0)]
         public void TestDraw(bool panel, bool press, int ans)
@@ -254,6 +274,17 @@ namespace PowerPoint.Tests
             Assert.AreEqual(1, graphics._countDrawLine);
             Assert.AreEqual(1, graphics._countDrawRectangle);
             Assert.AreEqual(ans, _mockState._countDraw);
+        }
+
+        // Test NotifyPanelChanged
+        [TestMethod]
+        public void TestNotifyPanelChanged()
+        {
+            bool eventRaised = false;
+            _model._panelChanged += () => eventRaised = true;
+
+            _modelPrivate.Invoke("NotifyPanelChanged");
+            Assert.IsTrue(eventRaised);
         }
 
         // Test GetInfoDataGridView
