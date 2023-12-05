@@ -175,7 +175,7 @@ namespace PowerPoint.Tests
             Assert.AreEqual(null, type);
         }
 
-        // Test
+        // Test PressToolStrip
         [TestMethod]
         public void TestPressToolStrip()
         {

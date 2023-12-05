@@ -96,12 +96,5 @@ namespace PowerPoint
             foreach (Shape aShape in _shapeList)
                 aShape.Draw(graphics);
         }
-
-        // 繪製選取外框
-        public void DrawSelectFrame(IGraphics graphics, int index)
-        {
-            if (index >= 0 && index < _shapeList.Count())
-                _shapeList[index].DrawSelectFrame(graphics);
-        }
     }
 }

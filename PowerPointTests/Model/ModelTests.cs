@@ -11,8 +11,6 @@ namespace PowerPoint.Tests
     [TestClass()]
     public class ModelTests
     {
-        private const int X1 = 1;
-        private const int Y1 = 20;
         Coordinate _point1 = new Coordinate(23, 16);
         Coordinate _point2 = new Coordinate(49, 33);
         MockState _mockState;

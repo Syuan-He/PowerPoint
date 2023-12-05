@@ -75,7 +75,6 @@
     <Compile Include="Model\StatePattern\MockState.cs" />
     <Compile Include="Model\StatePattern\PointPointerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Form\ToolStringBindingButtonTests.cs" />
     <Compile Include="Model\StatePattern\ScalingPointerTests.cs" />
   </ItemGroup>
   <ItemGroup>

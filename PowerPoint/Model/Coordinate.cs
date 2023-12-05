@@ -15,6 +15,7 @@ namespace PowerPoint
             X = x1;
             Y = y1;
         }
+
         public int X
         {
             get;

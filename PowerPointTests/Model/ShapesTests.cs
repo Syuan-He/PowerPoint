@@ -159,6 +159,17 @@ namespace PowerPoint.Tests
             Assert.AreEqual(-1, _shapes.GetAtSelectedCorner(9, 2, 3));
         }
 
+        // Test GetShape
+        [TestMethod]
+        public void TestGetShape()
+        {
+            AddListElement();
+            Assert.AreEqual(null, _shapes.GetShape(-1));
+            Assert.AreEqual(_shapes.ShapeList[0], _shapes.GetShape(0));
+            Assert.AreEqual(_shapes.ShapeList[5], _shapes.GetShape(5));
+            Assert.AreEqual(null, _shapes.GetShape(6));
+        }
+
         // Test Draw
         [TestMethod()]
         public void TestDraw()
@@ -170,24 +181,6 @@ namespace PowerPoint.Tests
             Assert.AreEqual(2, _graphics._countDrawRectangle);
             Assert.AreEqual(3, _graphics._countDrawCircle);
 
-        }
-
-        // Test DrawSelectFrame
-        [TestMethod()]
-        public void TestDrawSelectFrame()
-        {
-            _graphics = new MockIGraphics();
-            AddListElement();
-            _shapes.DrawSelectFrame(_graphics, -1);
-            Assert.AreEqual(0, _graphics._countDrawSelectFrame);
-            _shapes.DrawSelectFrame(_graphics, 0);
-            Assert.AreEqual(1, _graphics._countDrawSelectFrame);
-            Assert.AreEqual(0, _graphics._x1);
-            _shapes.DrawSelectFrame(_graphics, 5);
-            Assert.AreEqual(2, _graphics._countDrawSelectFrame);
-            Assert.AreEqual(20, _graphics._x1);
-            _shapes.DrawSelectFrame(_graphics, 6);
-            Assert.AreEqual(2, _graphics._countDrawSelectFrame);
         }
     }
 }
