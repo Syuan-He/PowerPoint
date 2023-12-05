@@ -22,9 +22,9 @@ namespace PowerPoint
 
         public Form1(PresentationModel presentationModel, Model model)
         {
-            InitializeComponent();
             _model = model;
             _presentationModel = presentationModel;
+            InitializeComponent();
             _model._panelChanged += HandlePanelChanged;
 
             _lineToolStripButton.DataBindings.Add(CHECKED_PROPERTY, presentationModel, LINE_PROPERTY);
@@ -40,7 +40,7 @@ namespace PowerPoint
         // 資訊顯示的新增按鍵
         void ClickAddButton(object sender, EventArgs e)
         {
-            _model.PressInfoAdd(_shapeComboBox.Text, _panel.Width, _panel.Height);
+            _model.PressInfoAdd(_shapeComboBox.Text);
         }
 
         // 資訊顯示的刪除按鍵
@@ -76,13 +76,13 @@ namespace PowerPoint
         // 畫出所有在 list 的圖形
         void PaintPanel(object sender, PaintEventArgs e)
         {
-            _presentationModel.Draw(e.Graphics);
+            _presentationModel.Draw(e.Graphics, _panel.Width);
         }
 
         // 在小畫面畫出所有在 list 的縮圖
         void PaintSlide(object sender, PaintEventArgs e)
         {
-            _presentationModel.DrawSlide(e.Graphics, _panel.Size, _slide1.Size);
+            _presentationModel.DrawSlide(e.Graphics, _slide1.Width);
         }
 
         // 通知 panel modelChange (observer's function)
@@ -107,28 +107,56 @@ namespace PowerPoint
         // 滑鼠在畫布上按住左鍵
         public void HandleCanvasPressed(object sender, MouseEventArgs e)
         {
-            _presentationModel.PressPointer(e.X, e.Y);
+            _presentationModel.PressPointer(e.X, e.Y, _panel.Width);
         }
 
         // 放掉滑鼠左鍵
         public void HandleCanvasReleased(object sender, MouseEventArgs e)
         {
-            _model.ReleasePointer(e.X, e.Y);
-            _presentationModel.PressPointerButton();
+            _presentationModel.ReleasePointer(e.X, e.Y, _panel.Width);
             Cursor = _presentationModel.GetPointerShape();
         }
 
         // 滑鼠移動
         public void HandleCanvasMoved(object sender, MouseEventArgs e)
         {
-            Cursor = _presentationModel.GetPointerShape(e.X, e.Y);
-            _model.MovePointer(e.X, e.Y);
+            _presentationModel.MovePointer(e.X, e.Y, _panel.Width);
+            Cursor = _presentationModel.GetPointerShape(e.X, e.Y, _panel.Width);
         }
 
         // 按下鍵盤
         private void PressKey(object sender, KeyEventArgs e)
         {
             _presentationModel.PressDelete(e.KeyCode);
+        }
+
+        // 移動大小畫面間的分割線
+        private void MovedSplit1(object sender, SplitterEventArgs e)
+        {
+            _slide1.Width = e.X;
+            _slide1.Height = _presentationModel.GetPanelWidth(_slide1.Width);
+            _panel.Invalidate(true);
+            _slide1.Invalidate(true);
+        }
+
+        // 移動畫面與 DataGrideView 間的分割線
+        private void MovedSplit2(object sender, SplitterEventArgs e)
+        {
+            _panel.Width = e.X;
+            _panel.Height = _presentationModel.GetPanelWidth(_panel.Width);
+            _panel.Invalidate(true);
+        }
+
+        // 按下 ToolStrip 的 undo 按鈕
+        private void ClickUndoToolStripButton(object sender, EventArgs e)
+        {
+            _presentationModel.PressUndo();
+        }
+
+        // 按下 ToolStrip 的 undo 按鈕
+        private void ClickRedoToolStripButton(object sender, EventArgs e)
+        {
+            _presentationModel.PressRedo();
         }
     }
 }

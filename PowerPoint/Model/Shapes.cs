@@ -35,9 +35,9 @@ namespace PowerPoint
         }
 
         // 用多載為 list 創建隨機位子的新 shape
-        public void CreateShape(string shapeType, int width, int height)
+        public void CreateShape(string shapeType)
         {
-            Shape shape = _factory.GenerateShape(shapeType, width, height);
+            Shape shape = _factory.GenerateShape(shapeType);
             CreateShape(shape);
         }
 
@@ -49,13 +49,34 @@ namespace PowerPoint
         }
 
         // 從 list 移除要刪除的物件
-        public void Remove(int index)
+        public Shape Remove(int index)
         {
+            Shape shape = null;
             if (index >= 0 && index < _shapeList.Count())
+            {
+                shape = _shapeList[index];
                 _shapeList.RemoveAt(index);
+            }
+            return shape;
         }
 
-        // 尋找被選取的 shape
+        // 從 list 移除最後一個物件
+        public void RemoveLast()
+        {
+            int last = _shapeList.Count;
+            if (last > 0)
+            {
+                _shapeList.RemoveAt(last - 1);
+            }
+        }
+
+        // 在 list 指定的位子插入 shape
+        public void Insert(Shape shape, int index)
+        {
+            _shapeList.Insert(index, shape);
+        }
+
+        // 尋找被點選的 shape
         public int FindSelectItem(int x1, int y1)
         {
             int index = _shapeList.Count - 1;

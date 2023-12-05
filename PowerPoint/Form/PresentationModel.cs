@@ -17,7 +17,8 @@ namespace PowerPoint
         private const int RECTANGLE_NUMBER = 1;
         private const int CIRCLE_NUMBER = 2;
         private const int POINTER_NUMBER = 3;
-
+        private const float ASPECT_RATIO = 0.5625f;
+        private const float WIDTH = 1920;
         string[] _stringToolStripList = { ShapeType.LINE, ShapeType.RECTANGLE, ShapeType.CIRCLE, null };
         Cursor[] _cornerCursors = { Cursors.SizeNWSE, Cursors.SizeNS, Cursors.SizeNESW, Cursors.SizeWE, Cursors.Default, Cursors.SizeNS, Cursors.SizeNESW, Cursors.SizeWE, Cursors.SizeNWSE };
 
@@ -118,9 +119,25 @@ namespace PowerPoint
         }
 
         // 按下滑鼠左鍵時，依據 ToolStrip 的選取狀況，決定要拉什麼圖
-        public void PressPointer(int x1, int y1)
+        public void PressPointer(int x1, int y1, int width)
         {
-            _model.PressPointer(_shapeType, x1, y1);
+            float ratio = WIDTH / width;
+            _model.PressPointer(_shapeType, (int)(x1 * ratio), (int)(y1 * ratio));
+        }
+
+        // 滑鼠移動時
+        public void MovePointer(int x2, int y2, int width)
+        {
+            float ratio = WIDTH / width;
+            _model.MovePointer((int)(x2 * ratio), (int)(y2 * ratio));
+        }
+
+        // 放開滑鼠左鍵
+        public void ReleasePointer(int x2, int y2, int width)
+        {
+            float ratio = WIDTH / width;
+            _model.ReleasePointer((int)(x2 * ratio), (int)(y2 * ratio));
+            PressPointerButton();
         }
 
         // 按下刪除鍵
@@ -143,15 +160,16 @@ namespace PowerPoint
         }
 
         // 傳回鼠標當下應該要有的樣子(形狀)
-        public Cursor GetPointerShape(int x1, int y1)
+        public Cursor GetPointerShape(int x1, int y1, int width)
         {
+            float ratio = WIDTH / width;
             if (_shapeType != null)
             {
                 return Cursors.Cross;
             }
             else if (_model.IsHasSelected())
             {
-                return GetCornerCursor(_model.GetAtSelectedCorner(x1, y1));
+                return GetCornerCursor(_model.GetAtSelectedCorner((int)(x1 * ratio), (int)(y1 * ratio)));
             }
             return Cursors.Default;
         }
@@ -167,20 +185,15 @@ namespace PowerPoint
         }
 
         // 讓 model 畫圖
-        public void Draw(Graphics graphics)
+        public void Draw(Graphics graphics, int width)
         {
-            _model.Draw(new WindowsFormsGraphicsAdaptor(graphics), true);
+            _model.Draw(new WindowsFormsGraphicsAdaptor(graphics, width), true);
         }
 
         // 讓 model 畫縮圖
-        public void DrawSlide(Graphics graphics, Size panelSize, Size slideSize)
+        public void DrawSlide(Graphics graphics, int width)
         {
-            _model.Draw(
-                new SlideAdaptor(
-                    graphics,
-                    new Coordinate(panelSize.Width, panelSize.Height),
-                    new Coordinate(slideSize.Width, slideSize.Height)),
-                false);
+            _model.Draw(new WindowsFormsGraphicsAdaptor(graphics, width), false);
         }
 
         // 通知 ToolBar 相關 bool 變數改變
@@ -208,6 +221,24 @@ namespace PowerPoint
             {
                 _booleanToolStripList[i] = false;
             }
+        }
+
+        // 換算寬度
+        public int GetPanelWidth(int height)
+        {
+            return (int)(height * ASPECT_RATIO);
+        }
+
+        // 按 Undo
+        public void PressUndo()
+        {
+            _model.PressUndo();
+        }
+
+        // 按 Redo
+        public void PressRedo()
+        {
+            _model.PressRedo();
         }
     }
 }

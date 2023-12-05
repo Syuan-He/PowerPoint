@@ -12,11 +12,14 @@ namespace PowerPoint
         private const int HALF = 2;
         private const int DIAMETER = 10;
         private const int RADIUS = 5;
+        private const int WIDTH = 1920;
         Graphics _graphics;
+        float ratio;
 
-        public WindowsFormsGraphicsAdaptor(Graphics graphics)
+        public WindowsFormsGraphicsAdaptor(Graphics graphics, int width)
         {
             this._graphics = graphics;
+            ratio = (float)width / WIDTH;
         }
 
         //清除畫面
@@ -28,40 +31,44 @@ namespace PowerPoint
         //畫直線
         public void DrawLine(int x1, int y1, int x2, int y2)
         {
-            _graphics.DrawLine(Pens.Black, x1, y1, x2, y2);
+            _graphics.DrawLine(Pens.Black, (int)(x1 * ratio), (int)(y1 * ratio), (int)(x2 * ratio), (int)(y2 * ratio));
         }
 
         //畫矩形
         public void DrawRectangle(int x1, int y1, int width, int height)
         {
-            _graphics.DrawRectangle(Pens.Black, x1, y1, width, height);
+            _graphics.DrawRectangle(Pens.Black, x1 * ratio, y1 * ratio, width * ratio, height * ratio);
         }
 
         //畫圓圈
         public void DrawEllipse(int x1, int y1, int width, int height)
         {
-            _graphics.DrawEllipse(Pens.Black, x1, y1, width, height);
+            _graphics.DrawEllipse(Pens.Black, x1 * ratio, y1 * ratio, width * ratio, height * ratio);
         }
 
         // 繪製選取外框
         public void DrawSelectFrame(int x1, int y1, int x2, int y2)
         {
+            float ratioX1 = x1 * ratio;
+            float ratioY1 = y1 * ratio;
+            float ratioX2 = x2 * ratio;
+            float ratioY2 = y2 * ratio;
             _graphics.DrawRectangle(
                 Pens.Black,
-                Math.Min(x1, x2),
-                Math.Min(y1, y2),
-                Math.Abs(x2 - x1),
-                Math.Abs(y2 - y1));
+                Math.Min(ratioX1, ratioX2),
+                Math.Min(ratioY1, ratioY2),
+                Math.Abs(ratioX2 - ratioX1),
+                Math.Abs(ratioY2 - ratioY1));
 
-            _graphics.DrawEllipse(Pens.Black, x1 - RADIUS, y1 - RADIUS, DIAMETER, DIAMETER);
-            _graphics.DrawEllipse(Pens.Black, x2 - RADIUS, y1 - RADIUS, DIAMETER, DIAMETER);
-            _graphics.DrawEllipse(Pens.Black, x1 - RADIUS, y2 - RADIUS, DIAMETER, DIAMETER);
-            _graphics.DrawEllipse(Pens.Black, x2 - RADIUS, y2 - RADIUS, DIAMETER, DIAMETER);
+            _graphics.DrawEllipse(Pens.Black, ratioX1 - RADIUS, ratioY1 - RADIUS, DIAMETER, DIAMETER);
+            _graphics.DrawEllipse(Pens.Black, ratioX2 - RADIUS, ratioY1 - RADIUS, DIAMETER, DIAMETER);
+            _graphics.DrawEllipse(Pens.Black, ratioX1 - RADIUS, ratioY2 - RADIUS, DIAMETER, DIAMETER);
+            _graphics.DrawEllipse(Pens.Black, ratioX2 - RADIUS, ratioY2 - RADIUS, DIAMETER, DIAMETER);
 
-            _graphics.DrawEllipse(Pens.Black, (x1 + x2) / HALF - RADIUS, y1 - RADIUS, DIAMETER, DIAMETER);
-            _graphics.DrawEllipse(Pens.Black, (x1 + x2) / HALF - RADIUS, y2 - RADIUS, DIAMETER, DIAMETER);
-            _graphics.DrawEllipse(Pens.Black, x1 - RADIUS, (y1 + y2) / HALF - RADIUS, DIAMETER, DIAMETER);
-            _graphics.DrawEllipse(Pens.Black, x2 - RADIUS, (y1 + y2) / HALF - RADIUS, DIAMETER, DIAMETER);
+            _graphics.DrawEllipse(Pens.Black, (ratioX1 + ratioX2) / HALF - RADIUS, ratioY1 - RADIUS, DIAMETER, DIAMETER);
+            _graphics.DrawEllipse(Pens.Black, (ratioX1 + ratioX2) / HALF - RADIUS, ratioY2 - RADIUS, DIAMETER, DIAMETER);
+            _graphics.DrawEllipse(Pens.Black, ratioX1 - RADIUS, (ratioY1 + ratioY2) / HALF - RADIUS, DIAMETER, DIAMETER);
+            _graphics.DrawEllipse(Pens.Black, ratioX2 - RADIUS, (ratioY1 + ratioY2) / HALF - RADIUS, DIAMETER, DIAMETER);
         }
     }
 }

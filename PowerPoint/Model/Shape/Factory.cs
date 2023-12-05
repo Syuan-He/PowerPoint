@@ -9,6 +9,8 @@ namespace PowerPoint
 {
     public class Factory : IFactory
     {
+        private const int WIDTH = 1920;
+        private const int HEIGHT = 1080;
         Random _randomPosition;
         public Factory(Random random)
         {
@@ -31,9 +33,9 @@ namespace PowerPoint
         }
 
         // 用多載實作能產生隨機位子的 Shape 的 Simple Factory
-        public Shape GenerateShape(string type, int width, int height)
+        public Shape GenerateShape(string type)
         {
-            return GenerateShape(type, CreateRandomPoint(width, height), CreateRandomPoint(width, height));
+            return GenerateShape(type, CreateRandomPoint(WIDTH, HEIGHT), CreateRandomPoint(WIDTH, HEIGHT));
         }
 
         // 產生一個位子隨機的點

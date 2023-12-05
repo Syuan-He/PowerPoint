@@ -9,7 +9,13 @@ namespace PowerPoint
 {
     public class DrawingPointer : IState
     {
+        Model _model;
         Shape _hint;
+
+        public DrawingPointer(Model model)
+        {
+            _model = model;
+        }
 
         // 按下滑鼠左鍵時
         public void PressPointer(int x1, int y1, Shape shape)

@@ -15,10 +15,11 @@ namespace PowerPoint
         private const int NOT_IN_LIST = -1;
 
         Shapes _shapes;
-        string _shapeType;
-
-        IState _pointer;
         IFactory _factory;
+        IState _pointer;
+        CommandManager _commandManager;
+
+        string _shapeType;
 
         bool _isPressed;
         int _selectedIndex;
@@ -31,37 +32,40 @@ namespace PowerPoint
             _selectedIndex = NOT_IN_LIST;
             _isPressed = false;
             _pointer = new PointPointer(null);
+            _commandManager = new CommandManager();
         }
 
         // 按下資訊顯示的新增按鍵
-        public void PressInfoAdd(string shapeType, int panelWidth, int panelHeight)
+        public void PressInfoAdd(string shapeType)
         {
-            _shapes.CreateShape(shapeType, panelWidth, panelHeight);
-            NotifyPanelChanged();
+            _commandManager.Execute(new AddCommand(this, _factory.GenerateShape(shapeType)));
         }
 
         // 按下資訊顯示的刪除按鍵
         public void PressDelete(int columnIndex, int rowIndex)
         {
-            if (columnIndex == 0 && rowIndex >= 0)
+            if (columnIndex == 0)
             {
-                _shapes.Remove(rowIndex);
-                _selectedIndex = NOT_IN_LIST;
-                SetPoint();
-                NotifyPanelChanged();
+                _commandManager.Execute(new DeleteCommand(this, rowIndex));
             }
+        }
+
+        // 按下 Undo 按鍵
+        public void PressUndo()
+        {
+            _commandManager.Undo();
+        }
+
+        // 按下 Redo 按鍵
+        public void PressRedo()
+        {
+            _commandManager.Redo();
         }
 
         // 按下鍵盤 delete 鍵
         public void PressDeleteKey()
         {
-            if (_selectedIndex > NOT_IN_LIST)
-            {
-                _shapes.Remove(_selectedIndex);
-                _selectedIndex = NOT_IN_LIST;
-                SetPoint();
-                NotifyPanelChanged();
-            }
+            _commandManager.Execute(new DeleteCommand(this, _selectedIndex));
         }
 
         // pointer 進入 point 模式 (有選取的 shape 就傳進 pointer，GetShape會自動判斷)
@@ -74,7 +78,7 @@ namespace PowerPoint
         // pointer 進入 drawing 模式
         public void SetDrawing()
         {
-            _pointer = new DrawingPointer();
+            _pointer = new DrawingPointer(this);
             _selectedIndex = NOT_IN_LIST;
             NotifyPanelChanged();
         }
@@ -135,7 +139,7 @@ namespace PowerPoint
             _pointer.ReleasePointer(x2, y2);
             if (_shapeType != null)
             {
-                _shapes.CreateShape(_shape);
+                _commandManager.Execute(new DrawCommand(this, _shape));
                 _shape = null;
                 NotifyPanelChanged();
             }
@@ -170,6 +174,44 @@ namespace PowerPoint
         public System.ComponentModel.BindingList<Shape> GetInfoDataGridView()
         {
             return _shapes.ShapeList;
+        }
+
+        // DrawingPointer、ICommand 創建新圖形要用的 function
+        public void CreateShape(Shape shape)
+        {
+            _shapes.CreateShape(shape);
+            NotifyPanelChanged();
+        }
+
+        // ICommand 從 list 移除最後一個物件
+        public void RemoveLast()
+        {
+            _shapes.RemoveLast();
+            NotifyPanelChanged();
+        }
+
+        // DeleteCommand 從 list 移除選定的物件
+        public Shape RemoveAt(int index)
+        {
+            Shape shape = null;
+            if (index > ShapeInteger.NOT_IN_LIST)
+            {
+                shape = _shapes.Remove(index);
+                _selectedIndex = ShapeInteger.NOT_IN_LIST;
+                SetPoint();
+                NotifyPanelChanged();
+            }
+            return shape;
+        }
+
+        // DeleteCommand 在 shapes 插入 shape
+        public void Insert(Shape shape,int index)
+        {
+            if (shape != null)
+            {
+                _shapes.Insert(shape, index);
+                NotifyPanelChanged();
+            }
         }
     }
 }

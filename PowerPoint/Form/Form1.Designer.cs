@@ -42,15 +42,27 @@ namespace PowerPoint
             this._aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._slide1 = new System.Windows.Forms.Button();
             this._toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this._splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this._splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this._panel = new PowerPoint.DoubleBufferedPanel();
             this._lineToolStripButton = new PowerPoint.ToolStripBindingButton();
             this._rectangleToolStripButton = new PowerPoint.ToolStripBindingButton();
             this._circleToolStripButton = new PowerPoint.ToolStripBindingButton();
             this._pointerToolStripButton = new PowerPoint.ToolStripBindingButton();
-            this._panel = new PowerPoint.DoubleBufferedPanel();
+            this._undoToolStripButton = new PowerPoint.ToolStripBindingButton();
+            this._redoToolStripButton = new PowerPoint.ToolStripBindingButton();
             ((System.ComponentModel.ISupportInitialize)(this._infoDataGridView)).BeginInit();
             this._infoGroupBox.SuspendLayout();
             this._menuStrip1.SuspendLayout();
             this._toolStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this._splitContainer1)).BeginInit();
+            this._splitContainer1.Panel1.SuspendLayout();
+            this._splitContainer1.Panel2.SuspendLayout();
+            this._splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this._splitContainer2)).BeginInit();
+            this._splitContainer2.Panel1.SuspendLayout();
+            this._splitContainer2.Panel2.SuspendLayout();
+            this._splitContainer2.SuspendLayout();
             this.SuspendLayout();
             // 
             // _infoDataGridView
@@ -67,7 +79,7 @@ namespace PowerPoint
             this._infoDataGridView.RowHeadersVisible = false;
             this._infoDataGridView.RowHeadersWidth = 62;
             this._infoDataGridView.RowTemplate.Height = 27;
-            this._infoDataGridView.Size = new System.Drawing.Size(331, 609);
+            this._infoDataGridView.Size = new System.Drawing.Size(413, 578);
             this._infoDataGridView.TabIndex = 2;
             this._infoDataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ClickInfoDataGridViewCellContent);
             // 
@@ -99,22 +111,23 @@ namespace PowerPoint
             // _infoGroupBox
             // 
             this._infoGroupBox.AutoSize = true;
+            this._infoGroupBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this._infoGroupBox.Controls.Add(this._addButton);
             this._infoGroupBox.Controls.Add(this._shapeComboBox);
             this._infoGroupBox.Controls.Add(this._infoDataGridView);
-            this._infoGroupBox.Dock = System.Windows.Forms.DockStyle.Right;
-            this._infoGroupBox.Location = new System.Drawing.Point(966, 31);
+            this._infoGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._infoGroupBox.Location = new System.Drawing.Point(0, 0);
             this._infoGroupBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this._infoGroupBox.Name = "_infoGroupBox";
             this._infoGroupBox.Padding = new System.Windows.Forms.Padding(3, 74, 3, 4);
-            this._infoGroupBox.Size = new System.Drawing.Size(337, 709);
-            this._infoGroupBox.TabIndex = 1;
+            this._infoGroupBox.Size = new System.Drawing.Size(419, 678);
+            this._infoGroupBox.TabIndex = 10;
             this._infoGroupBox.TabStop = false;
             this._infoGroupBox.Text = "資訊顯示";
             // 
             // _addButton
             // 
-            this._addButton.Location = new System.Drawing.Point(3, 25);
+            this._addButton.Location = new System.Drawing.Point(6, 22);
             this._addButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this._addButton.Name = "_addButton";
             this._addButton.Size = new System.Drawing.Size(182, 66);
@@ -130,7 +143,7 @@ namespace PowerPoint
             "線",
             "矩形",
             "圓圈"});
-            this._shapeComboBox.Location = new System.Drawing.Point(186, 46);
+            this._shapeComboBox.Location = new System.Drawing.Point(194, 43);
             this._shapeComboBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this._shapeComboBox.Name = "_shapeComboBox";
             this._shapeComboBox.Size = new System.Drawing.Size(145, 26);
@@ -155,7 +168,7 @@ namespace PowerPoint
             this._infoToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this._aboutToolStripMenuItem});
             this._infoToolStripMenuItem.Name = "_infoToolStripMenuItem";
-            this._infoToolStripMenuItem.Size = new System.Drawing.Size(62, 32);
+            this._infoToolStripMenuItem.Size = new System.Drawing.Size(62, 27);
             this._infoToolStripMenuItem.Text = "說明";
             // 
             // _aboutToolStripMenuItem
@@ -166,11 +179,10 @@ namespace PowerPoint
             // 
             // _slide1
             // 
-            this._slide1.Location = new System.Drawing.Point(12, 78);
-            this._slide1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this._slide1.Location = new System.Drawing.Point(0, 0);
             this._slide1.Name = "_slide1";
-            this._slide1.Size = new System.Drawing.Size(160, 120);
-            this._slide1.TabIndex = 3;
+            this._slide1.Size = new System.Drawing.Size(160, 90);
+            this._slide1.TabIndex = 2;
             this._slide1.UseVisualStyleBackColor = true;
             // 
             // _toolStrip1
@@ -180,12 +192,68 @@ namespace PowerPoint
             this._lineToolStripButton,
             this._rectangleToolStripButton,
             this._circleToolStripButton,
-            this._pointerToolStripButton});
+            this._pointerToolStripButton,
+            this._undoToolStripButton,
+            this._redoToolStripButton});
             this._toolStrip1.Location = new System.Drawing.Point(0, 31);
             this._toolStrip1.Name = "_toolStrip1";
-            this._toolStrip1.Size = new System.Drawing.Size(966, 29);
+            this._toolStrip1.Size = new System.Drawing.Size(1303, 29);
             this._toolStrip1.TabIndex = 5;
             this._toolStrip1.Text = "toolStrip1";
+            // 
+            // _splitContainer1
+            // 
+            this._splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this._splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._splitContainer1.Location = new System.Drawing.Point(0, 60);
+            this._splitContainer1.Name = "_splitContainer1";
+            // 
+            // _splitContainer1.Panel1
+            // 
+            this._splitContainer1.Panel1.Controls.Add(this._slide1);
+            // 
+            // _splitContainer1.Panel2
+            // 
+            this._splitContainer1.Panel2.Controls.Add(this._splitContainer2);
+            this._splitContainer1.Size = new System.Drawing.Size(1303, 680);
+            this._splitContainer1.SplitterDistance = 160;
+            this._splitContainer1.TabIndex = 7;
+            this._splitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.MovedSplit1);
+            // 
+            // _splitContainer2
+            // 
+            this._splitContainer2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this._splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this._splitContainer2.Name = "_splitContainer2";
+            // 
+            // _splitContainer2.Panel1
+            // 
+            this._splitContainer2.Panel1.Controls.Add(this._panel);
+            // 
+            // _splitContainer2.Panel2
+            // 
+            this._splitContainer2.Panel2.Controls.Add(this._infoGroupBox);
+            this._splitContainer2.Size = new System.Drawing.Size(1139, 680);
+            this._splitContainer2.SplitterDistance = 714;
+            this._splitContainer2.TabIndex = 7;
+            this._splitContainer2.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.MovedSplit2);
+            // 
+            // _panel
+            // 
+            this._panel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this._panel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this._panel.BackColor = System.Drawing.SystemColors.Window;
+            this._panel.Location = new System.Drawing.Point(0, 0);
+            this._panel.Name = "_panel";
+            this._panel.Size = new System.Drawing.Size(713, 360);
+            this._panel.TabIndex = 6;
+            this._panel.Paint += new System.Windows.Forms.PaintEventHandler(this.PaintPanel);
+            this._panel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.HandleCanvasPressed);
+            this._panel.MouseEnter += new System.EventHandler(this.HandleCanvasEnter);
+            this._panel.MouseLeave += new System.EventHandler(this.HandleCanvasLeave);
+            this._panel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.HandleCanvasMoved);
+            this._panel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.HandleCanvasReleased);
             // 
             // _lineToolStripButton
             // 
@@ -203,7 +271,7 @@ namespace PowerPoint
             this._rectangleToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("_rectangleToolStripButton.Image")));
             this._rectangleToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this._rectangleToolStripButton.Name = "_rectangleToolStripButton";
-            this._rectangleToolStripButton.Size = new System.Drawing.Size(34, 33);
+            this._rectangleToolStripButton.Size = new System.Drawing.Size(34, 24);
             this._rectangleToolStripButton.Text = "RecatangleToolStripButton";
             this._rectangleToolStripButton.Click += new System.EventHandler(this.ClickRectangleToolStripButton);
             // 
@@ -213,7 +281,7 @@ namespace PowerPoint
             this._circleToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("_circleToolStripButton.Image")));
             this._circleToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this._circleToolStripButton.Name = "_circleToolStripButton";
-            this._circleToolStripButton.Size = new System.Drawing.Size(34, 33);
+            this._circleToolStripButton.Size = new System.Drawing.Size(34, 24);
             this._circleToolStripButton.Text = "CircleToolStripButton";
             this._circleToolStripButton.Click += new System.EventHandler(this.ClickCircleToolStripButton);
             // 
@@ -223,36 +291,38 @@ namespace PowerPoint
             this._pointerToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("_pointerToolStripButton.Image")));
             this._pointerToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this._pointerToolStripButton.Name = "_pointerToolStripButton";
-            this._pointerToolStripButton.Size = new System.Drawing.Size(34, 33);
+            this._pointerToolStripButton.Size = new System.Drawing.Size(34, 24);
             this._pointerToolStripButton.Text = "toolStripBindingButton1";
             this._pointerToolStripButton.Click += new System.EventHandler(this.ClickPointerToolStripButton);
             // 
-            // _panel
+            // _undoToolStripButton
             // 
-            this._panel.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this._panel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this._panel.BackColor = System.Drawing.SystemColors.Window;
-            this._panel.Location = new System.Drawing.Point(237, 78);
-            this._panel.Name = "_panel";
-            this._panel.Size = new System.Drawing.Size(640, 480);
-            this._panel.TabIndex = 6;
-            this._panel.Paint += new System.Windows.Forms.PaintEventHandler(this.PaintPanel);
-            this._panel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.HandleCanvasPressed);
-            this._panel.MouseEnter += new System.EventHandler(this.HandleCanvasEnter);
-            this._panel.MouseLeave += new System.EventHandler(this.HandleCanvasLeave);
-            this._panel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.HandleCanvasMoved);
-            this._panel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.HandleCanvasReleased);
+            this._undoToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this._undoToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("_undoToolStripButton.Image")));
+            this._undoToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this._undoToolStripButton.Name = "_undoToolStripButton";
+            this._undoToolStripButton.Size = new System.Drawing.Size(34, 24);
+            this._undoToolStripButton.Text = "toolStripBindingButton1";
+            this._undoToolStripButton.Click += new System.EventHandler(this.ClickUndoToolStripButton);
+            // 
+            // _redoToolStripButton
+            // 
+            this._redoToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this._redoToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("_redoToolStripButton.Image")));
+            this._redoToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this._redoToolStripButton.Name = "_redoToolStripButton";
+            this._redoToolStripButton.Size = new System.Drawing.Size(34, 24);
+            this._redoToolStripButton.Text = "toolStripBindingButton2";
+            this._redoToolStripButton.Click += new System.EventHandler(this.ClickRedoToolStripButton);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1303, 740);
+            this.Controls.Add(this._splitContainer1);
             this.Controls.Add(this._toolStrip1);
-            this.Controls.Add(this._slide1);
-            this.Controls.Add(this._infoGroupBox);
             this.Controls.Add(this._menuStrip1);
-            this.Controls.Add(this._panel);
             this.KeyPreview = true;
             this.MainMenuStrip = this._menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -265,6 +335,15 @@ namespace PowerPoint
             this._menuStrip1.PerformLayout();
             this._toolStrip1.ResumeLayout(false);
             this._toolStrip1.PerformLayout();
+            this._splitContainer1.Panel1.ResumeLayout(false);
+            this._splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this._splitContainer1)).EndInit();
+            this._splitContainer1.ResumeLayout(false);
+            this._splitContainer2.Panel1.ResumeLayout(false);
+            this._splitContainer2.Panel2.ResumeLayout(false);
+            this._splitContainer2.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this._splitContainer2)).EndInit();
+            this._splitContainer2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -289,6 +368,10 @@ namespace PowerPoint
         private ToolStripBindingButton _pointerToolStripButton;
         private System.Windows.Forms.DataGridViewButtonColumn _delete;
         private DoubleBufferedPanel _panel;
+        private ToolStripBindingButton _undoToolStripButton;
+        private ToolStripBindingButton _redoToolStripButton;
+        private System.Windows.Forms.SplitContainer _splitContainer1;
+        private System.Windows.Forms.SplitContainer _splitContainer2;
     }
 }
 

@@ -46,6 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\CommandPattern\DrawCommand.cs" />
+    <Compile Include="Model\CommandPattern\MoveCommand.cs" />
+    <Compile Include="Model\CommandPattern\DeleteCommand.cs" />
+    <Compile Include="Model\CommandPattern\AddCommand.cs" />
+    <Compile Include="Model\CommandPattern\CommandManager.cs" />
+    <Compile Include="Model\CommandPattern\ICommand.cs" />
     <Compile Include="Model\Coordinate.cs" />
     <Compile Include="Model\IModel.cs" />
     <Compile Include="Model\Shape\IFactory.cs" />
