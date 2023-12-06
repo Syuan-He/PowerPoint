@@ -126,5 +126,11 @@ namespace PowerPoint
         {
             graphics.DrawSelectFrame(_x1, _y1, _x2, _y2);
         }
+
+        // 回傳複製
+        public override Shape GetDuplicate()
+        {
+            return new Circle(new Coordinate(_x1, _y1), new Coordinate(_x2, _y2));
+        }
     }
 }

@@ -21,7 +21,7 @@ namespace PowerPoint
         // Command 執行
         public void Execute()
         {
-            _model.CreateShape(_shape);
+            _model.CreateShapeCommand(_shape);
         }
 
         // Command 解執行

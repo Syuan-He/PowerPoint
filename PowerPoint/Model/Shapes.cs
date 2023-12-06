@@ -117,5 +117,25 @@ namespace PowerPoint
             foreach (Shape aShape in _shapeList)
                 aShape.Draw(graphics);
         }
+
+        // 取得被選取的 shape 的複製
+        public Shape GetSelectDuplicate(int index)
+        {
+            if (index >= 0 && index < _shapeList.Count)
+            {
+                //_shapeList[index].Visible = false;
+                return _shapeList[index].GetDuplicate();
+            }
+            return null;
+        }
+
+        // 設定選取的 shape 是否為可見
+        public void SetSelectShapeVisible(int index, bool visible)
+        {
+            if (index >= 0 && index < _shapeList.Count)
+            {
+                _shapeList[index].Visible = visible;
+            }
+        }
     }
 }

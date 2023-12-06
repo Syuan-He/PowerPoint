@@ -23,7 +23,6 @@ namespace PowerPoint
 
         bool _isPressed;
         int _selectedIndex;
-        Shape _shape;
 
         public Model(IFactory factory)
         {
@@ -31,7 +30,7 @@ namespace PowerPoint
             _shapes = new Shapes(factory);
             _selectedIndex = NOT_IN_LIST;
             _isPressed = false;
-            _pointer = new PointPointer(null);
+            _pointer = new PointPointer(this, null);
             _commandManager = new CommandManager();
         }
 
@@ -68,10 +67,10 @@ namespace PowerPoint
             _commandManager.Execute(new DeleteCommand(this, _selectedIndex));
         }
 
-        // pointer 進入 point 模式 (有選取的 shape 就傳進 pointer，GetShape會自動判斷)
+        // pointer 進入 point 模式
         public void SetPoint()
         {
-            _pointer = new PointPointer(_shapes.GetShape(_selectedIndex));
+            _pointer = new PointPointer(this, GetSelectedDuplicate());
             NotifyPanelChanged();
         }
 
@@ -106,20 +105,7 @@ namespace PowerPoint
         {
             _isPressed = true;
             _shapeType = shapeType;
-
-            if (shapeType == null)
-            {
-                if (GetAtSelectedCorner(x1, y1) < 0)
-                {
-                    _selectedIndex = _shapes.FindSelectItem(x1, y1);
-                    _shape = GetSelectShape(_selectedIndex);
-                }
-                else
-                    SetScaling();
-            }
-            else
-                _shape = _factory.GenerateShape(_shapeType, new Coordinate(x1, y1), new Coordinate(x1, y1));
-            _pointer.PressPointer(x1, y1, _shape);
+            _pointer.PressPointer(x1, y1);
         }
 
         // 滑鼠移動時
@@ -137,19 +123,6 @@ namespace PowerPoint
         {
             _isPressed = false;
             _pointer.ReleasePointer(x2, y2);
-            if (_shapeType != null)
-            {
-                _commandManager.Execute(new DrawCommand(this, _shape));
-                _shape = null;
-                NotifyPanelChanged();
-            }
-            _pointer = new PointPointer(_shapes.GetShape(_selectedIndex));
-        }
-
-        // 回傳指定位子的 shape
-        Shape GetSelectShape(int index)
-        {
-            return _shapes.GetShape(index);
         }
 
         // 繪製圖形
@@ -176,8 +149,44 @@ namespace PowerPoint
             return _shapes.ShapeList;
         }
 
-        // DrawingPointer、ICommand 創建新圖形要用的 function
+        // PointPointer 取得指定位子的 shape
+        public Shape GetSelectedDuplicate()
+        {
+            return _shapes.GetSelectDuplicate(_selectedIndex);
+        }
+
+        // PointPointer 找被點選的 shape
+        public void FindSelected(int x1, int y1)
+        {
+            _selectedIndex = _shapes.FindSelectItem(x1, y1);
+        }
+
+        // PointPointer 移動圖形
+        public void MoveSelected(int offsetX, int offsetY)
+        {
+            _commandManager.Execute(new MoveCommand(this, offsetX, offsetY));
+        }
+
+        // PointPointer 設隱藏的 shape 為可見
+        public void SetSelectedVisible(bool visible)
+        {
+            _shapes.SetSelectShapeVisible(_selectedIndex, visible);
+        }
+
+        // DrawingPointer 創建 hint 要用的 function
+        public Shape CreateHint(int x1, int y1)
+        {
+            return _factory.GenerateShape(_shapeType, new Coordinate(x1, y1), new Coordinate(x1, y1));
+        }
+
+        // DrawingPointer 創建新圖形要用的 function
         public void CreateShape(Shape shape)
+        {
+            _commandManager.Execute(new DrawCommand(this, shape));
+        }
+
+        // ICommand 創建新圖形要用的 function
+        public void CreateShapeCommand(Shape shape)
         {
             _shapes.CreateShape(shape);
             NotifyPanelChanged();
@@ -205,13 +214,22 @@ namespace PowerPoint
         }
 
         // DeleteCommand 在 shapes 插入 shape
-        public void Insert(Shape shape,int index)
+        public void Insert(Shape shape, int index)
         {
             if (shape != null)
             {
                 _shapes.Insert(shape, index);
+                _selectedIndex = index;
                 NotifyPanelChanged();
             }
+        }
+
+        // MoveCommand 移動 shape 用
+        public void MoveShape(int offsetX, int offsetY)
+        {
+            _shapes.SetSelectShapeVisible(_selectedIndex, true);
+            _shapes.MoveSelectedShape(_selectedIndex, offsetX, offsetY);
+            NotifyPanelChanged();
         }
     }
 }

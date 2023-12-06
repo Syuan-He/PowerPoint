@@ -16,7 +16,7 @@ namespace PowerPoint
         }
 
         // 按下滑鼠左鍵時
-        public void PressPointer(int x1, int y1, Shape shape)
+        public void PressPointer(int x1, int y1)
         {
         }
 
@@ -38,7 +38,10 @@ namespace PowerPoint
         public void Draw(IGraphics graphics)
         {
             if (_shape != null)
+            {
+                _shape.Draw(graphics);
                 _shape.DrawSelectFrame(graphics);
+            }
         }
     }
 }

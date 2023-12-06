@@ -18,9 +18,9 @@ namespace PowerPoint
         }
 
         // 按下滑鼠左鍵時
-        public void PressPointer(int x1, int y1, Shape shape)
+        public void PressPointer(int x1, int y1)
         {
-            _hint = shape;
+            _hint = _model.CreateHint(x1, y1);
         }
 
         // 滑鼠移動
@@ -37,6 +37,7 @@ namespace PowerPoint
             {
                 _hint.SetEndPoint(x2, y2);
                 _hint.AdjustPoint();
+                _model.CreateShape(_hint);
             }
         }
 

@@ -26,6 +26,7 @@ namespace PowerPoint
             _y2 = point2.Y;
             AdjustPoint();
             ShapeName = ShapeType.LINE;
+            Visible = true;
         }
 
         // 設定圖形終點
@@ -47,6 +48,7 @@ namespace PowerPoint
             _y1 += offsetY;
             _y2 += offsetY;
             Information = String.Format(INFO_FORMAT, _x1, _y1, _x2, _y2);
+            NotifyPropertyChanged(INFORMATION_PROPERTY);
         }
 
         // 檢查是否被選取
@@ -118,13 +120,20 @@ namespace PowerPoint
         // 繪製該圖形
         public override void Draw(IGraphics graphics)
         {
-            graphics.DrawLine(_x1, _y1, _x2, _y2);
+            if (Visible)
+                graphics.DrawLine(_x1, _y1, _x2, _y2);
         }
 
         // 繪製選取外框
         public override void DrawSelectFrame(IGraphics graphics)
         {
             graphics.DrawSelectFrame(_x1, _y1, _x2, _y2);
+        }
+
+        // 回傳複製
+        public override Shape GetDuplicate()
+        {
+            return new Line(new Coordinate(_x1, _y1), new Coordinate(_x2, _y2));
         }
     }
 }

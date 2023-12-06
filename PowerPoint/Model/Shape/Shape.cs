@@ -24,6 +24,12 @@ namespace PowerPoint
             set;
         }
 
+        public bool Visible
+        {
+            get;
+            set;
+        }
+
         // 設定圖形終點
         public abstract void SetEndPoint(int x2, int y2);
 
@@ -44,6 +50,9 @@ namespace PowerPoint
 
         // 繪製選取外框
         public abstract void DrawSelectFrame(IGraphics graphics);
+
+        // 回傳複製
+        public abstract Shape GetDuplicate();
 
         // observer
         protected void NotifyPropertyChanged(string propertyName)
