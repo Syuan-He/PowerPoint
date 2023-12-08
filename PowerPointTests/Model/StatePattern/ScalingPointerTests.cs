@@ -11,60 +11,78 @@ namespace PowerPoint.Tests
     [TestClass()]
     public class ScalingPointerTests
     {
-        private const int X1 = 0;
-        private const int Y1 = 1;
-        private const int X2 = 2;
-        private const int Y2 = 3;
+        private const int X1 = 3;
+        private const int Y1 = 6;
+        private const int X2 = 54;
+        private const int Y2 = 92;
+        Coordinate point1 = new Coordinate(X1, Y1);
         Shape _hint;
 
-        ScalingPointer _scaling;
-        PrivateObject _scalingPrivate;
+        Model _model;
+        PrivateObject _modelPrivate;
+        IState _pointer;
+        PrivateObject _pointPrivate;
 
         // Initial
         [TestInitialize()]
         public void Initialize()
         {
-            _hint = new Line(new Coordinate(X2, Y2), new Coordinate(X2, Y2));
-            _scaling = new ScalingPointer(_hint);
-            _scalingPrivate = new PrivateObject(_scaling);
+            _model = new Model(new MockFactory());
+            _modelPrivate = new PrivateObject(_model);
+            _hint = new Circle(new Coordinate(X1, Y1), new Coordinate(X2, Y2));
+            _model.CreateShapeCommand(_hint);
+            _pointer = (IState)_modelPrivate.GetField("_pointer");
+            _pointer.PressPointer(X1, Y1);
+            _pointer.PressPointer(X2, Y2);
+            _pointer = (IState)_modelPrivate.GetField("_pointer");
+            _pointPrivate = new PrivateObject(_pointer);
         }
 
         // 測試建構式
         [TestMethod()]
         public void TestScalingPointer()
         {
-            Shape hint = (Shape)_scalingPrivate.GetFieldOrProperty("_shape");
-            Assert.AreEqual(String.Format("({0}, {1}), ({2}, {3})", X2, Y2, X2, Y2), hint.Information);
+            Assert.IsInstanceOfType(_pointer, typeof(ScalingPointer));
+            Shape hint = (Shape)_pointPrivate.GetFieldOrProperty("_shape");
+            Assert.AreEqual(_hint, hint);
+            Assert.AreEqual(
+                String.Format("({0}, {1})", X2, Y2),
+                ((Coordinate)_pointPrivate.GetField("_firstPoint")).ToString());
         }
 
         // Test PressPointer
         [TestMethod()]
         public void TestPressPointer()
         {
-            _scaling.PressPointer(X1, Y1, _hint);
+            _pointer.PressPointer(X1, Y1);
         }
 
         // Test MovePointer
         [TestMethod()]
         public void TestMovePointer()
         {
-            _scaling.MovePointer(X1, Y1);
-            Assert.AreEqual(String.Format("({0}, {1}), ({2}, {3})", X2, Y2, X1, Y1), _hint.Information);
+            _pointer.MovePointer(X1, Y1);
+            Assert.AreEqual(String.Format("({0}, {1}), ({2}, {3})", X1, Y1, X1, Y1), _hint.Information);
 
-            _scaling = new ScalingPointer(null);
-            _scaling.MovePointer(X1, Y1);
+            _pointPrivate.SetField("_shape", null);
+            _pointer.MovePointer(X1, Y1);
         }
 
         // Test ReleasePointer
         [TestMethod()]
         public void TestReleasePointer()
         {
-            _scaling.MovePointer(X1, Y1);
-            _scaling.ReleasePointer(X1, Y1);
-            Assert.AreEqual(String.Format("({0}, {1}), ({2}, {3})", X1, Y1, X2, Y2), _hint.Information);
-            
-            _scaling = new ScalingPointer(null);
-            _scaling.ReleasePointer(X1, Y1);
+            _pointer.ReleasePointer(16, 64);
+            Assert.AreEqual(String.Format("({0}, {1}), ({2}, {3})", X1, Y1, 16, 64), _hint.Information);
+            Assert.IsInstanceOfType(_modelPrivate.GetField("_pointer"), typeof(PointPointer));
+
+            _pointer.ReleasePointer(X2, Y2);
+            _model.PressUndo();
+            Assert.IsFalse(_model.IsUndoEnabled);
+
+            _pointPrivate.SetField("_shape", null);
+            _pointer.ReleasePointer(X1, Y1);
+            Assert.IsFalse(_model.IsUndoEnabled);
         }
 
         // Test Draw
@@ -72,11 +90,11 @@ namespace PowerPoint.Tests
         public void TestDraw()
         {
             MockIGraphics graphics = new MockIGraphics();
-            _scaling.Draw(graphics);
+            _pointer.Draw(graphics);
             Assert.AreEqual(1, graphics._countDrawSelectFrame);
 
-            _scaling = new ScalingPointer(null);
-            _scaling.Draw(graphics);
+            _modelPrivate.SetField("_selectedIndex", -1);
+            _pointer.Draw(graphics);
             Assert.AreEqual(1, graphics._countDrawSelectFrame);
         }
     }

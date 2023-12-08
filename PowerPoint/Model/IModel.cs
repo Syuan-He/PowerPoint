@@ -7,12 +7,6 @@ namespace PowerPoint
         // 按下鍵盤 delete 鍵
         void PressDeleteKey();
 
-        // 按下 Undo 按鍵
-        void PressUndo();
-
-        // 按下 Redo 按鍵
-        void PressRedo();
-
         // pointer 進入 point 模式
         void SetPoint();
 

@@ -8,8 +8,8 @@ namespace PowerPoint.Tests
 {
     class MockFactory : IFactory
     {
-        public int _width;
-        public int _height;
+        const int WIDTH = 1920;
+        const int HEIGHT = 1080;
         public Coordinate _point1;
         public Coordinate _point2;
         public string _shapeType;
@@ -23,7 +23,6 @@ namespace PowerPoint.Tests
         //實作 Shape 的 Simple Factory
         public Shape GenerateShape(string type, Coordinate point1, Coordinate point2)
         {
-
             _point1 = point1;
             _point2 = point2;
             _shapeType = type;
@@ -40,11 +39,9 @@ namespace PowerPoint.Tests
         }
 
         // 用多載實作能產生隨機位子的 Shape 的 Simple Factory
-        public Shape GenerateShape(string type, int width, int height)
+        public Shape GenerateShape(string type)
         {
-            _width = width;
-            _height = height;
-            return GenerateShape(type, CreateRandomPoint(width, height), CreateRandomPoint(width, height));
+            return GenerateShape(type, CreateRandomPoint(WIDTH, HEIGHT), CreateRandomPoint(WIDTH, HEIGHT));
         }
 
         // 產生一個位子隨機的點

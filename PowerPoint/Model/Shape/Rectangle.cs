@@ -45,6 +45,23 @@ namespace PowerPoint
             Information = String.Format(INFO_FORMAT, _x1, _y1, _x2, _y2);
         }
 
+        // 設定位子(以左上角為準)
+        public override void SetPosition(Coordinate point1)
+        {
+            _x2 += point1.X - _x1;
+            _y2 += point1.Y - _y1;
+            _x1 = point1.X;
+            _y1 = point1.Y;
+            Information = String.Format(INFO_FORMAT, _x1, _y1, _x2, _y2);
+            NotifyPropertyChanged(INFORMATION_PROPERTY);
+        }
+
+        // 取得第一個點的座標
+        public override Coordinate GetPoint1()
+        {
+            return new Coordinate(_x1, _y1);
+        }
+
         // 檢查是否被選取
         public override bool IsSelect(int x1, int y1)
         {
@@ -125,12 +142,6 @@ namespace PowerPoint
         public override void DrawSelectFrame(IGraphics graphics)
         {
             graphics.DrawSelectFrame(_x1, _y1, _x2, _y2);
-        }
-
-        // 回傳複製
-        public override Shape GetDuplicate()
-        {
-            return new Rectangle(new Coordinate(_x1, _y1), new Coordinate(_x2, _y2));
         }
     }
 }

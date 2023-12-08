@@ -67,6 +67,18 @@ namespace PowerPoint.Tests
             _point1 = new Coordinate(x1, y1);
         }
 
+        // 移動滑鼠
+        void IModel.MovePointer(int x2, int y2)
+        {
+            _point1 = new Coordinate(x2, y2);
+        }
+
+        // 放開滑鼠左鍵
+        void IModel.ReleasePointer(int x2, int y2)
+        {
+            _point1 = new Coordinate(x2, y2);
+        }
+
         // 繪製圖形
         public void Draw(IGraphics graphics, bool isPanel)
         {

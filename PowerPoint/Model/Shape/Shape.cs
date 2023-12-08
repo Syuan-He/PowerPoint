@@ -24,17 +24,17 @@ namespace PowerPoint
             set;
         }
 
-        public bool Visible
-        {
-            get;
-            set;
-        }
-
         // 設定圖形終點
         public abstract void SetEndPoint(int x2, int y2);
 
         // 移動圖形
         public abstract void SetMove(int offsetX, int offsetY);
+
+        // 設定位子(以左上角為準)
+        public abstract void SetPosition(Coordinate point1);
+
+        // 取得第一個點的座標
+        public abstract Coordinate GetPoint1();
 
         // 檢查是否被選取
         public abstract bool IsSelect(int x1, int y1);
@@ -50,9 +50,6 @@ namespace PowerPoint
 
         // 繪製選取外框
         public abstract void DrawSelectFrame(IGraphics graphics);
-
-        // 回傳複製
-        public abstract Shape GetDuplicate();
 
         // observer
         protected void NotifyPropertyChanged(string propertyName)

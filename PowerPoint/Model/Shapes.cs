@@ -73,7 +73,8 @@ namespace PowerPoint
         // 在 list 指定的位子插入 shape
         public void Insert(Shape shape, int index)
         {
-            _shapeList.Insert(index, shape);
+            if (index >= 0 && index <= _shapeList.Count())
+                _shapeList.Insert(index, shape);
         }
 
         // 尋找被點選的 shape
@@ -93,6 +94,23 @@ namespace PowerPoint
         {
             if (index >= 0 && index < _shapeList.Count())
                 _shapeList[index].SetMove(x1, y1);
+        }
+
+        // 設定選取 shape 的位子
+        public void SetSelectedShapePosition(int index, Coordinate point1)
+        {
+            if (index >= 0 && index < _shapeList.Count())
+                _shapeList[index].SetPosition(point1);
+        }
+
+        // 設定選取 shape 的 endPoint
+        public void SetSelectedShapeEndPoint(int index, Coordinate point1)
+        {
+            if (index >= 0 && index < _shapeList.Count())
+            {
+                _shapeList[index].SetEndPoint(point1.X, point1.Y);
+                _shapeList[index].AdjustPoint();
+            }
         }
 
         // 確認在哪個頂點上
@@ -118,24 +136,11 @@ namespace PowerPoint
                 aShape.Draw(graphics);
         }
 
-        // 取得被選取的 shape 的複製
-        public Shape GetSelectDuplicate(int index)
+        // 繪製選取外框
+        public void DrawSelectFrame(IGraphics graphics, int index)
         {
-            if (index >= 0 && index < _shapeList.Count)
-            {
-                //_shapeList[index].Visible = false;
-                return _shapeList[index].GetDuplicate();
-            }
-            return null;
-        }
-
-        // 設定選取的 shape 是否為可見
-        public void SetSelectShapeVisible(int index, bool visible)
-        {
-            if (index >= 0 && index < _shapeList.Count)
-            {
-                _shapeList[index].Visible = visible;
-            }
+            if (index >= 0 && index < _shapeList.Count())
+                _shapeList[index].DrawSelectFrame(graphics);
         }
     }
 }

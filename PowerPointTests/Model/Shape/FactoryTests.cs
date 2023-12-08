@@ -48,10 +48,10 @@ namespace PowerPoint.Tests
         [TestMethod()]
         public void TestGenerateShapeWithSize()
         {
-            Assert.IsNull(_factory.GenerateShape("", WIDTH, HEIGHT));
-            Assert.IsInstanceOfType(_factory.GenerateShape(ShapeType.LINE, WIDTH, HEIGHT), typeof(Line));
-            Assert.IsInstanceOfType(_factory.GenerateShape(ShapeType.RECTANGLE, WIDTH, HEIGHT), typeof(Rectangle));
-            Assert.IsInstanceOfType(_factory.GenerateShape(ShapeType.CIRCLE, WIDTH, HEIGHT), typeof(Circle));
+            Assert.IsNull(_factory.GenerateShape(""));
+            Assert.IsInstanceOfType(_factory.GenerateShape(ShapeType.LINE), typeof(Line));
+            Assert.IsInstanceOfType(_factory.GenerateShape(ShapeType.RECTANGLE), typeof(Rectangle));
+            Assert.IsInstanceOfType(_factory.GenerateShape(ShapeType.CIRCLE), typeof(Circle));
         }
 
         // Test CreateRandomPoint

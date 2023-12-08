@@ -9,26 +9,34 @@ namespace PowerPoint
     public class MoveCommand : ICommand
     {
         Model _model;
-        int _offsetX;
-        int _offsetY;
+        Coordinate _startPoint;
+        Coordinate _endPoint;
+        int _index;
 
-        public MoveCommand(Model model, int offsetX, int offsetY)
+        public MoveCommand(Model model, int index, Coordinate startPoint, Coordinate endPoint)
         {
             _model = model;
-            _offsetX = offsetX;
-            _offsetY = offsetY;
+            _startPoint = startPoint;
+            _endPoint = endPoint;
+            _index = index;
         }
 
         // Command 執行
         public void Execute()
         {
-            _model.MoveShape(_offsetX, _offsetY);
+            _model.SetShapePosition(_index, _endPoint);
         }
 
         // Command 解執行
         public void Undo()
         {
-            _model.MoveShape(-_offsetX, -_offsetY);
+            _model.SetShapePosition(_index, _startPoint);
+        }
+
+        // Command 回復執行
+        public void Redo()
+        {
+            _model.SetShapePosition(_index, _endPoint);
         }
     }
 }

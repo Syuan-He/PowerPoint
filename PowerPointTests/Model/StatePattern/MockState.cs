@@ -13,7 +13,6 @@ namespace PowerPoint.Tests
         public int _countRelease;
         public int _countDraw;
         public Coordinate _point;
-        public Shape _shape;
         public IGraphics _graphics;
 
         public MockState()
@@ -26,11 +25,10 @@ namespace PowerPoint.Tests
         }
 
         // 按下滑鼠左鍵時
-        public void PressPointer(int x1, int y1, Shape shape)
+        public void PressPointer(int x1, int y1)
         {
             _point.X = x1;
             _point.Y = y1;
-            _shape = shape;
             _countPress++;
         }
 

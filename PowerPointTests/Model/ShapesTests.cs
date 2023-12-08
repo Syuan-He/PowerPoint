@@ -51,7 +51,8 @@ namespace PowerPoint.Tests
         {
             _shapeList = (IList<Shape>)_shapesPrivate.GetFieldOrProperty("_shapeList");
 
-            _shapes.CreateShape(null);
+            Shape shape = null;
+            _shapes.CreateShape(shape);
             Assert.AreEqual(0, _shapeList.Count());
 
             _shapes.CreateShape(new Line(_point1, _point2));
@@ -63,8 +64,8 @@ namespace PowerPoint.Tests
                 _shapeList[0].Information);
         }
 
-            // Test CreateShape With Coordinates
-            [TestMethod()]
+        // Test CreateShape With Coordinates
+        [TestMethod()]
         public void TestCreateShapeWithCoordinates()
         {
             _shapes.CreateShape(ShapeType.LINE, _point1, _point2);
@@ -76,16 +77,14 @@ namespace PowerPoint.Tests
                 _shapeList[0].Information);
         }
 
-        // Test CreateShape With Size
+        // Test CreateShape With Random
         [TestMethod()]
-        public void TestCreateShapeWithSize()
+        public void TestCreateShapeWithRandom()
         {
-            _shapes.CreateShape(ShapeType.LINE, WIDTH, HEIGHT);
+            _shapes.CreateShape(ShapeType.LINE);
             _shapeList = (IList<Shape>)_shapesPrivate.GetFieldOrProperty("_shapeList");
             
             Assert.AreEqual(_shapeList[0].ShapeName, ShapeType.LINE);
-            Assert.AreEqual(WIDTH, _mockFactory._width);
-            Assert.AreEqual(HEIGHT, _mockFactory._height);
         }
 
         // Test Remove
@@ -108,17 +107,58 @@ namespace PowerPoint.Tests
             _shapeList = (IList<Shape>)_shapesPrivate.GetFieldOrProperty("_shapeList");
             Assert.AreEqual(4, _shapeList.Count());
             Assert.AreEqual("(4, 5), (6, 7)", _shapeList[0].Information);
+            Shape one = new Line(new Coordinate(1, 2), new Coordinate(9, 10));
+            _shapes.CreateShape(one);
+            Shape another = _shapes.Remove(4);
+            Assert.AreEqual(one, another);
         }
-
+        
         // 替 shapes 加點料
         void AddListElement()
         {
-            _shapes.CreateShape(ShapeType.LINE, WIDTH, HEIGHT);
-            _shapes.CreateShape(ShapeType.RECTANGLE, WIDTH, HEIGHT);
-            _shapes.CreateShape(ShapeType.CIRCLE, WIDTH, HEIGHT);
-            _shapes.CreateShape(ShapeType.RECTANGLE, WIDTH, HEIGHT);
-            _shapes.CreateShape(ShapeType.CIRCLE, WIDTH, HEIGHT);
-            _shapes.CreateShape(ShapeType.CIRCLE, WIDTH, HEIGHT);
+            _shapes.CreateShape(ShapeType.LINE);
+            _shapes.CreateShape(ShapeType.RECTANGLE);
+            _shapes.CreateShape(ShapeType.CIRCLE);
+            _shapes.CreateShape(ShapeType.RECTANGLE);
+            _shapes.CreateShape(ShapeType.CIRCLE);
+            _shapes.CreateShape(ShapeType.CIRCLE);
+        }
+
+        // Test RemoveLast
+        [TestMethod()]
+        public void TestRemoveLast()
+        {
+            _shapes.CreateShape(ShapeType.LINE);
+            _shapes.CreateShape(ShapeType.RECTANGLE);
+            _shapes.RemoveLast();
+            Assert.AreEqual(1, _shapes.ShapeList.Count);
+            Assert.AreEqual(ShapeType.LINE, _shapes.ShapeList[0].ShapeName);
+            _shapes.RemoveLast();
+            _shapes.RemoveLast();
+        }
+
+        //Test Insert
+        [TestMethod]
+        public void TestInsert()
+        {
+            AddListElement();
+            _shapeList = (IList<Shape>)_shapesPrivate.GetFieldOrProperty("_shapeList");
+            Shape shape = new Line(_point1, _point2);
+            _shapes.Insert(shape, -1);
+            Assert.AreEqual(6, _shapeList.Count);
+            _shapes.Insert(shape, 7);
+            Assert.AreEqual(6, _shapeList.Count);
+
+            _shapes.Insert(shape, 0);
+            Assert.AreEqual(7, _shapeList.Count);
+            Assert.AreEqual(
+                String.Format("{0}, {1}", _point1.ToString(), _point2.ToString()),
+                _shapeList[0].Information);
+            _shapes.Insert(shape, 7);
+            Assert.AreEqual(8, _shapeList.Count);
+            Assert.AreEqual(
+                String.Format("{0}, {1}", _point1.ToString(), _point2.ToString()),
+                _shapeList[7].Information);
         }
 
         // Test FindSelectItem
@@ -146,6 +186,36 @@ namespace PowerPoint.Tests
             _shapes.MoveSelectedShape(5, 1, 1);
             Assert.AreEqual("(21, 22), (23, 24)", _shapeList[5].Information);
 
+        }
+
+        // Test SetSelectedShapePosition
+        [TestMethod()]
+        public void TestSetSelectedShapePosition()
+        {
+            AddListElement();
+            _shapeList = (IList<Shape>)_shapesPrivate.GetFieldOrProperty("_shapeList");
+            _shapes.SetSelectedShapePosition(-1, new Coordinate(1, 1));
+            _shapes.SetSelectedShapePosition(6, new Coordinate(1, 1));
+
+            _shapes.SetSelectedShapePosition(0, new Coordinate(1, 1));
+            Assert.AreEqual("(1, 1), (3, 3)", _shapeList[0].Information);
+            _shapes.SetSelectedShapePosition(5, new Coordinate(1, 1));
+            Assert.AreEqual("(1, 1), (3, 3)", _shapeList[5].Information);
+        }
+
+        // Test SetSelectedShapeEndPoint
+        [TestMethod()]
+        public void TestSetSelectedShapeEndPoint()
+        {
+            AddListElement();
+            _shapeList = (IList<Shape>)_shapesPrivate.GetFieldOrProperty("_shapeList");
+            _shapes.SetSelectedShapeEndPoint(-1, new Coordinate(1, 1));
+            _shapes.SetSelectedShapeEndPoint(6, new Coordinate(1, 1));
+
+            _shapes.SetSelectedShapeEndPoint(0, new Coordinate(1, 1));
+            Assert.AreEqual("(0, 1), (1, 1)", _shapeList[0].Information);
+            _shapes.SetSelectedShapeEndPoint(5, new Coordinate(1, 1));
+            Assert.AreEqual("(1, 1), (20, 21)", _shapeList[5].Information);
         }
 
         // Test GetAtSelectedCorner
@@ -181,6 +251,24 @@ namespace PowerPoint.Tests
             Assert.AreEqual(2, _graphics._countDrawRectangle);
             Assert.AreEqual(3, _graphics._countDrawCircle);
 
+        }
+
+        // Test DrawSelectFrame
+        [TestMethod()]
+        public void TestDrawSelectFrame()
+        {
+            _graphics = new MockIGraphics();
+            AddListElement();
+            _shapes.DrawSelectFrame(_graphics, -1);
+            Assert.AreEqual(0, _graphics._countDrawSelectFrame);
+            _shapes.DrawSelectFrame(_graphics, 0);
+            Assert.AreEqual(1, _graphics._countDrawSelectFrame);
+            Assert.AreEqual(0, _graphics._x1);
+            _shapes.DrawSelectFrame(_graphics, 5);
+            Assert.AreEqual(2, _graphics._countDrawSelectFrame);
+            Assert.AreEqual(20, _graphics._x1);
+            _shapes.DrawSelectFrame(_graphics, 6);
+            Assert.AreEqual(2, _graphics._countDrawSelectFrame);
         }
     }
 }

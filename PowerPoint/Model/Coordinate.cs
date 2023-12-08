@@ -33,5 +33,11 @@ namespace PowerPoint
         {
             return String.Format(FORMAT, X, Y);
         }
+
+        // 判斷是否相等
+        public bool AreEqual(Coordinate coordinate)
+        {
+            return ToString() == coordinate.ToString();
+        }
     }
 }

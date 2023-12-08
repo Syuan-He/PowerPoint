@@ -218,5 +218,29 @@ namespace PowerPoint.Tests
             Assert.AreEqual(_shapePrivate.GetFieldOrProperty("_y2"), graphics._y2);
             Assert.AreEqual(1, graphics._countDrawSelectFrame);
         }
+
+        // Test SetPosition
+        [TestMethod]
+        public void TestSetPosition()
+        {
+            bool eventRaised = false;
+            _shape.PropertyChanged += (sender, args) => eventRaised = true;
+            _shape.SetPosition(new Coordinate(MAX_X, MAX_Y));
+            Assert.AreEqual(String.Format(
+                    "({0}, {1}), ({2}, {3})",
+                    MAX_X,
+                    MAX_Y,
+                    _point1.X + MAX_X - _point2.X,
+                    _point1.Y + MAX_Y - _point2.Y),
+                _shape.Information);
+            Assert.AreEqual(true, eventRaised);
+        }
+
+        // Test GetPoint1
+        [TestMethod]
+        public void TestGetPoint1()
+        {
+            Assert.AreEqual(_point2.ToString(), _shape.GetPoint1().ToString());
+        }
     }
 }

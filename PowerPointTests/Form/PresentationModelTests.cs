@@ -14,6 +14,7 @@ namespace PowerPoint.Tests
     [TestClass()]
     public class PresentationModelTests
     {
+        private const int WIDTH = 1920;
         MockModel _model;
         PresentationModel _pModel;
         PrivateObject _pModelPrivate;
@@ -200,9 +201,25 @@ namespace PowerPoint.Tests
         public void TestPressPointer()
         {
             _pModel.PressCircleButton();
-            _pModel.PressPointer(0, 1);
+            _pModel.PressPointer(0, 1, WIDTH);
             Assert.AreEqual("(0, 1)", _model._point1.ToString());
             Assert.AreEqual(ShapeType.CIRCLE, _model._shapeType);
+        }
+
+        // Test MovePointer
+        [TestMethod()]
+        public void TestMovePointer()
+        {
+            _pModel.MovePointer(0, 1, WIDTH);
+            Assert.AreEqual("(0, 1)", _model._point1.ToString());
+        }
+
+        // Test ReleasePointer
+        [TestMethod()]
+        public void TestReleasePointer()
+        {
+            _pModel.ReleasePointer(0, 1, WIDTH);
+            Assert.AreEqual("(0, 1)", _model._point1.ToString());
         }
 
         // Test PressDelete
@@ -246,12 +263,12 @@ namespace PowerPoint.Tests
         public void TestGetPointerShapeWithCoordinate()
         {
             _pModel.PressCircleButton();
-            Assert.AreEqual(Cursors.Cross, _pModel.GetPointerShape(0, 0));
+            Assert.AreEqual(Cursors.Cross, _pModel.GetPointerShape(0, 0, WIDTH));
             _pModel.PressPointerButton();
-            Assert.AreEqual(Cursors.Default, _pModel.GetPointerShape(0, 0));
-            Assert.AreEqual(Cursors.SizeNWSE, _pModel.GetPointerShape(1, 1));
+            Assert.AreEqual(Cursors.Default, _pModel.GetPointerShape(0, 0, WIDTH));
+            Assert.AreEqual(Cursors.SizeNWSE, _pModel.GetPointerShape(1, 1, WIDTH));
             _model._isHasSelected = false;
-            Assert.AreEqual(Cursors.Default, _pModel.GetPointerShape(1, 1));
+            Assert.AreEqual(Cursors.Default, _pModel.GetPointerShape(1, 1, WIDTH));
         }
 
         // Test Draw
@@ -259,7 +276,7 @@ namespace PowerPoint.Tests
         public void TestDraw()
         {
             Graphics graphics = null;
-            _pModel.Draw(graphics);
+            _pModel.Draw(graphics, WIDTH);
             Assert.IsInstanceOfType(_model._graphics, typeof(WindowsFormsGraphicsAdaptor));
         }
 
@@ -268,8 +285,8 @@ namespace PowerPoint.Tests
         public void TestDrawSlide()
         {
             Graphics graphics = null;
-            _pModel.DrawSlide(graphics, new Size(1, 1), new Size(1, 1));
-            Assert.IsInstanceOfType(_model._graphics, typeof(SlideAdaptor));
+            _pModel.DrawSlide(graphics, 1);
+            Assert.IsInstanceOfType(_model._graphics, typeof(WindowsFormsGraphicsAdaptor));
         }
 
         // Test NotifyPropertyChanged

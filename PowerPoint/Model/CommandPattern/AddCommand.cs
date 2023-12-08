@@ -15,7 +15,6 @@ namespace PowerPoint
         {
             _model = model;
             _shape = shape;
-            
         }
 
         // Command 執行
@@ -28,6 +27,12 @@ namespace PowerPoint
         public void Undo()
         {
             _model.RemoveLast();
+        }
+
+        // Command 回復執行
+        public void Redo()
+        {
+            _model.CreateShapeCommand(_shape);
         }
     }
 }

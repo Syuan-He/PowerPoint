@@ -17,6 +17,7 @@ namespace PowerPoint
         private const string CIRCLE_PROPERTY = "IsCircle";
         private const string POINTER_PROPERTY = "IsPointer";
         private const string CHECKED_PROPERTY = "Checked";
+        private const float ASPECT_RATIO = 0.5625f;
         Model _model;
         PresentationModel _presentationModel;
 
@@ -27,6 +28,10 @@ namespace PowerPoint
             InitializeComponent();
             _model._panelChanged += HandlePanelChanged;
 
+            _panel.Width = _splitContainer2.Panel1.Width;
+            _panel.Height = GetPanelHeight(_panel.Width);
+            _slide1.Width = _splitContainer1.Panel1.Width;
+            _slide1.Height = GetPanelHeight(_slide1.Width);
             _lineToolStripButton.DataBindings.Add(CHECKED_PROPERTY, presentationModel, LINE_PROPERTY);
             _rectangleToolStripButton.DataBindings.Add(CHECKED_PROPERTY, presentationModel, RECTANGLE_PROPERTY);
             _circleToolStripButton.DataBindings.Add(CHECKED_PROPERTY, presentationModel, CIRCLE_PROPERTY);
@@ -41,12 +46,14 @@ namespace PowerPoint
         void ClickAddButton(object sender, EventArgs e)
         {
             _model.PressInfoAdd(_shapeComboBox.Text);
+            RefreshCommandButton();
         }
 
         // 資訊顯示的刪除按鍵
         void ClickInfoDataGridViewCellContent(object sender, DataGridViewCellEventArgs e)
         {
             _model.PressDelete(e.ColumnIndex, e.RowIndex);
+            RefreshCommandButton();
         }
         
         // ToolStrip 的 Line 按鈕
@@ -115,6 +122,7 @@ namespace PowerPoint
         {
             _presentationModel.ReleasePointer(e.X, e.Y, _panel.Width);
             Cursor = _presentationModel.GetPointerShape();
+            RefreshCommandButton();
         }
 
         // 滑鼠移動
@@ -128,13 +136,14 @@ namespace PowerPoint
         private void PressKey(object sender, KeyEventArgs e)
         {
             _presentationModel.PressDelete(e.KeyCode);
+            RefreshCommandButton();
         }
 
         // 移動大小畫面間的分割線
         private void MovedSplit1(object sender, SplitterEventArgs e)
         {
             _slide1.Width = e.X;
-            _slide1.Height = _presentationModel.GetPanelWidth(_slide1.Width);
+            _slide1.Height = GetPanelHeight(_slide1.Width);
             _panel.Invalidate(true);
             _slide1.Invalidate(true);
         }
@@ -143,20 +152,36 @@ namespace PowerPoint
         private void MovedSplit2(object sender, SplitterEventArgs e)
         {
             _panel.Width = e.X;
-            _panel.Height = _presentationModel.GetPanelWidth(_panel.Width);
+            _panel.Height = GetPanelHeight(_panel.Width);
             _panel.Invalidate(true);
         }
 
         // 按下 ToolStrip 的 undo 按鈕
         private void ClickUndoToolStripButton(object sender, EventArgs e)
         {
-            _presentationModel.PressUndo();
+            _model.PressUndo();
+            RefreshCommandButton();
         }
 
         // 按下 ToolStrip 的 undo 按鈕
         private void ClickRedoToolStripButton(object sender, EventArgs e)
         {
-            _presentationModel.PressRedo();
+            _model.PressRedo();
+            RefreshCommandButton();
+        }
+
+        // 更新redo與undo是否為enabled
+        void RefreshCommandButton()
+        {
+            _redoToolStripButton.Enabled = _model.IsRedoEnabled;
+            _undoToolStripButton.Enabled = _model.IsUndoEnabled;
+            Invalidate();
+        }
+
+        // 換算寬度
+        int GetPanelHeight(int width)
+        {
+            return (int)(width * ASPECT_RATIO);
         }
     }
 }

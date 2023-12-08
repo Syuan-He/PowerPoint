@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PowerPoint
 {
-    class DrawCommand : ICommand
+    public class DrawCommand : ICommand
     {
         Model _model;
         Shape _shape;
@@ -27,6 +27,12 @@ namespace PowerPoint
         public void Undo()
         {
             _model.RemoveLast();
+        }
+
+        // Command 回復執行
+        public void Redo()
+        {
+            _model.CreateShapeCommand(_shape);
         }
     }
 }

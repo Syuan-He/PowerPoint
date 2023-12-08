@@ -5,12 +5,15 @@ using System.Text;
 
 namespace PowerPoint
 {
-    interface ICommand
+    public interface ICommand
     {
         // Command 執行
         void Execute();
 
         // Command 解執行
         void Undo();
+
+        // Command 回復執行
+        void Redo();
     }
 }

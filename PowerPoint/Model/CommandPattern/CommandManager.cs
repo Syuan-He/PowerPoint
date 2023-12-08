@@ -5,7 +5,7 @@ using System.Text;
 
 namespace PowerPoint
 {
-    class CommandManager
+    public class CommandManager
     {
         private const string UNDO_WARNING_MESSAGE = "Cannot Undo exception\n";
         private const string REDO_WARNING_MESSAGE = "Cannot Redo exception\n";
@@ -16,9 +16,7 @@ namespace PowerPoint
         public void Execute(ICommand command)
         {
             command.Execute();
-            // push command 進 undo stack
             _undo.Push(command);
-            // 清除redo stack
             _redo.Clear();
         }
 
@@ -39,15 +37,7 @@ namespace PowerPoint
                 throw new Exception(REDO_WARNING_MESSAGE);
             ICommand command = _redo.Pop();
             _undo.Push(command);
-            command.Execute();
-        }
-
-        public bool IsRedoEnabled
-        {
-            get
-            {
-                return _redo.Count != 0;
-            }
+            command.Redo();
         }
 
         public bool IsUndoEnabled
@@ -55,6 +45,14 @@ namespace PowerPoint
             get
             {
                 return _undo.Count != 0;
+            }
+        }
+
+        public bool IsRedoEnabled
+        {
+            get
+            {
+                return _redo.Count != 0;
             }
         }
     }

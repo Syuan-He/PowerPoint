@@ -17,7 +17,6 @@ namespace PowerPoint
         private const int RECTANGLE_NUMBER = 1;
         private const int CIRCLE_NUMBER = 2;
         private const int POINTER_NUMBER = 3;
-        private const float ASPECT_RATIO = 0.5625f;
         private const float WIDTH = 1920;
         string[] _stringToolStripList = { ShapeType.LINE, ShapeType.RECTANGLE, ShapeType.CIRCLE, null };
         Cursor[] _cornerCursors = { Cursors.SizeNWSE, Cursors.SizeNS, Cursors.SizeNESW, Cursors.SizeWE, Cursors.Default, Cursors.SizeNS, Cursors.SizeNESW, Cursors.SizeWE, Cursors.SizeNWSE };
@@ -93,9 +92,9 @@ namespace PowerPoint
             {
                 SetFalse();
                 _booleanToolStripList[POINTER_NUMBER] = true;
+                _model.SetPoint();
             }
             _shapeType = null;
-            _model.SetPoint();
             NotifyPropertyChanged();
         }
 
@@ -221,24 +220,6 @@ namespace PowerPoint
             {
                 _booleanToolStripList[i] = false;
             }
-        }
-
-        // 換算寬度
-        public int GetPanelWidth(int height)
-        {
-            return (int)(height * ASPECT_RATIO);
-        }
-
-        // 按 Undo
-        public void PressUndo()
-        {
-            _model.PressUndo();
-        }
-
-        // 按 Redo
-        public void PressRedo()
-        {
-            _model.PressRedo();
         }
     }
 }

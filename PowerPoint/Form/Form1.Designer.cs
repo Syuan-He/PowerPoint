@@ -29,6 +29,9 @@ namespace PowerPoint
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this._infoDataGridView = new System.Windows.Forms.DataGridView();
             this._delete = new System.Windows.Forms.DataGridViewButtonColumn();
@@ -42,15 +45,15 @@ namespace PowerPoint
             this._aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._slide1 = new System.Windows.Forms.Button();
             this._toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this._splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this._splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this._panel = new PowerPoint.DoubleBufferedPanel();
             this._lineToolStripButton = new PowerPoint.ToolStripBindingButton();
             this._rectangleToolStripButton = new PowerPoint.ToolStripBindingButton();
             this._circleToolStripButton = new PowerPoint.ToolStripBindingButton();
             this._pointerToolStripButton = new PowerPoint.ToolStripBindingButton();
             this._undoToolStripButton = new PowerPoint.ToolStripBindingButton();
             this._redoToolStripButton = new PowerPoint.ToolStripBindingButton();
+            this._splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this._splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this._panel = new PowerPoint.DoubleBufferedPanel();
             ((System.ComponentModel.ISupportInitialize)(this._infoDataGridView)).BeginInit();
             this._infoGroupBox.SuspendLayout();
             this._menuStrip1.SuspendLayout();
@@ -69,17 +72,41 @@ namespace PowerPoint
             // 
             this._infoDataGridView.AllowUserToAddRows = false;
             this._infoDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("新細明體", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this._infoDataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this._infoDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this._infoDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this._delete});
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("新細明體", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this._infoDataGridView.DefaultCellStyle = dataGridViewCellStyle2;
             this._infoDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this._infoDataGridView.Location = new System.Drawing.Point(3, 96);
             this._infoDataGridView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this._infoDataGridView.Name = "_infoDataGridView";
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("新細明體", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this._infoDataGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this._infoDataGridView.RowHeadersVisible = false;
             this._infoDataGridView.RowHeadersWidth = 62;
             this._infoDataGridView.RowTemplate.Height = 27;
-            this._infoDataGridView.Size = new System.Drawing.Size(413, 578);
+            this._infoDataGridView.Size = new System.Drawing.Size(337, 578);
             this._infoDataGridView.TabIndex = 2;
             this._infoDataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ClickInfoDataGridViewCellContent);
             // 
@@ -120,7 +147,7 @@ namespace PowerPoint
             this._infoGroupBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this._infoGroupBox.Name = "_infoGroupBox";
             this._infoGroupBox.Padding = new System.Windows.Forms.Padding(3, 74, 3, 4);
-            this._infoGroupBox.Size = new System.Drawing.Size(419, 678);
+            this._infoGroupBox.Size = new System.Drawing.Size(343, 678);
             this._infoGroupBox.TabIndex = 10;
             this._infoGroupBox.TabStop = false;
             this._infoGroupBox.Text = "資訊顯示";
@@ -179,6 +206,8 @@ namespace PowerPoint
             // 
             // _slide1
             // 
+            this._slide1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this._slide1.Location = new System.Drawing.Point(0, 0);
             this._slide1.Name = "_slide1";
             this._slide1.Size = new System.Drawing.Size(160, 90);
@@ -200,60 +229,6 @@ namespace PowerPoint
             this._toolStrip1.Size = new System.Drawing.Size(1303, 29);
             this._toolStrip1.TabIndex = 5;
             this._toolStrip1.Text = "toolStrip1";
-            // 
-            // _splitContainer1
-            // 
-            this._splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this._splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._splitContainer1.Location = new System.Drawing.Point(0, 60);
-            this._splitContainer1.Name = "_splitContainer1";
-            // 
-            // _splitContainer1.Panel1
-            // 
-            this._splitContainer1.Panel1.Controls.Add(this._slide1);
-            // 
-            // _splitContainer1.Panel2
-            // 
-            this._splitContainer1.Panel2.Controls.Add(this._splitContainer2);
-            this._splitContainer1.Size = new System.Drawing.Size(1303, 680);
-            this._splitContainer1.SplitterDistance = 160;
-            this._splitContainer1.TabIndex = 7;
-            this._splitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.MovedSplit1);
-            // 
-            // _splitContainer2
-            // 
-            this._splitContainer2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this._splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._splitContainer2.Location = new System.Drawing.Point(0, 0);
-            this._splitContainer2.Name = "_splitContainer2";
-            // 
-            // _splitContainer2.Panel1
-            // 
-            this._splitContainer2.Panel1.Controls.Add(this._panel);
-            // 
-            // _splitContainer2.Panel2
-            // 
-            this._splitContainer2.Panel2.Controls.Add(this._infoGroupBox);
-            this._splitContainer2.Size = new System.Drawing.Size(1139, 680);
-            this._splitContainer2.SplitterDistance = 714;
-            this._splitContainer2.TabIndex = 7;
-            this._splitContainer2.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.MovedSplit2);
-            // 
-            // _panel
-            // 
-            this._panel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this._panel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this._panel.BackColor = System.Drawing.SystemColors.Window;
-            this._panel.Location = new System.Drawing.Point(0, 0);
-            this._panel.Name = "_panel";
-            this._panel.Size = new System.Drawing.Size(713, 360);
-            this._panel.TabIndex = 6;
-            this._panel.Paint += new System.Windows.Forms.PaintEventHandler(this.PaintPanel);
-            this._panel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.HandleCanvasPressed);
-            this._panel.MouseEnter += new System.EventHandler(this.HandleCanvasEnter);
-            this._panel.MouseLeave += new System.EventHandler(this.HandleCanvasLeave);
-            this._panel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.HandleCanvasMoved);
-            this._panel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.HandleCanvasReleased);
             // 
             // _lineToolStripButton
             // 
@@ -298,6 +273,7 @@ namespace PowerPoint
             // _undoToolStripButton
             // 
             this._undoToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this._undoToolStripButton.Enabled = false;
             this._undoToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("_undoToolStripButton.Image")));
             this._undoToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this._undoToolStripButton.Name = "_undoToolStripButton";
@@ -308,12 +284,70 @@ namespace PowerPoint
             // _redoToolStripButton
             // 
             this._redoToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this._redoToolStripButton.Enabled = false;
             this._redoToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("_redoToolStripButton.Image")));
             this._redoToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this._redoToolStripButton.Name = "_redoToolStripButton";
             this._redoToolStripButton.Size = new System.Drawing.Size(34, 24);
             this._redoToolStripButton.Text = "toolStripBindingButton2";
             this._redoToolStripButton.Click += new System.EventHandler(this.ClickRedoToolStripButton);
+            // 
+            // _splitContainer1
+            // 
+            this._splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this._splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this._splitContainer1.Location = new System.Drawing.Point(0, 60);
+            this._splitContainer1.Name = "_splitContainer1";
+            // 
+            // _splitContainer1.Panel1
+            // 
+            this._splitContainer1.Panel1.Controls.Add(this._slide1);
+            // 
+            // _splitContainer1.Panel2
+            // 
+            this._splitContainer1.Panel2.Controls.Add(this._splitContainer2);
+            this._splitContainer1.Size = new System.Drawing.Size(1303, 680);
+            this._splitContainer1.SplitterDistance = 160;
+            this._splitContainer1.TabIndex = 7;
+            this._splitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.MovedSplit1);
+            // 
+            // _splitContainer2
+            // 
+            this._splitContainer2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this._splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this._splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this._splitContainer2.Name = "_splitContainer2";
+            // 
+            // _splitContainer2.Panel1
+            // 
+            this._splitContainer2.Panel1.Controls.Add(this._panel);
+            // 
+            // _splitContainer2.Panel2
+            // 
+            this._splitContainer2.Panel2.Controls.Add(this._infoGroupBox);
+            this._splitContainer2.Size = new System.Drawing.Size(1139, 680);
+            this._splitContainer2.SplitterDistance = 790;
+            this._splitContainer2.TabIndex = 7;
+            this._splitContainer2.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.MovedSplit2);
+            // 
+            // _panel
+            // 
+            this._panel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this._panel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this._panel.BackColor = System.Drawing.SystemColors.Window;
+            this._panel.Location = new System.Drawing.Point(0, 0);
+            this._panel.Name = "_panel";
+            this._panel.Size = new System.Drawing.Size(789, 360);
+            this._panel.TabIndex = 6;
+            this._panel.Paint += new System.Windows.Forms.PaintEventHandler(this.PaintPanel);
+            this._panel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.HandleCanvasPressed);
+            this._panel.MouseEnter += new System.EventHandler(this.HandleCanvasEnter);
+            this._panel.MouseLeave += new System.EventHandler(this.HandleCanvasLeave);
+            this._panel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.HandleCanvasMoved);
+            this._panel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.HandleCanvasReleased);
             // 
             // Form1
             // 

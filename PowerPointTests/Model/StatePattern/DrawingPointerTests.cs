@@ -17,37 +17,40 @@ namespace PowerPoint.Tests
         private const int Y2 = 3;
         Shape _hint;
 
-        DrawingPointer _drawing;
-        PrivateObject _drawingPrivate;
+        Model _model;
+        PrivateObject _modelPrivate;
+        IState _pointer;
+        PrivateObject _pointerPrivate;
 
         // Initial
         [TestInitialize()]
         public void Initialize()
         {
-            _drawing = new DrawingPointer();
-            _drawingPrivate = new PrivateObject(_drawing);
-            _hint = new Line(new Coordinate(X2, Y2), new Coordinate(X2, Y2));
+            _model = new Model(new Factory(new MockRandom()));
+            _modelPrivate = new PrivateObject(_model);
+            _model.SetDrawing();
+            _pointer = (IState)_modelPrivate.GetField("_pointer");
+            _pointerPrivate = new PrivateObject(_pointer);
         }
 
         // Test PressPointer
         [TestMethod()]
         public void TestPressPointer()
         {
-            _drawing.PressPointer(X1, Y1, _hint);
-            Shape hint = (Shape)_drawingPrivate.GetFieldOrProperty("_hint");
-            Assert.AreEqual(String.Format("({0}, {1}), ({2}, {3})", X2, Y2, X2, Y2), hint.Information);
+            _model.PressPointer(ShapeType.LINE, X2, Y2);
+            _hint = (Shape)_pointerPrivate.GetFieldOrProperty("_hint");
+            Assert.AreEqual(String.Format("({0}, {1}), ({2}, {3})", X2, Y2, X2, Y2), _hint.Information);
         }
 
         // Test MovePointer
         [TestMethod()]
         public void TestMovePointer()
         {
-            Shape hint = (Shape)_drawingPrivate.GetFieldOrProperty("_hint");
-            Assert.IsNull(hint);
-            _drawing.MovePointer(X2, Y2);
+            _pointer.MovePointer(X2, Y2);
 
-            _drawing.PressPointer(X2, Y2, _hint);
-            _drawing.MovePointer(X1, Y1);
+            _model.PressPointer(ShapeType.LINE, X2, Y2);
+            _hint = (Shape)_pointerPrivate.GetFieldOrProperty("_hint");
+            _pointer.MovePointer(X1, Y1);
             Assert.AreEqual(String.Format("({0}, {1}), ({2}, {3})", X2, Y2, X1, Y1), _hint.Information);
         }
 
@@ -55,13 +58,12 @@ namespace PowerPoint.Tests
         [TestMethod()]
         public void TestReleasePointer()
         {
-            Shape hint = (Shape)_drawingPrivate.GetFieldOrProperty("_hint");
-            Assert.IsNull(hint);
-            _drawing.ReleasePointer(X2, Y2);
+            _pointer.ReleasePointer(X2, Y2);
 
-            _drawing.PressPointer(X2, Y2, _hint);
-            _drawing.MovePointer(X1, Y2);
-            _drawing.ReleasePointer(X1, Y1);
+            _model.PressPointer(ShapeType.LINE, X2, Y2);
+            _hint = (Shape)_pointerPrivate.GetFieldOrProperty("_hint");
+            _pointer.MovePointer(X1, Y2);
+            _pointer.ReleasePointer(X1, Y1);
 
             Assert.AreEqual(String.Format("({0}, {1}), ({2}, {3})", X1, Y1, X2, Y2), _hint.Information);
         }
@@ -71,9 +73,10 @@ namespace PowerPoint.Tests
         public void TestDraw()
         {
             MockIGraphics graphics = new MockIGraphics();
-            _drawing.Draw(graphics);
-            _drawing.PressPointer(X1, Y1, _hint);
-            _drawing.Draw(graphics);
+            _pointer.Draw(graphics);
+            Assert.AreEqual(0, graphics._countDrawLine);
+            _model.PressPointer(ShapeType.LINE, X2, Y2);
+            _pointer.Draw(graphics);
             Assert.AreEqual(1, graphics._countDrawLine);
         }
     }

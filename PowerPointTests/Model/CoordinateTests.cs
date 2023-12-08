@@ -72,5 +72,14 @@ namespace PowerPoint.Tests
                 String.Format("({0}, {1})", INITIAL_X, INITIAL_Y),
                 _coordinate.ToString());
         }
+
+        // Test AreEqual
+        [TestMethod]
+        public void TestAreEqual()
+        {
+            Assert.AreEqual(true, _coordinate.AreEqual(_coordinate));
+            Assert.AreEqual(true, _coordinate.AreEqual(new Coordinate(INITIAL_X, INITIAL_Y)));
+            Assert.AreEqual(false, _coordinate.AreEqual(new Coordinate(1156, INITIAL_Y)));
+        }
     }
 }
