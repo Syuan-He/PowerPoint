@@ -15,7 +15,6 @@ namespace PowerPoint.Tests
         private const int Y1 = 6;
         private const int X2 = 54;
         private const int Y2 = 92;
-        Coordinate point1 = new Coordinate(X1, Y1);
         Shape _hint;
 
         Model _model;
@@ -72,8 +71,8 @@ namespace PowerPoint.Tests
         [TestMethod()]
         public void TestReleasePointer()
         {
-            _pointer.ReleasePointer(16, 64);
-            Assert.AreEqual(String.Format("({0}, {1}), ({2}, {3})", X1, Y1, 16, 64), _hint.Information);
+            _pointer.ReleasePointer(50, 87);
+            Assert.AreEqual(String.Format("({0}, {1}), ({2}, {3})", X1, Y1, 50, 87), _hint.Information);
             Assert.IsInstanceOfType(_modelPrivate.GetField("_pointer"), typeof(PointPointer));
 
             _pointer.ReleasePointer(X2, Y2);

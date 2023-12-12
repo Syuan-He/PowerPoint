@@ -253,7 +253,7 @@ namespace PowerPoint.Tests
         public void TestGetCornerCursor()
         {
             Assert.AreEqual(Cursors.Default, _pModelPrivate.Invoke("GetCornerCursor", new object[] { -1 }));
-            Assert.AreEqual(Cursors.SizeNWSE, _pModelPrivate.Invoke("GetCornerCursor", new object[] { 0 }));
+            Assert.AreEqual(Cursors.Default, _pModelPrivate.Invoke("GetCornerCursor", new object[] { 0 }));
             Assert.AreEqual(Cursors.SizeNWSE, _pModelPrivate.Invoke("GetCornerCursor", new object[] { 8 }));
             Assert.AreEqual(Cursors.Default, _pModelPrivate.Invoke("GetCornerCursor", new object[] { 9 }));
         }

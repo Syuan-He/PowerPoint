@@ -12,5 +12,8 @@ namespace PowerPoint
         public const int RADIUS = 5;
         public const int TOTAL_CORNER = 8;
         public const int NOT_IN_LIST = -1;
+        public const int SPLIT_PART = 3;
+        public const int X1 = 0;
+        public const int X2 = 2;
     }
 }

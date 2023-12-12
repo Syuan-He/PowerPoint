@@ -153,10 +153,11 @@ namespace PowerPoint.Tests
         [TestMethod]
         public void TestSetShapeEndPoint()
         {
+
             SetEvent();
             GetShapes();
             Add3Shapes();
-            _model.SetShapeEndPoint(2, new Coordinate(1, 1));
+            _model.SetShapeEndPoint(2, new Coordinate(1, 1), 8);
             Assert.AreEqual("(1, 1), (8, 9)", _shapes.ShapeList[2].Information);
             Assert.IsTrue(_eventRaised);
         }
@@ -414,18 +415,6 @@ namespace PowerPoint.Tests
             Shape shape = _model.CreateHint(1, 2);
             Assert.AreEqual(String.Format("({0}, {1}), ({0}, {1})", 1, 2), shape.Information);
         }
-
-        // Test ScalingSelected
-        [TestMethod]
-        public void TestScalingSelected()
-        {
-            Add3Shapes();
-            _modelPrivate.SetFieldOrProperty("_selectedIndex", 2);
-            _model.ScalingSelected(new Coordinate(8, 9), new Coordinate(9, 10));
-            Shapes shapes = (Shapes)_modelPrivate.GetFieldOrProperty("_shapes");
-            Assert.AreEqual("(8, 9), (9, 10)", shapes.ShapeList[2].Information);
-        }
-
         // Test PressUndo
         [TestMethod]
         public void PressUndo()
@@ -445,6 +434,21 @@ namespace PowerPoint.Tests
             _model.PressRedo();
             GetShapes();
             Assert.AreEqual(3, _shapes.ShapeList.Count);
+        }
+
+        // Test ScalingSelected
+        [TestMethod]
+        public void TestScalingSelected()
+        {
+            Add3Shapes();
+            _modelPrivate.SetFieldOrProperty("_selectedIndex", 2);
+            _model.ScalingSelected(new Coordinate(8, 9), new Coordinate(10, 11));
+            Shapes shapes = (Shapes)_modelPrivate.GetFieldOrProperty("_shapes");
+            Assert.AreEqual("(8, 9), (10, 11)", shapes.ShapeList[2].Information);
+            _model.PressUndo();
+            Assert.AreEqual("(8, 9), (8, 9)", shapes.ShapeList[2].Information);
+            _model.PressRedo();
+            Assert.AreEqual("(8, 9), (10, 11)", shapes.ShapeList[2].Information);
         }
 
         // Test IsUndoEnabled

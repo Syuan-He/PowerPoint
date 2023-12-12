@@ -25,11 +25,12 @@ namespace PowerPoint.Tests
         public void Initialize()
         {
             _model = new Model(new Factory(new Random()));
-            _shape = new Line(_point1, _point2);
+            _shape = new Circle(_point1, _point1);
             _model.CreateShapeCommand(_shape);
+            _modelPrivate = new PrivateObject(_model);
+            _modelPrivate.SetField("_selectedIndex", 0);
             _command = new ScalingCommand(_model, 0, _point2, _point1);
             _commandPrivate = new PrivateObject(_command);
-            _modelPrivate = new PrivateObject(_model);
             _shapes = (Shapes)_modelPrivate.GetField("_shapes");
         }
 
@@ -49,6 +50,7 @@ namespace PowerPoint.Tests
         {
             _command.Execute();
             Assert.AreEqual("(23, 16), (23, 16)", _shapes.ShapeList[0].Information);
+            Assert.AreEqual(8, _commandPrivate.GetField("_cornerIndex"));
         }
 
         // Test Undo

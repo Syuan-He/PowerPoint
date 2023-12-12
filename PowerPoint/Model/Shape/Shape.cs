@@ -27,6 +27,9 @@ namespace PowerPoint
         // 設定圖形終點
         public abstract void SetEndPoint(int x2, int y2);
 
+        // 依 index 設定圖形的點
+        public abstract void SetPoint(int x1, int y1, int index);
+
         // 移動圖形
         public abstract void SetMove(int offsetX, int offsetY);
 

@@ -39,7 +39,7 @@ namespace PowerPoint
                 _shape.AdjustPoint();
                 Coordinate endPoint = new Coordinate(x2, y2);
                 if (!_firstPoint.AreEqual(endPoint))
-                    _model.ScalingSelected(_firstPoint,endPoint);
+                    _model.ScalingSelected(_firstPoint, endPoint);
                 _model.SetPoint();
             }
         }

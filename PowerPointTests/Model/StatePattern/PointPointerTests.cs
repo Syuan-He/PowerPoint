@@ -84,14 +84,17 @@ namespace PowerPoint.Tests
             Shape hint = (Shape)_pointPrivate.GetFieldOrProperty("_shape");
             Assert.IsNull(hint);
             _pointer.ReleasePointer(X2, Y2);
-
+            Assert.IsInstanceOfType(_modelPrivate.GetField("_pointer"), typeof(PointPointer));
+            
             _pointer.PressPointer(X1, Y1);
             _pointer.ReleasePointer(X2, Y2);
+            Assert.IsInstanceOfType(_modelPrivate.GetField("_pointer"), typeof(PointPointer));
             Assert.AreEqual(String.Format("({0}, {1}), ({2}, {3})", X2, Y2, X2 + X2 - X1, Y2 + Y2 - Y1), _hint.Information);
 
             _pointer.PressPointer(X2, Y2);
             _pointer.ReleasePointer(X2, Y2);
             _model.PressUndo();
+            Assert.IsInstanceOfType(_modelPrivate.GetField("_pointer"), typeof(PointPointer));
             Assert.IsFalse(_model.IsUndoEnabled);
         }
 

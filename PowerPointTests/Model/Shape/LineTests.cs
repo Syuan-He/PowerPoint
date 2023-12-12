@@ -102,24 +102,44 @@ namespace PowerPoint.Tests
         {
             _shape.SetEndPoint(20, 20);
             Assert.AreEqual(
-                String.Format(
-                    "({0}, {1}), ({2}, {3})",
-                    0,
-                    20,
-                    20,
-                    0),
+                String.Format("({0}, {1}), ({2}, {3})", 0, 20, 20, 0),
                 _shape.Information);
 
             _shapePrivate.SetField("_y2", 20);
             _shape.AdjustPoint();
             _shape.SetEndPoint(30, 30);
             Assert.AreEqual(
-                String.Format(
-                    "({0}, {1}), ({2}, {3})",
-                    0,
-                    20,
-                    30,
-                    30),
+                String.Format("({0}, {1}), ({2}, {3})", 0, 20, 30, 30),
+                _shape.Information);
+        }
+
+        // Test SetPoint
+        [TestMethod()]
+        [DataRow(0, 40, 20, 0, 4)]
+        [DataRow(2, 40, 20, 3, 0)]
+        [DataRow(0, 3, 2, 0, 8)]
+        [DataRow(0, 40, 2, 3, 2)]
+        public void TestSetPoint(int x1, int y1, int x2, int y2, int index)
+        {
+            _shape.SetPoint(2, 3, index);
+            Assert.AreEqual(
+                String.Format("({0}, {1}), ({2}, {3})", x1, y1, x2, y2),
+                _shape.Information);
+        }
+
+        // Test SetY Not Reverse
+        [TestMethod()]
+        [DataRow(0, 40, 4)]
+        [DataRow(3, 40, 0)]
+        [DataRow(0, 3, 6)]
+        public void TestSetYNotReverse(int y1, int y2, int index)
+        {
+            _shapePrivate.SetField("_y1", 0);
+            _shapePrivate.SetField("_y2", 40);
+            _shapePrivate.SetField("_isReverse", false);
+            _shape.SetPoint(0, 3, index);
+            Assert.AreEqual(
+                String.Format("({0}, {1}), ({2}, {3})", 0, y1, 20, y2),
                 _shape.Information);
         }
 
@@ -164,33 +184,69 @@ namespace PowerPoint.Tests
         // TestGetAtCorner
         [TestMethod()]
         [DataRow(20, 40, 8)]
-        [DataRow(0, 0, -1)]
-        [DataRow(15, 35, -1)]
+        [DataRow(-10, -10, -1)]
+        [DataRow(16, 35, 8)]
         public void TestGetAtCorner(int x1, int y1, int ans)
         {
             Assert.AreEqual(ans, _shape.GetAtCorner(x1, y1));
         }
 
-        // Test IsCornerInX (private)
+        // Test NearCoordinate (private)
         [TestMethod()]
-        [DataRow(MAX_X + 5, false)]
-        [DataRow(MAX_X + 4, true)]
-        [DataRow(MAX_X - 4, true)]
-        [DataRow(MAX_X - 5, false)]
-        public void TestIsCornerInX(int x1, bool ans)
+        [DataRow(MAX_X + 6, -1)]
+        [DataRow(MAX_X + 5, 2)]
+        [DataRow(MAX_X - 5, 2)]
+        [DataRow(MAX_X - 6, 1)]
+        [DataRow(-6, -1)]
+        [DataRow(0, 0)]
+        [DataRow(4, 0)]
+        [DataRow(5, 1)]
+        public void TestNearCoordinate(int x1, int ans)
         {
-            Assert.AreEqual(ans, (bool)_shapePrivate.Invoke("IsCornerInX", new object[] { x1 }));
+            Assert.AreEqual(ans, (int)_shapePrivate.Invoke("NearCoordinate", new object[] { x1, 0, MAX_X }));
         }
 
-        // Test IsCornerInY (private)
+        // Test NearCoordinate1 (private)
         [TestMethod()]
-        [DataRow(MAX_Y + 5, false)]
-        [DataRow(MAX_Y + 4, true)]
-        [DataRow(MAX_Y - 4, true)]
-        [DataRow(MAX_Y - 5, false)]
-        public void TestIsCornerInY(int y1, bool ans)
+        [DataRow(-6, -1)]
+        [DataRow(-5, 0)]
+        [DataRow(5, 0)]
+        [DataRow(6, -1)]
+        [DataRow(14, -1)]
+        [DataRow(15, 1)]
+        public void TestNearCoordinate1(int value, int ans)
         {
-            Assert.AreEqual(ans, (bool)_shapePrivate.Invoke("IsCornerInY", new object[] { y1 }));
+            Assert.AreEqual(ans, (int)_shapePrivate.Invoke("NearCoordinate1", new object[] { value, 0, (0 + MAX_Y) / 2 }));
+        }
+
+        // Test NearCoordinate2 (private)
+        [TestMethod()]
+        [DataRow(20, 1)]
+        [DataRow(25, 1)]
+        [DataRow(26, -1)]
+        [DataRow(34, -1)]
+        [DataRow(35, 2)]
+        [DataRow(45, 2)]
+        [DataRow(46, -1)]
+        public void TestNearCoordinate2(int value, int ans)
+        {
+            Assert.AreEqual(ans, (int)_shapePrivate.Invoke("NearCoordinate2", new object[] { value, MAX_Y, (0 + MAX_Y) / 2 }));
+        }
+
+        // Test NearCoordinate2 (private) Ex
+        [TestMethod()]
+        [DataRow(1, 2)]
+        public void TestNearCoordinate2Ex(int value, int ans)
+        {
+            Assert.AreEqual(ans, (int)_shapePrivate.Invoke("NearCoordinate2", new object[] { value, 1, 1 }));
+        }
+
+        // Test NearCoordinate Ex
+        [TestMethod()]
+        [DataRow(1, 2)]
+        public void TestNearCoordinateEx(int value, int ans)
+        {
+            Assert.AreEqual(ans, (int)_shapePrivate.Invoke("NearCoordinate", new object[] { value, 1, 1 }));
         }
 
         // Test Draw

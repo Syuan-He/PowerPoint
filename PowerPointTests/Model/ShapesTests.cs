@@ -11,8 +11,6 @@ namespace PowerPoint.Tests
     [TestClass()]
     public class ShapesTests
     {
-        private const int WIDTH = 123;
-        private const int HEIGHT = 465;
         Coordinate _point1 = new Coordinate(123, 456);
         Coordinate _point2 = new Coordinate(456, 796);
 
@@ -209,12 +207,12 @@ namespace PowerPoint.Tests
         {
             AddListElement();
             _shapeList = (IList<Shape>)_shapesPrivate.GetFieldOrProperty("_shapeList");
-            _shapes.SetSelectedShapeEndPoint(-1, new Coordinate(1, 1));
-            _shapes.SetSelectedShapeEndPoint(6, new Coordinate(1, 1));
+            _shapes.SetSelectedShapePoint(-1, new Coordinate(1, 1), 8);
+            _shapes.SetSelectedShapePoint(6, new Coordinate(1, 1), 8);
 
-            _shapes.SetSelectedShapeEndPoint(0, new Coordinate(1, 1));
+            _shapes.SetSelectedShapePoint(0, new Coordinate(1, 1), 8);
             Assert.AreEqual("(0, 1), (1, 1)", _shapeList[0].Information);
-            _shapes.SetSelectedShapeEndPoint(5, new Coordinate(1, 1));
+            _shapes.SetSelectedShapePoint(5, new Coordinate(1, 1), 8);
             Assert.AreEqual("(1, 1), (20, 21)", _shapeList[5].Information);
         }
 

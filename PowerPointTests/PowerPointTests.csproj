@@ -82,7 +82,7 @@
     <Compile Include="Model\StatePattern\PointPointerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\StatePattern\ScalingPointerTests.cs" />
-    <Compile Include="ScalingCommandTests.cs" />
+    <Compile Include="Model\CommandPattern\ScalingCommandTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

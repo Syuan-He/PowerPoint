@@ -19,7 +19,7 @@ namespace PowerPoint
         private const int POINTER_NUMBER = 3;
         private const float WIDTH = 1920;
         string[] _stringToolStripList = { ShapeType.LINE, ShapeType.RECTANGLE, ShapeType.CIRCLE, null };
-        Cursor[] _cornerCursors = { Cursors.SizeNWSE, Cursors.SizeNS, Cursors.SizeNESW, Cursors.SizeWE, Cursors.Default, Cursors.SizeNS, Cursors.SizeNESW, Cursors.SizeWE, Cursors.SizeNWSE };
+        Cursor[] _cornerCursors = { Cursors.SizeNWSE, Cursors.SizeNS, Cursors.SizeNESW, Cursors.SizeWE, Cursors.Default, Cursors.SizeWE, Cursors.SizeNESW, Cursors.SizeNS, Cursors.SizeNWSE };
 
         IModel _model;
 
@@ -176,7 +176,7 @@ namespace PowerPoint
         // 取得選取邊緣的鼠標
         Cursor GetCornerCursor(int index)
         {
-            if (index >= 0 && index <= ShapeInteger.TOTAL_CORNER)
+            if (index == ShapeInteger.TOTAL_CORNER)
             {
                 return _cornerCursors[index];
             }

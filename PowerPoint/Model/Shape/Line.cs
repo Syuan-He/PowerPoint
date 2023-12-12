@@ -39,6 +39,38 @@ namespace PowerPoint
             Information = String.Format(INFO_FORMAT, _x1, _y1, _x2, _y2);
         }
 
+        // 依 index 設定圖形的點
+        public override void SetPoint(int x1, int y1, int index)
+        {
+            int coordinateX = index % ShapeInteger.SPLIT_PART;
+            if (coordinateX == ShapeInteger.X1)
+                _x1 = x1;
+            else if (coordinateX == ShapeInteger.X2)
+                _x2 = x1;
+            SetY(y1, index);
+            Information = String.Format(INFO_FORMAT, _x1, _y1, _x2, _y2);
+        }
+
+        // 依 isReverse 決定如何依 index 設定 y
+        void SetY(int y1, int index)
+        {
+            int coordinateY = index / ShapeInteger.SPLIT_PART;
+            if (_isReverse)
+            {
+                if (coordinateY == ShapeInteger.X1)
+                    _y2 = y1;
+                else if (coordinateY == ShapeInteger.X2)
+                    _y1 = y1;
+            }
+            else
+            {
+                if (coordinateY == ShapeInteger.X1)
+                    _y1 = y1;
+                else if (coordinateY == ShapeInteger.X2)
+                    _y2 = y1;
+            }
+        }
+
         // 移動圖形
         public override void SetMove(int offsetX, int offsetY)
         {
@@ -91,25 +123,62 @@ namespace PowerPoint
         // 確認在哪個頂點上
         public override int GetAtCorner(int x1, int y1)
         {
-            if (IsCornerInX(x1) && IsCornerInY(y1))
+            int nearX = NearCoordinate(x1, _x1, _x2);
+            int nearY = NearCoordinate(y1, Math.Min(_y1, _y2), Math.Max(_y1, _y2));
+            if (nearX >= 0 && nearY >= 0)
+                return nearY * ShapeInteger.SPLIT_PART + nearX;
+            return ShapeInteger.NOT_IN_LIST;
+        }
+
+        // 看靠近 X 軸或 Y 軸上的哪個點
+        int NearCoordinate(int value, int x1, int x2)
+        {
+            int centerX = (x1 + x2) / ShapeInteger.HALF;
+
+            if (centerX - value > 0)
             {
-                return ShapeInteger.TOTAL_CORNER;
+                return NearCoordinate1(value, x1, centerX);
+            }
+            else
+            {
+                return NearCoordinate2(value, x2, centerX);
+            }
+        }
+
+        // 看是否靠近 X 或 Y 軸上的 x1
+        int NearCoordinate1(int value, int x1, int centerX)
+        {
+            int index = 0;
+            if (Math.Abs(x1 - value) < centerX - value)
+            {
+                if (Math.Abs(x1 - value) <= ShapeInteger.RADIUS)
+                    return index;
+            }
+            else
+            {
+                index++;
+                if (centerX - value <= ShapeInteger.RADIUS)
+                    return index;
             }
             return ShapeInteger.NOT_IN_LIST;
         }
 
-        // 檢查X軸是否在角落的範圍內
-        bool IsCornerInX(int x1)
+        // 看是否靠近 X 或 Y 軸上的 x2
+        int NearCoordinate2(int value, int x2, int centerX)
         {
-            return Math.Max(_x1, _x2) + ShapeInteger.RADIUS > x1 &&
-                Math.Max(_x1, _x2) - ShapeInteger.RADIUS < x1;
-        }
-
-        // 檢查Y軸是否在角落的範圍內
-        bool IsCornerInY(int y1)
-        {
-            return Math.Max(_y1, _y2) + ShapeInteger.RADIUS > y1 &&
-                Math.Max(_y1, _y2) - ShapeInteger.RADIUS < y1;
+            int index = 1;
+            if (Math.Abs(x2 - value) > value - centerX)
+            {
+                if (value - centerX <= ShapeInteger.RADIUS)
+                    return index;
+            }
+            else
+            {
+                index++;
+                if (Math.Abs(x2 - value) <= ShapeInteger.RADIUS)
+                    return index;
+            }
+            return ShapeInteger.NOT_IN_LIST;
         }
 
         // 調整傳入的 point 的座標，使第一個 point 的座標在左上，第二個在右下

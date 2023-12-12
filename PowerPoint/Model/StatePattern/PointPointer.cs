@@ -18,7 +18,7 @@
         {
             _x1 = x1;
             _y1 = y1;
-            if (_model.GetAtSelectedCorner(x1, y1) < 0)
+            if (_model.GetAtSelectedCorner(x1, y1) != ShapeInteger.TOTAL_CORNER)
             {
                 GetSelect(x1, y1);
                 if (_shape != null)

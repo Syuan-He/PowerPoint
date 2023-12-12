@@ -249,9 +249,9 @@ namespace PowerPoint
         }
 
         // ScalingCommand 拉 shape 用
-        public void SetShapeEndPoint(int index, Coordinate point1)
+        public void SetShapeEndPoint(int index, Coordinate point1, int cornerIndex)
         {
-            _shapes.SetSelectedShapeEndPoint(index, point1);
+            _shapes.SetSelectedShapePoint(index, point1, cornerIndex);
             NotifyPanelChanged();
         }
     }

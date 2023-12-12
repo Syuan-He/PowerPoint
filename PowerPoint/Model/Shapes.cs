@@ -103,12 +103,12 @@ namespace PowerPoint
                 _shapeList[index].SetPosition(point1);
         }
 
-        // 設定選取 shape 的 endPoint
-        public void SetSelectedShapeEndPoint(int index, Coordinate point1)
+        // 設定選取 shape 的指定 Corner
+        public void SetSelectedShapePoint(int index, Coordinate point1, int cornerIndex)
         {
             if (index >= 0 && index < _shapeList.Count())
             {
-                _shapeList[index].SetEndPoint(point1.X, point1.Y);
+                _shapeList[index].SetPoint(point1.X, point1.Y, cornerIndex);
                 _shapeList[index].AdjustPoint();
             }
         }
