@@ -12,7 +12,13 @@ namespace PowerPoint
         public event ModelChangedEventHandler _panelChanged;
         public delegate void ModelChangedEventHandler();
 
-        Shapes _shapes;
+        public event SlideRemoveAtEventHandler _slideRemoveAt;
+        public delegate void SlideRemoveAtEventHandler(int index);
+
+        public event SlideInsertEventHandler _slideInsert;
+        public delegate void SlideInsertEventHandler(int index);
+
+        List<Shapes> _pages;
         IFactory _factory;
         IState _pointer;
         CommandManager _commandManager;
@@ -24,11 +30,27 @@ namespace PowerPoint
         public Model(IFactory factory)
         {
             _factory = factory;
-            _shapes = new Shapes(factory);
+            _pages = new List<Shapes>();
+            _pages.Add(new Shapes(factory));
+            PageIndex = 0;
             _selectedIndex = ShapeInteger.NOT_IN_LIST;
             _isPressed = false;
             _pointer = new PointPointer(this);
             _commandManager = new CommandManager();
+        }
+
+        Shapes CurrentShapes
+        {
+            get
+            {
+                return _pages[PageIndex];
+            }
+        }
+
+        public int PageIndex
+        {
+            get;
+            set;
         }
 
         public bool IsUndoEnabled
@@ -50,7 +72,7 @@ namespace PowerPoint
         // 按下資訊顯示的新增按鍵
         public void PressInfoAdd(string shapeType)
         {
-            _commandManager.Execute(new AddCommand(this, _factory.GenerateShape(shapeType)));
+            _commandManager.Execute(new AddCommand(this, _factory.GenerateShape(shapeType), PageIndex));
             _selectedIndex = ShapeInteger.NOT_IN_LIST;
         }
 
@@ -59,7 +81,7 @@ namespace PowerPoint
         {
             if (columnIndex == 0 && rowIndex > ShapeInteger.NOT_IN_LIST)
             {
-                _commandManager.Execute(new DeleteCommand(this, rowIndex));
+                _commandManager.Execute(new DeleteCommand(this, rowIndex, PageIndex));
                 _selectedIndex = ShapeInteger.NOT_IN_LIST;
             }
         }
@@ -76,11 +98,19 @@ namespace PowerPoint
             _commandManager.Redo();
         }
 
+        // 按下 AddPage 按鍵
+        public void PressAddPage()
+        {
+            _commandManager.Execute(new AddPageCommand(this, _pages.Count, new Shapes(_factory)));
+        }
+
         // 按下鍵盤 delete 鍵
         public void PressDeleteKey()
         {
-            if (_selectedIndex > ShapeInteger.NOT_IN_LIST)
-                _commandManager.Execute(new DeleteCommand(this, _selectedIndex));
+            if (_selectedIndex == ShapeInteger.NOT_IN_LIST)
+                _commandManager.Execute(new DeletePageCommand(this, PageIndex));
+            else if (_selectedIndex > ShapeInteger.NOT_IN_LIST)
+                _commandManager.Execute(new DeleteCommand(this, _selectedIndex, PageIndex));
         }
 
         // pointer 進入 point 模式
@@ -101,7 +131,7 @@ namespace PowerPoint
         // pointer 進入 scaling 模式 (有選取的 shape 就傳進 pointer，GetShape會自動判斷)
         public void SetScaling(Coordinate point1)
         {
-            _pointer = new ScalingPointer(this, _shapes.GetShape(_selectedIndex), point1);
+            _pointer = new ScalingPointer(this, CurrentShapes.GetShape(_selectedIndex), point1);
         }
 
         // 是否有被選取的 shape
@@ -113,7 +143,13 @@ namespace PowerPoint
         // 判斷是不是位在頂點上
         public int GetAtSelectedCorner(int x1, int y1)
         {
-            return _shapes.GetAtSelectedCorner(_selectedIndex, x1, y1);
+            return CurrentShapes.GetAtSelectedCorner(_selectedIndex, x1, y1);
+        }
+
+        // 判斷是不是位在頂點上
+        public int GetAtSelectedCorner(int x1, int y1, int index)
+        {
+            return _pages[index].GetAtSelectedCorner(_selectedIndex, x1, y1);
         }
 
         // 按下滑鼠左鍵
@@ -144,18 +180,23 @@ namespace PowerPoint
         // 繪製選取外框
         public void DrawSelectFrame(IGraphics graphics)
         {
-            _shapes.DrawSelectFrame(graphics, _selectedIndex);
+            CurrentShapes.DrawSelectFrame(graphics, _selectedIndex);
         }
 
         // 繪製圖形
-        public void Draw(IGraphics graphics, bool isPanel)
+        public void Draw(IGraphics graphics)
         {
             graphics.ClearAll();
-            _shapes.Draw(graphics);
-            if (isPanel)
-            {
-                _pointer.Draw(graphics);
-            }
+            CurrentShapes.Draw(graphics);
+            _pointer.Draw(graphics);
+        }
+
+        // 繪製圖形
+        public void DrawSlide(IGraphics graphics, int index)
+        {
+            graphics.ClearAll();
+            if (index < _pages.Count)
+                _pages[index].Draw(graphics);
         }
 
         // 通知 model 要重新繪製 panel
@@ -165,29 +206,43 @@ namespace PowerPoint
                 _panelChanged();
         }
 
+        // 通知 form 要刪除 Slides
+        void NotifySlideRemoveAt(int index)
+        {
+            if (_slideRemoveAt != null)
+                _slideRemoveAt(index);
+        }
+
+        // 通知 form 要注入 Slides
+        void NotifySlideInsert(int index)
+        {
+            if (_slideInsert != null)
+                _slideInsert(index);
+        }
+
         //回傳 Shapes 的 BindingList ，給資訊顯示的 _infoDataGridView 用
         public System.ComponentModel.BindingList<Shape> GetInfoDataGridView()
         {
-            return _shapes.ShapeList;
+            return CurrentShapes.ShapeList;
         }
 
         // PointPointer 找被點選的 shape
         public void FindSelected(int x1, int y1)
         {
-            _selectedIndex = _shapes.FindSelectItem(x1, y1);
+            _selectedIndex = CurrentShapes.FindSelectItem(x1, y1);
             NotifyPanelChanged();
         }
 
         // PointPointer 取得指定位子的 shape
         public Shape GetSelected()
         {
-            return _shapes.GetShape(_selectedIndex);
+            return CurrentShapes.GetShape(_selectedIndex);
         }
 
         // PointPointer 移動圖形
         public void MoveSelected(Coordinate startPoint, Coordinate endPoint)
         {
-            _commandManager.Execute(new MoveCommand(this, _selectedIndex, startPoint, endPoint));
+            _commandManager.Execute(new MoveCommand(this, new Coordinate(_selectedIndex, PageIndex), startPoint, endPoint));
         }
 
         // DrawingPointer 創建 hint 要用的 function
@@ -199,59 +254,83 @@ namespace PowerPoint
         // DrawingPointer 創建新圖形要用的 function
         public void CreateShape(Shape shape)
         {
-            _commandManager.Execute(new DrawCommand(this, shape));
+            _commandManager.Execute(new DrawCommand(this, shape, PageIndex));
         }
 
         // ScalingPointer 拉圖形
         public void ScalingSelected(Coordinate startPoint, Coordinate endPoint)
         {
-            _commandManager.Execute(new ScalingCommand(this, _selectedIndex, startPoint, endPoint));
+            _commandManager.Execute(new ScalingCommand(this, new Coordinate(_selectedIndex, PageIndex), startPoint, endPoint));
         }
 
         // ICommand 創建新圖形要用的 function
-        public void CreateShapeCommand(Shape shape)
+        public void CreateShapeCommand(Shape shape, int index)
         {
-            _shapes.CreateShape(shape);
+            _pages[index].CreateShape(shape);
             NotifyPanelChanged();
         }
 
         // ICommand 從 list 移除最後一個物件
-        public void RemoveLast()
+        public void RemoveLast(int index)
         {
-            _shapes.RemoveLast();
+            _pages[index].RemoveLast();
             NotifyPanelChanged();
         }
 
         // DeleteCommand 從 list 移除選定的物件
-        public Shape RemoveAt(int index)
+        public Shape RemoveAt(int index, int pageIndex)
         {
-            Shape shape = _shapes.Remove(index);
+            Shape shape = _pages[pageIndex].Remove(index);
             _selectedIndex = ShapeInteger.NOT_IN_LIST;
             NotifyPanelChanged();
             return shape;
         }
 
         // DeleteCommand 在 shapes 插入 shape
-        public void Insert(Shape shape, int index)
+        public void Insert(Shape shape, int index, int pageIndex)
         {
             if (shape != null)
             {
-                _shapes.Insert(shape, index);
+                _pages[pageIndex].Insert(shape, index);
                 NotifyPanelChanged();
             }
         }
 
-        // MoveCommand 移動 shape 用
-        public void SetShapePosition(int index, Coordinate point1)
+        // DeletePageCommand 從 list 移除選定的物件
+        public Shapes RemovePageAt(int index)
         {
-            _shapes.SetSelectedShapePosition(index, point1);
+            Shapes shapes = _pages[index];
+            _pages.RemoveAt(index);
+            if (PageIndex >= _pages.Count)
+            {
+                PageIndex = _pages.Count - 1;
+            }
+            NotifySlideRemoveAt(index);
+            NotifyPanelChanged();
+            return shapes;
+        }
+
+        // DeletePageCommand 在 shapes 插入 shape
+        public void InsertPage(Shapes shapes, int index)
+        {
+            if (shapes != null)
+            {
+                _pages.Insert(index, shapes);
+                NotifySlideInsert(index);
+            }
+        }
+
+        // MoveCommand 移動 shape 用
+        public void SetShapePosition(int index, int pageIndex, Coordinate point1)
+        {
+            _pages[pageIndex].SetSelectedShapePosition(index, point1);
             NotifyPanelChanged();
         }
 
         // ScalingCommand 拉 shape 用
-        public void SetShapeEndPoint(int index, Coordinate point1, int cornerIndex)
+        public void SetShapeEndPoint(int index, int pageIndex, Coordinate point1, int cornerIndex)
         {
-            _shapes.SetSelectedShapePoint(index, point1, cornerIndex);
+            _pages[pageIndex].SetSelectedShapePoint(index, point1, cornerIndex);
             NotifyPanelChanged();
         }
     }

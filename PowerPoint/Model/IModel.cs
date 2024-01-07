@@ -29,6 +29,9 @@ namespace PowerPoint
         void ReleasePointer(int x2, int y2);
 
         // 繪製圖形
-        void Draw(IGraphics graphics, bool isPanel);
+        void Draw(IGraphics graphics);
+
+        // 繪製圖形
+        void DrawSlide(IGraphics graphics, int index);
     }
 }

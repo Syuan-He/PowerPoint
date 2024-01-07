@@ -18,18 +18,43 @@ namespace PowerPoint
         private const int CIRCLE_NUMBER = 2;
         private const int POINTER_NUMBER = 3;
         private const float WIDTH = 1920;
+        private const float HEIGHT = 1080;
+        private const float ASPECT_RATIO = 0.5625f;
+        private const int HALF = 2;
         string[] _stringToolStripList = { ShapeType.LINE, ShapeType.RECTANGLE, ShapeType.CIRCLE, null };
         Cursor[] _cornerCursors = { Cursors.SizeNWSE, Cursors.SizeNS, Cursors.SizeNESW, Cursors.SizeWE, Cursors.Default, Cursors.SizeWE, Cursors.SizeNESW, Cursors.SizeNS, Cursors.SizeNWSE };
+        Coordinate _panelLocal;
 
-        IModel _model;
+        Model _model;
 
         bool[] _booleanToolStripList = { false, false, false, true };
         string _shapeType;
 
-        public PresentationModel(IModel model)
+        public PresentationModel(Model model)
         {
             _shapeType = null;
             this._model = model;
+            _panelLocal = new Coordinate(0, 0);
+        }
+
+        public int PanelHeight
+        {
+            get;
+            set;
+        }
+
+        public int PanelWidth
+        {
+            get;
+            set;
+        }
+
+        public Coordinate PanelLocal
+        {
+            get
+            {
+                return _panelLocal;
+            }
         }
 
         public bool IsLine
@@ -186,13 +211,38 @@ namespace PowerPoint
         // 讓 model 畫圖
         public void Draw(Graphics graphics, int width)
         {
-            _model.Draw(new WindowsFormsGraphicsAdaptor(graphics, width), true);
+            _model.Draw(new WindowsFormsGraphicsAdaptor(graphics, width));
         }
 
         // 讓 model 畫縮圖
-        public void DrawSlide(Graphics graphics, int width)
+        public void DrawSlide(Graphics graphics, int width, int index)
         {
-            _model.Draw(new WindowsFormsGraphicsAdaptor(graphics, width), false);
+            _model.DrawSlide(new WindowsFormsGraphicsAdaptor(graphics, width), index);
+        }
+
+        // 換算寬度、高度
+        public void SetPanelSize(int width, int height)
+        {
+            float rateX = width / WIDTH;
+            float rateY = height / HEIGHT;
+            if (rateX > rateY)
+            {
+                PanelHeight = height;
+                PanelWidth = (int)(PanelHeight / ASPECT_RATIO);
+            }
+            else
+            {
+                PanelWidth = width;
+                PanelHeight = (int)(PanelWidth * ASPECT_RATIO);
+            }
+            PanelLocal.X = (width - PanelWidth) / HALF;
+            PanelLocal.Y = (height - PanelHeight) / HALF;
+        }
+
+        // 換算寬度
+        public int GetPanelHeight(int width)
+        {
+            return (int)(width * ASPECT_RATIO);
         }
 
         // 通知 ToolBar 相關 bool 變數改變

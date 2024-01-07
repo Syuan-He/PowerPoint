@@ -47,6 +47,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExceptionString.cs" />
+    <Compile Include="Model\CommandPattern\AddPageCommand.cs" />
+    <Compile Include="Model\CommandPattern\DeletePageCommand.cs" />
     <Compile Include="Model\CommandPattern\DrawCommand.cs" />
     <Compile Include="Model\CommandPattern\MoveCommand.cs" />
     <Compile Include="Model\CommandPattern\DeleteCommand.cs" />
@@ -84,7 +86,7 @@
     <Compile Include="Model\Shape\Shape.cs" />
     <Compile Include="Model\Shapes.cs" />
     <Compile Include="Model\StatePattern\ScalingPointer.cs" />
-    <Compile Include="ScalingCommand.cs" />
+    <Compile Include="Model\CommandPattern\ScalingCommand.cs" />
     <Compile Include="ShapeInteger.cs" />
     <Compile Include="ShapeType.cs" />
     <EmbeddedResource Include="Form\Form1.resx">

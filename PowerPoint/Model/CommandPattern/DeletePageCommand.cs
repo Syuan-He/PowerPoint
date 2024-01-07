@@ -6,35 +6,34 @@ using System.Threading.Tasks;
 
 namespace PowerPoint
 {
-    public class AddCommand : ICommand
+    class DeletePageCommand : ICommand
     {
         Model _model;
-        Shape _shape;
-        int _pageIndex;
+        int _index;
+        Shapes _shapes;
 
-        public AddCommand(Model model, Shape shape, int pageIndex)
+        public DeletePageCommand(Model model, int pageIndex)
         {
             _model = model;
-            _shape = shape;
-            _pageIndex = pageIndex;
+            _index = pageIndex;
         }
 
         // Command 執行
         public void Execute()
         {
-            _model.CreateShapeCommand(_shape, _pageIndex);
+            _shapes = _model.RemovePageAt(_index);
         }
 
         // Command 解執行
         public void Undo()
         {
-            _model.RemoveLast(_pageIndex);
+            _model.InsertPage(_shapes, _index);
         }
 
         // Command 回復執行
         public void Redo()
         {
-            _model.CreateShapeCommand(_shape, _pageIndex);
+            _shapes = _model.RemovePageAt(_index);
         }
     }
 }

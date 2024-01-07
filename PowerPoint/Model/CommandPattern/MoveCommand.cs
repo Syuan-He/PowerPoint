@@ -12,31 +12,33 @@ namespace PowerPoint
         Coordinate _startPoint;
         Coordinate _endPoint;
         int _index;
+        int _pageIndex;
 
-        public MoveCommand(Model model, int index, Coordinate startPoint, Coordinate endPoint)
+        public MoveCommand(Model model, Coordinate indexes, Coordinate startPoint, Coordinate endPoint)
         {
             _model = model;
             _startPoint = startPoint;
             _endPoint = endPoint;
-            _index = index;
+            _index = indexes.X;
+            _pageIndex = indexes.Y;
         }
 
         // Command 執行
         public void Execute()
         {
-            _model.SetShapePosition(_index, _endPoint);
+            _model.SetShapePosition(_index, _pageIndex, _endPoint);
         }
 
         // Command 解執行
         public void Undo()
         {
-            _model.SetShapePosition(_index, _startPoint);
+            _model.SetShapePosition(_index, _pageIndex, _startPoint);
         }
 
         // Command 回復執行
         public void Redo()
         {
-            _model.SetShapePosition(_index, _endPoint);
+            _model.SetShapePosition(_index, _pageIndex, _endPoint);
         }
     }
 }
