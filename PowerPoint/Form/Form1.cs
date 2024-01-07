@@ -259,5 +259,10 @@ namespace PowerPoint
             _panel.Invalidate(true);
             _infoDataGridView.DataSource = _model.GetInfoDataGridView();
         }
+
+        private void _saveToolStripButton_Click(object sender, EventArgs e)
+        {
+            _model.SaveJson();
+        }
     }
 }

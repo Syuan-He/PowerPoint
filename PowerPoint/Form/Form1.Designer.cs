@@ -109,7 +109,7 @@ namespace PowerPoint
             this._infoDataGridView.RowHeadersVisible = false;
             this._infoDataGridView.RowHeadersWidth = 62;
             this._infoDataGridView.RowTemplate.Height = 27;
-            this._infoDataGridView.Size = new System.Drawing.Size(335, 471);
+            this._infoDataGridView.Size = new System.Drawing.Size(335, 474);
             this._infoDataGridView.TabIndex = 2;
             this._infoDataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ClickInfoDataGridViewCellContent);
             // 
@@ -149,7 +149,7 @@ namespace PowerPoint
             this._infoGroupBox.Location = new System.Drawing.Point(0, 0);
             this._infoGroupBox.Name = "_infoGroupBox";
             this._infoGroupBox.Padding = new System.Windows.Forms.Padding(3, 62, 3, 3);
-            this._infoGroupBox.Size = new System.Drawing.Size(341, 554);
+            this._infoGroupBox.Size = new System.Drawing.Size(341, 557);
             this._infoGroupBox.TabIndex = 10;
             this._infoGroupBox.TabStop = false;
             this._infoGroupBox.Text = "資訊顯示";
@@ -184,8 +184,7 @@ namespace PowerPoint
             this._infoToolStripMenuItem});
             this._menuStrip1.Location = new System.Drawing.Point(0, 0);
             this._menuStrip1.Name = "_menuStrip1";
-            this._menuStrip1.Padding = new System.Windows.Forms.Padding(6, 2, 0, 2);
-            this._menuStrip1.Size = new System.Drawing.Size(1158, 30);
+            this._menuStrip1.Size = new System.Drawing.Size(1158, 27);
             this._menuStrip1.TabIndex = 2;
             this._menuStrip1.Text = "menuStrip1";
             // 
@@ -194,7 +193,7 @@ namespace PowerPoint
             this._infoToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this._aboutToolStripMenuItem});
             this._infoToolStripMenuItem.Name = "_infoToolStripMenuItem";
-            this._infoToolStripMenuItem.Size = new System.Drawing.Size(53, 26);
+            this._infoToolStripMenuItem.Size = new System.Drawing.Size(53, 23);
             this._infoToolStripMenuItem.Text = "說明";
             // 
             // _aboutToolStripMenuItem
@@ -232,7 +231,7 @@ namespace PowerPoint
             this._redoToolStripButton,
             this._saveToolStripButton,
             this._loadToolStripButton});
-            this._toolStrip1.Location = new System.Drawing.Point(0, 30);
+            this._toolStrip1.Location = new System.Drawing.Point(0, 27);
             this._toolStrip1.Name = "_toolStrip1";
             this._toolStrip1.Size = new System.Drawing.Size(1158, 31);
             this._toolStrip1.TabIndex = 5;
@@ -330,6 +329,7 @@ namespace PowerPoint
             this._saveToolStripButton.ReadOnly = true;
             this._saveToolStripButton.Size = new System.Drawing.Size(41, 27);
             this._saveToolStripButton.Text = "save";
+            this._saveToolStripButton.Click += new System.EventHandler(this._saveToolStripButton_Click);
             // 
             // _loadToolStripButton
             // 
@@ -345,7 +345,7 @@ namespace PowerPoint
             this._splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this._splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this._splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this._splitContainer1.Location = new System.Drawing.Point(0, 61);
+            this._splitContainer1.Location = new System.Drawing.Point(0, 58);
             this._splitContainer1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this._splitContainer1.Name = "_splitContainer1";
             // 
@@ -356,7 +356,7 @@ namespace PowerPoint
             // _splitContainer1.Panel2
             // 
             this._splitContainer1.Panel2.Controls.Add(this._splitContainer2);
-            this._splitContainer1.Size = new System.Drawing.Size(1158, 556);
+            this._splitContainer1.Size = new System.Drawing.Size(1158, 559);
             this._splitContainer1.SplitterDistance = 166;
             this._splitContainer1.TabIndex = 7;
             this._splitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.MovedSplit1);
@@ -377,7 +377,7 @@ namespace PowerPoint
             // _splitContainer2.Panel2
             // 
             this._splitContainer2.Panel2.Controls.Add(this._infoGroupBox);
-            this._splitContainer2.Size = new System.Drawing.Size(988, 556);
+            this._splitContainer2.Size = new System.Drawing.Size(988, 559);
             this._splitContainer2.SplitterDistance = 641;
             this._splitContainer2.TabIndex = 7;
             this._splitContainer2.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.MovedSplit2);
@@ -387,7 +387,7 @@ namespace PowerPoint
             this._panel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this._panel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this._panel.BackColor = System.Drawing.SystemColors.Window;
-            this._panel.Location = new System.Drawing.Point(0, -1);
+            this._panel.Location = new System.Drawing.Point(0, 0);
             this._panel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this._panel.Name = "_panel";
             this._panel.Size = new System.Drawing.Size(640, 300);

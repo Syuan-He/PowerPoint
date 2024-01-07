@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Text.Json;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace PowerPoint
 {
@@ -220,10 +223,17 @@ namespace PowerPoint
                 _slideInsert(index);
         }
 
-        //回傳 Shapes 的 BindingList ，給資訊顯示的 _infoDataGridView 用
+        // 回傳 Shapes 的 BindingList ，給資訊顯示的 _infoDataGridView 用
         public System.ComponentModel.BindingList<Shape> GetInfoDataGridView()
         {
             return CurrentShapes.ShapeList;
+        }
+
+        // 存檔
+        public void SaveJson()
+        {
+            string jsonString = JsonConvert.SerializeObject(_pages);
+            File.WriteAllText("D:/tempJson.json", jsonString);
         }
 
         // PointPointer 找被點選的 shape
