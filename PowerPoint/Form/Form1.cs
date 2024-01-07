@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -226,9 +227,6 @@ namespace PowerPoint
         private void ClickAddPageButton(object sender, EventArgs e)
         {
             _model.PressAddPage();
-            //Button button = CreateNewSlide();
-            //_splitContainer1.Panel1.Controls.Add(button);
-            //_slides.Add(button);
             RefreshCommandButton();
         }
 
@@ -254,6 +252,7 @@ namespace PowerPoint
         // 按在 Slide(Page) 上
         private void ClickSlide(object sender, EventArgs e)
         {
+            Debug.Assert(_model.PageIndex < _slides.Count, "Pages 的 Index 大於索引");
             _slides[_model.PageIndex].FlatAppearance.BorderColor = SystemColors.ButtonShadow;
             _model.PageIndex = _slides.IndexOf((Button)sender);
             _slides[_model.PageIndex].FlatAppearance.BorderColor = SystemColors.MenuHighlight;

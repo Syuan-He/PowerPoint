@@ -107,7 +107,7 @@ namespace PowerPoint
         // 按下鍵盤 delete 鍵
         public void PressDeleteKey()
         {
-            if (_selectedIndex == ShapeInteger.NOT_IN_LIST)
+            if (_selectedIndex == ShapeInteger.NOT_IN_LIST && _pages.Count > 1)
                 _commandManager.Execute(new DeletePageCommand(this, PageIndex));
             else if (_selectedIndex > ShapeInteger.NOT_IN_LIST)
                 _commandManager.Execute(new DeleteCommand(this, _selectedIndex, PageIndex));
