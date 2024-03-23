@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PowerPoint
 {
-    class AddPageCommand : ICommand
+    public class AddPageCommand : ICommand
     {
         Model _model;
         int _index;

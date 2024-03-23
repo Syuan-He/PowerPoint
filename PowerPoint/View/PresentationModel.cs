@@ -9,28 +9,23 @@ namespace PowerPoint
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private const string LINE_PROPERTY = "IsLine";
-        private const string RECTANGLE_PROPERTY = "IsRectangle";
-        private const string CIRCLE_PROPERTY = "IsCircle";
-        private const string POINTER_PROPERTY = "IsPointer";
         private const int LINE_NUMBER = 0;
         private const int RECTANGLE_NUMBER = 1;
         private const int CIRCLE_NUMBER = 2;
         private const int POINTER_NUMBER = 3;
-        private const float WIDTH = 1920;
-        private const float HEIGHT = 1080;
-        private const float ASPECT_RATIO = 0.5625f;
-        private const int HALF = 2;
+        private const double WIDTH = 1920;
+        private const double HEIGHT = 1080;
+        private const double ASPECT_RATIO = 0.5625f;
         string[] _stringToolStripList = { ShapeType.LINE, ShapeType.RECTANGLE, ShapeType.CIRCLE, null };
         Cursor[] _cornerCursors = { Cursors.SizeNWSE, Cursors.SizeNS, Cursors.SizeNESW, Cursors.SizeWE, Cursors.Default, Cursors.SizeWE, Cursors.SizeNESW, Cursors.SizeNS, Cursors.SizeNWSE };
         Coordinate _panelLocal;
 
-        Model _model;
+        IModel _model;
 
         bool[] _booleanToolStripList = { false, false, false, true };
         string _shapeType;
 
-        public PresentationModel(Model model)
+        public PresentationModel(IModel model)
         {
             _shapeType = null;
             this._model = model;
@@ -145,21 +140,21 @@ namespace PowerPoint
         // 按下滑鼠左鍵時，依據 ToolStrip 的選取狀況，決定要拉什麼圖
         public void PressPointer(int x1, int y1, int width)
         {
-            float ratio = WIDTH / width;
+            double ratio = WIDTH / width;
             _model.PressPointer(_shapeType, (int)(x1 * ratio), (int)(y1 * ratio));
         }
 
         // 滑鼠移動時
         public void MovePointer(int x2, int y2, int width)
         {
-            float ratio = WIDTH / width;
+            double ratio = WIDTH / width;
             _model.MovePointer((int)(x2 * ratio), (int)(y2 * ratio));
         }
 
         // 放開滑鼠左鍵
         public void ReleasePointer(int x2, int y2, int width)
         {
-            float ratio = WIDTH / width;
+            double ratio = WIDTH / width;
             _model.ReleasePointer((int)(x2 * ratio), (int)(y2 * ratio));
             PressPointerButton();
         }
@@ -186,7 +181,7 @@ namespace PowerPoint
         // 傳回鼠標當下應該要有的樣子(形狀)
         public Cursor GetPointerShape(int x1, int y1, int width)
         {
-            float ratio = WIDTH / width;
+            double ratio = WIDTH / width;
             if (_shapeType != null)
             {
                 return Cursors.Cross;
@@ -223,8 +218,8 @@ namespace PowerPoint
         // 換算寬度、高度
         public void SetPanelSize(int width, int height)
         {
-            float rateX = width / WIDTH;
-            float rateY = height / HEIGHT;
+            double rateX = width / WIDTH;
+            double rateY = height / HEIGHT;
             if (rateX > rateY)
             {
                 PanelHeight = height;
@@ -235,8 +230,8 @@ namespace PowerPoint
                 PanelWidth = width;
                 PanelHeight = (int)(PanelWidth * ASPECT_RATIO);
             }
-            PanelLocal.X = (width - PanelWidth) / HALF;
-            PanelLocal.Y = (height - PanelHeight) / HALF;
+            PanelLocal.X = (width - PanelWidth) / ShapeInteger.HALF;
+            PanelLocal.Y = (height - PanelHeight) / ShapeInteger.HALF;
         }
 
         // 換算寬度
@@ -257,10 +252,10 @@ namespace PowerPoint
         // 統一呼叫 NotifyPropertyChanged 的多載
         void NotifyPropertyChanged()
         {
-            NotifyPropertyChanged(LINE_PROPERTY);
-            NotifyPropertyChanged(RECTANGLE_PROPERTY);
-            NotifyPropertyChanged(CIRCLE_PROPERTY);
-            NotifyPropertyChanged(POINTER_PROPERTY);
+            NotifyPropertyChanged(DataString.LINE_PROPERTY);
+            NotifyPropertyChanged(DataString.RECTANGLE_PROPERTY);
+            NotifyPropertyChanged(DataString.CIRCLE_PROPERTY);
+            NotifyPropertyChanged(DataString.POINTER_PROPERTY);
         }
 
         // 統一設 ToolBar 相關 bool 變數為 false

@@ -26,7 +26,7 @@ namespace PowerPoint.Tests
         [TestInitialize()]
         public void Initialize()
         {
-            _model = new Model(new Factory(new MockRandom()));
+            _model = new Model(new Factory(new MockRandom()), new MockService());
             _modelPrivate = new PrivateObject(_model);
             _model.SetDrawing();
             _pointer = (IState)_modelPrivate.GetField("_pointer");

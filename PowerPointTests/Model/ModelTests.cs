@@ -28,7 +28,7 @@ namespace PowerPoint.Tests
         public void Initialize()
         {
             _mockFactory = new MockFactory();
-            _model = new Model(_mockFactory);
+            _model = new Model(_mockFactory, new MockService());
             _modelPrivate = new PrivateObject(_model);
         }
 
@@ -37,7 +37,7 @@ namespace PowerPoint.Tests
         public void TestModel()
         {
             Assert.AreEqual(_mockFactory, _modelPrivate.GetFieldOrProperty("_factory"));
-            Assert.IsNotNull(_modelPrivate.GetFieldOrProperty("_shapes"));
+            Assert.IsNotNull(_modelPrivate.GetFieldOrProperty("CurrentShapes"));
             Assert.AreEqual(-1, _modelPrivate.GetFieldOrProperty(INDEX));
             Assert.AreEqual(false, _modelPrivate.GetFieldOrProperty("_isPressed"));
             Assert.IsNotNull(_modelPrivate.GetFieldOrProperty("_pointer"));
@@ -66,15 +66,15 @@ namespace PowerPoint.Tests
         // 取 model 內的 shapes
         void GetShapes()
         {
-            _shapes = (Shapes)_modelPrivate.GetField("_shapes");
+            _shapes = (Shapes)_modelPrivate.GetProperty("CurrentShapes");
         }
 
         // 替 model 的 shapes 加料
         void Add3Shapes()
         {
-            _model.PressInfoAdd(ShapeType.LINE);
-            _model.PressInfoAdd(ShapeType.RECTANGLE);
-            _model.PressInfoAdd(ShapeType.CIRCLE);
+            _model.PressInfoAdd(ShapeType.LINE, new Coordinate(0, 1), new Coordinate(2, 3));
+            _model.PressInfoAdd(ShapeType.RECTANGLE, new Coordinate(4, 5), new Coordinate(6, 7));
+            _model.PressInfoAdd(ShapeType.CIRCLE, new Coordinate(8, 9), new Coordinate(10, 11));
         }
 
         // Test CreateShapeCommand
@@ -84,7 +84,7 @@ namespace PowerPoint.Tests
             GetShapes();
             SetEvent();
             Shape shape = new Line(_point1, _point2);
-            _model.CreateShapeCommand(shape);
+            _model.CreateShapeCommand(shape, 0);
             Assert.AreEqual(1, _shapes.ShapeList.Count);
             Assert.AreEqual(shape, _shapes.ShapeList[0]);
         }
@@ -94,9 +94,9 @@ namespace PowerPoint.Tests
         public void TestRemoveLast()
         {
             GetShapes();
-            _model.RemoveLast();
+            _model.RemoveLast(0);
             Add3Shapes();
-            _model.RemoveLast();
+            _model.RemoveLast(0);
             Assert.AreEqual(2, _shapes.ShapeList.Count);
         }
 
@@ -116,11 +116,11 @@ namespace PowerPoint.Tests
         [TestMethod]
         public void TestRemoveAt()
         {
-            Assert.IsNull(_model.RemoveAt(0));
+            Assert.IsNull(_model.RemoveAt(0, 0));
             Shape shape = new Line(_point1, _point2);
             _model.CreateShape(shape);
             SetEvent();
-            Assert.AreEqual(shape, _model.RemoveAt(0));
+            Assert.AreEqual(shape, _model.RemoveAt(0, 0));
             Assert.AreEqual(-1, _modelPrivate.GetField(INDEX));
             Assert.IsTrue(_eventRaised);
         }
@@ -130,11 +130,38 @@ namespace PowerPoint.Tests
         public void TestInsert()
         {
             SetEvent();
-            _model.Insert(null, 0);
-            Assert.IsFalse(_eventRaised);
-            _model.Insert(new Line(_point1, _point2), 0);
+            _model.Insert(new Line(_point1, _point2), 0, 0);
             Assert.IsTrue(_eventRaised);
             
+        }
+
+        // Test InsertPage
+        [TestMethod]
+        public void TestInsertPage()
+        {
+            _model.InsertPage(new Shapes(_mockFactory), _model.PagesCount);
+            bool slideEventRaised = false;
+            Assert.AreEqual(2, _model.PagesCount);
+            _model._slideInsert += (_) => slideEventRaised = true;
+            _model.InsertPage(new Shapes(_mockFactory), _model.PagesCount);
+            Assert.AreEqual(3, _model.PagesCount);
+            Assert.IsTrue(slideEventRaised);
+        }
+
+        // Test RemovePageAt
+        [TestMethod]
+        public void TestRemovePageAt()
+        {
+            _model.InsertPage(new Shapes(_mockFactory),_model.PagesCount);
+            _model.RemovePageAt(0);
+            bool slideEventRaised = false;
+            _model._slideRemoveAt += (_) => slideEventRaised = true;
+            SetEvent();
+            _model.InsertPage(new Shapes(_mockFactory), _model.PagesCount);
+            _model.PageIndex = 1;
+            _model.RemovePageAt(_model.PageIndex);
+            Assert.AreEqual(0, _model.PageIndex);
+            Assert.IsTrue(slideEventRaised);
         }
 
         // Test SetShapePosition
@@ -144,7 +171,7 @@ namespace PowerPoint.Tests
             SetEvent();
             GetShapes();
             Add3Shapes();
-            _model.SetShapePosition(2, new Coordinate(1, 1));
+            _model.SetShapePosition(2, 0, new Coordinate(1, 1));
             Assert.AreEqual("(1, 1), (3, 3)", _shapes.ShapeList[2].Information);
             Assert.IsTrue(_eventRaised);
         }
@@ -157,7 +184,7 @@ namespace PowerPoint.Tests
             SetEvent();
             GetShapes();
             Add3Shapes();
-            _model.SetShapeEndPoint(2, new Coordinate(1, 1), 8);
+            _model.SetShapeEndPoint(2, 0, new Coordinate(1, 1), 8);
             Assert.AreEqual("(1, 1), (8, 9)", _shapes.ShapeList[2].Information);
             Assert.IsTrue(_eventRaised);
         }
@@ -170,7 +197,7 @@ namespace PowerPoint.Tests
         [DataRow("", 0)]
         public void TestPressInfoAdd(string type, int ans)
         {
-            _model.PressInfoAdd(type);
+            _model.PressInfoAdd(type, new Coordinate(0, 1), new Coordinate(2, 3));
             Assert.AreEqual(ans, _model.GetInfoDataGridView().Count);
         }
 
@@ -184,15 +211,23 @@ namespace PowerPoint.Tests
             Add3Shapes();
             bool eventRaised = false;
             _model._panelChanged += () => eventRaised = true;
-            Shapes shapes = (Shapes)_modelPrivate.GetFieldOrProperty("_shapes");
+            GetShapes();
 
             _model.PressDelete(column, row);
 
             Assert.AreEqual(ans, eventRaised);
-            Assert.AreEqual(len, shapes.ShapeList.Count());
+            Assert.AreEqual(len, _shapes.ShapeList.Count());
             Assert.AreEqual(-1, _modelPrivate.GetFieldOrProperty(INDEX));
             IState state = (IState)_modelPrivate.GetFieldOrProperty("_pointer");
             Assert.IsInstanceOfType(state, typeof(PointPointer));
+        }
+
+        // Test PressAddPage
+        [TestMethod]
+        public void TestPressAddPage()
+        {
+            _model.PressAddPage();
+            Assert.AreEqual(_model.PageIndex, _model.PagesCount - 1);
         }
 
         // Test PressDeleteKey
@@ -201,19 +236,35 @@ namespace PowerPoint.Tests
         [DataRow(0, true, 2)]
         [DataRow(2, true, 2)]
         [DataRow(3, true, 3)]
-        public void TestPressDeleteKey(int row, bool ans, int len)
+        public void TestPressDeleteKey(int row, bool ans1, int len)
         {
             Add3Shapes();
-            bool eventRaised = false;
-            _model._panelChanged += () => eventRaised = true;
+            SetEvent();
             _modelPrivate.SetFieldOrProperty(INDEX, row);
-            Shapes shapes = (Shapes)_modelPrivate.GetFieldOrProperty("_shapes");
+            GetShapes();
 
             _model.PressDeleteKey();
 
-            Assert.AreEqual(ans, eventRaised);
-            Assert.AreEqual(len, shapes.ShapeList.Count());
+            Assert.AreEqual(ans1, _eventRaised);
+            Assert.AreEqual(len, _shapes.ShapeList.Count());
             Assert.AreEqual(-1, _modelPrivate.GetFieldOrProperty(INDEX));
+        }
+
+        // Test PressDeleteKey for page
+        [TestMethod()]
+        public void TestPressDeleteKeyForPage()
+        {
+            bool slideEventRaised = false;
+            _model._slideRemoveAt += (_) => slideEventRaised = true;
+            _model.PressDeleteKey();
+            Assert.AreEqual(false, slideEventRaised);
+            Assert.AreEqual(1, _model.PagesCount);
+
+            _model.PressAddPage();
+            Assert.AreEqual(2, _model.PagesCount);
+            _model.PressDeleteKey();
+            Assert.AreEqual(true, slideEventRaised);
+            Assert.AreEqual(1, _model.PagesCount);
         }
 
         // Test SetPoint
@@ -238,7 +289,7 @@ namespace PowerPoint.Tests
         [TestMethod()]
         public void TestSetScaling()
         {
-            _model.PressInfoAdd(ShapeType.LINE);
+            _model.PressInfoAdd(ShapeType.LINE, new Coordinate(0, 1), new Coordinate(2, 3));
             _modelPrivate.SetField(INDEX, 0);
             _model.SetScaling(new Coordinate(20, 64));
             IState state = (IState)_modelPrivate.GetFieldOrProperty("_pointer");
@@ -262,7 +313,7 @@ namespace PowerPoint.Tests
         [TestMethod]
         public void TestGetAtSelectedCorner()
         {
-            _model.PressInfoAdd(ShapeType.LINE);
+            _model.PressInfoAdd(ShapeType.LINE, new Coordinate(0, 1), new Coordinate(2, 3));
             _modelPrivate.SetField(INDEX, 0);
             Assert.AreEqual(8, _model.GetAtSelectedCorner(2, 3));
             Assert.AreEqual(-1, _model.GetAtSelectedCorner(9,10));
@@ -338,17 +389,16 @@ namespace PowerPoint.Tests
 
         // Test Draw
         [TestMethod()]
-        [DataRow(true, false, 1)]
-        [DataRow(true, true, 1)]
-        [DataRow(false, true, 0)]
-        public void TestDraw(bool panel, bool press, int ans)
+        [DataRow(false, 1)]
+        [DataRow(true, 1)]
+        public void TestDraw(bool press, int ans)
         {
             Add3Shapes();
             MockIGraphics graphics = new MockIGraphics();
             SetMockState();
 
             _modelPrivate.SetField("_isPressed", press);
-            _model.Draw(graphics, panel);
+            _model.Draw(graphics);
             Assert.AreEqual(1, graphics._countClear);
             Assert.AreEqual(1, graphics._countDrawCircle);
             Assert.AreEqual(1, graphics._countDrawLine);
@@ -371,8 +421,8 @@ namespace PowerPoint.Tests
         [TestMethod()]
         public void TestGetInfoDataGridView()
         {
-            Shapes shapes = (Shapes)_modelPrivate.GetField("_shapes");
-            Assert.AreEqual(shapes.ShapeList, _model.GetInfoDataGridView());
+            GetShapes();
+            Assert.AreEqual(_shapes.ShapeList, _model.GetInfoDataGridView());
         }
 
         // Test FindSelected
@@ -403,8 +453,8 @@ namespace PowerPoint.Tests
             Add3Shapes();
             _modelPrivate.SetFieldOrProperty("_selectedIndex", 2);
             _model.MoveSelected(new Coordinate(8, 9), new Coordinate(9, 10));
-            Shapes shapes = (Shapes)_modelPrivate.GetFieldOrProperty("_shapes");
-            Assert.AreEqual("(9, 10), (11, 12)", shapes.ShapeList[2].Information);
+            GetShapes();
+            Assert.AreEqual("(9, 10), (11, 12)", _shapes.ShapeList[2].Information);
         }
 
         // Test CreateHint
@@ -443,12 +493,12 @@ namespace PowerPoint.Tests
             Add3Shapes();
             _modelPrivate.SetFieldOrProperty("_selectedIndex", 2);
             _model.ScalingSelected(new Coordinate(8, 9), new Coordinate(10, 11));
-            Shapes shapes = (Shapes)_modelPrivate.GetFieldOrProperty("_shapes");
-            Assert.AreEqual("(8, 9), (10, 11)", shapes.ShapeList[2].Information);
+            GetShapes();
+            Assert.AreEqual("(8, 9), (10, 11)", _shapes.ShapeList[2].Information);
             _model.PressUndo();
-            Assert.AreEqual("(8, 9), (8, 9)", shapes.ShapeList[2].Information);
+            Assert.AreEqual("(8, 9), (8, 9)", _shapes.ShapeList[2].Information);
             _model.PressRedo();
-            Assert.AreEqual("(8, 9), (10, 11)", shapes.ShapeList[2].Information);
+            Assert.AreEqual("(8, 9), (10, 11)", _shapes.ShapeList[2].Information);
         }
 
         // Test IsUndoEnabled

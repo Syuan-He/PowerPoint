@@ -212,5 +212,12 @@ namespace PowerPoint
         {
             graphics.DrawSelectFrame(_x1, _y1, _x2, _y2);
         }
+
+        // 取得Shape的兩點
+        public override int[] GetCoordinateList()
+        {
+            int[] list = { _x1, _y1, _x2, _y2 };
+            return list;
+        }
     }
 }

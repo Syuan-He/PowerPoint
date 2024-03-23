@@ -43,8 +43,13 @@ namespace PowerPoint
             this._menuStrip1 = new System.Windows.Forms.MenuStrip();
             this._infoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this._slide1 = new System.Windows.Forms.Button();
+            this._page = new System.Windows.Forms.Button();
             this._toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this._saveToolStripButton = new System.Windows.Forms.ToolStripTextBox();
+            this._loadToolStripButton = new System.Windows.Forms.ToolStripTextBox();
+            this._splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this._splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this._panel = new PowerPoint.DoubleBufferedPanel();
             this._lineToolStripButton = new PowerPoint.ToolStripBindingButton();
             this._rectangleToolStripButton = new PowerPoint.ToolStripBindingButton();
             this._circleToolStripButton = new PowerPoint.ToolStripBindingButton();
@@ -52,11 +57,6 @@ namespace PowerPoint
             this._addPageToolStripButton = new PowerPoint.ToolStripBindingButton();
             this._undoToolStripButton = new PowerPoint.ToolStripBindingButton();
             this._redoToolStripButton = new PowerPoint.ToolStripBindingButton();
-            this._saveToolStripButton = new System.Windows.Forms.ToolStripTextBox();
-            this._loadToolStripButton = new System.Windows.Forms.ToolStripTextBox();
-            this._splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this._splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this._panel = new PowerPoint.DoubleBufferedPanel();
             ((System.ComponentModel.ISupportInitialize)(this._infoDataGridView)).BeginInit();
             this._infoGroupBox.SuspendLayout();
             this._menuStrip1.SuspendLayout();
@@ -73,6 +73,7 @@ namespace PowerPoint
             // 
             // _infoDataGridView
             // 
+            this._infoDataGridView.AccessibleName = "_infoDataGridView";
             this._infoDataGridView.AllowUserToAddRows = false;
             this._infoDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -109,7 +110,7 @@ namespace PowerPoint
             this._infoDataGridView.RowHeadersVisible = false;
             this._infoDataGridView.RowHeadersWidth = 62;
             this._infoDataGridView.RowTemplate.Height = 27;
-            this._infoDataGridView.Size = new System.Drawing.Size(335, 474);
+            this._infoDataGridView.Size = new System.Drawing.Size(338, 471);
             this._infoDataGridView.TabIndex = 2;
             this._infoDataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ClickInfoDataGridViewCellContent);
             // 
@@ -149,7 +150,7 @@ namespace PowerPoint
             this._infoGroupBox.Location = new System.Drawing.Point(0, 0);
             this._infoGroupBox.Name = "_infoGroupBox";
             this._infoGroupBox.Padding = new System.Windows.Forms.Padding(3, 62, 3, 3);
-            this._infoGroupBox.Size = new System.Drawing.Size(341, 557);
+            this._infoGroupBox.Size = new System.Drawing.Size(344, 554);
             this._infoGroupBox.TabIndex = 10;
             this._infoGroupBox.TabStop = false;
             this._infoGroupBox.Text = "資訊顯示";
@@ -166,6 +167,7 @@ namespace PowerPoint
             // 
             // _shapeComboBox
             // 
+            this._shapeComboBox.AccessibleName = "_shapeComboBox";
             this._shapeComboBox.FormattingEnabled = true;
             this._shapeComboBox.Items.AddRange(new object[] {
             "線",
@@ -184,7 +186,7 @@ namespace PowerPoint
             this._infoToolStripMenuItem});
             this._menuStrip1.Location = new System.Drawing.Point(0, 0);
             this._menuStrip1.Name = "_menuStrip1";
-            this._menuStrip1.Size = new System.Drawing.Size(1158, 27);
+            this._menuStrip1.Size = new System.Drawing.Size(1158, 30);
             this._menuStrip1.TabIndex = 2;
             this._menuStrip1.Text = "menuStrip1";
             // 
@@ -193,7 +195,7 @@ namespace PowerPoint
             this._infoToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this._aboutToolStripMenuItem});
             this._infoToolStripMenuItem.Name = "_infoToolStripMenuItem";
-            this._infoToolStripMenuItem.Size = new System.Drawing.Size(53, 23);
+            this._infoToolStripMenuItem.Size = new System.Drawing.Size(53, 26);
             this._infoToolStripMenuItem.Text = "說明";
             // 
             // _aboutToolStripMenuItem
@@ -202,21 +204,21 @@ namespace PowerPoint
             this._aboutToolStripMenuItem.Size = new System.Drawing.Size(122, 26);
             this._aboutToolStripMenuItem.Text = "關於";
             // 
-            // _slide1
+            // _page
             // 
-            this._slide1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this._page.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this._slide1.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this._slide1.FlatAppearance.BorderColor = System.Drawing.SystemColors.MenuHighlight;
-            this._slide1.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            this._slide1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this._slide1.Location = new System.Drawing.Point(0, 0);
-            this._slide1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this._slide1.Name = "_slide1";
-            this._slide1.Size = new System.Drawing.Size(160, 75);
-            this._slide1.TabIndex = 3;
-            this._slide1.UseVisualStyleBackColor = false;
-            this._slide1.Click += new System.EventHandler(this.ClickSlide);
+            this._page.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this._page.FlatAppearance.BorderColor = System.Drawing.SystemColors.MenuHighlight;
+            this._page.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this._page.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this._page.Location = new System.Drawing.Point(0, 0);
+            this._page.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this._page.Name = "_page";
+            this._page.Size = new System.Drawing.Size(160, 75);
+            this._page.TabIndex = 3;
+            this._page.UseVisualStyleBackColor = false;
+            this._page.Click += new System.EventHandler(this.ClickSlide);
             // 
             // _toolStrip1
             // 
@@ -231,11 +233,94 @@ namespace PowerPoint
             this._redoToolStripButton,
             this._saveToolStripButton,
             this._loadToolStripButton});
-            this._toolStrip1.Location = new System.Drawing.Point(0, 27);
+            this._toolStrip1.Location = new System.Drawing.Point(0, 30);
             this._toolStrip1.Name = "_toolStrip1";
             this._toolStrip1.Size = new System.Drawing.Size(1158, 31);
             this._toolStrip1.TabIndex = 5;
             this._toolStrip1.Text = "toolStrip1";
+            // 
+            // _saveToolStripButton
+            // 
+            this._saveToolStripButton.AccessibleName = "save";
+            this._saveToolStripButton.Font = new System.Drawing.Font("Microsoft JhengHei UI", 9F);
+            this._saveToolStripButton.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
+            this._saveToolStripButton.Name = "_saveToolStripButton";
+            this._saveToolStripButton.ReadOnly = true;
+            this._saveToolStripButton.Size = new System.Drawing.Size(41, 27);
+            this._saveToolStripButton.Text = "save";
+            this._saveToolStripButton.Click += new System.EventHandler(this.ClickSaveButton);
+            // 
+            // _loadToolStripButton
+            // 
+            this._loadToolStripButton.AccessibleName = "load";
+            this._loadToolStripButton.Font = new System.Drawing.Font("Microsoft JhengHei UI", 9F);
+            this._loadToolStripButton.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
+            this._loadToolStripButton.Name = "_loadToolStripButton";
+            this._loadToolStripButton.ReadOnly = true;
+            this._loadToolStripButton.Size = new System.Drawing.Size(41, 27);
+            this._loadToolStripButton.Text = "load";
+            this._loadToolStripButton.Click += new System.EventHandler(this.ClickLoadButton);
+            // 
+            // _splitContainer1
+            // 
+            this._splitContainer1.AccessibleName = "_splitContainer1";
+            this._splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this._splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this._splitContainer1.Location = new System.Drawing.Point(0, 61);
+            this._splitContainer1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this._splitContainer1.Name = "_splitContainer1";
+            // 
+            // _splitContainer1.Panel1
+            // 
+            this._splitContainer1.Panel1.Controls.Add(this._page);
+            // 
+            // _splitContainer1.Panel2
+            // 
+            this._splitContainer1.Panel2.Controls.Add(this._splitContainer2);
+            this._splitContainer1.Size = new System.Drawing.Size(1158, 556);
+            this._splitContainer1.SplitterDistance = 166;
+            this._splitContainer1.TabIndex = 7;
+            this._splitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.MovedSplit1);
+            // 
+            // _splitContainer2
+            // 
+            this._splitContainer2.AccessibleName = "_splitContainer2";
+            this._splitContainer2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this._splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this._splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this._splitContainer2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this._splitContainer2.Name = "_splitContainer2";
+            // 
+            // _splitContainer2.Panel1
+            // 
+            this._splitContainer2.Panel1.Controls.Add(this._panel);
+            // 
+            // _splitContainer2.Panel2
+            // 
+            this._splitContainer2.Panel2.Controls.Add(this._infoGroupBox);
+            this._splitContainer2.Panel2.SizeChanged += new System.EventHandler(this.ChangedPanelSize);
+            this._splitContainer2.Size = new System.Drawing.Size(988, 556);
+            this._splitContainer2.SplitterDistance = 638;
+            this._splitContainer2.TabIndex = 7;
+            // 
+            // _panel
+            // 
+            this._panel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this._panel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this._panel.BackColor = System.Drawing.SystemColors.Window;
+            this._panel.Location = new System.Drawing.Point(0, -2);
+            this._panel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this._panel.Name = "_panel";
+            this._panel.Size = new System.Drawing.Size(637, 300);
+            this._panel.TabIndex = 6;
+            this._panel.Paint += new System.Windows.Forms.PaintEventHandler(this.PaintPanel);
+            this._panel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.HandleCanvasPressed);
+            this._panel.MouseEnter += new System.EventHandler(this.HandleCanvasEnter);
+            this._panel.MouseLeave += new System.EventHandler(this.HandleCanvasLeave);
+            this._panel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.HandleCanvasMoved);
+            this._panel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.HandleCanvasReleased);
             // 
             // _lineToolStripButton
             // 
@@ -257,7 +342,7 @@ namespace PowerPoint
             this._rectangleToolStripButton.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this._rectangleToolStripButton.Name = "_rectangleToolStripButton";
             this._rectangleToolStripButton.Size = new System.Drawing.Size(29, 27);
-            this._rectangleToolStripButton.Text = "DrawRecatangle";
+            this._rectangleToolStripButton.Text = "DrawRectangle";
             this._rectangleToolStripButton.ToolTipText = "DrawRecatangle";
             this._rectangleToolStripButton.Click += new System.EventHandler(this.ClickRectangleToolStripButton);
             // 
@@ -321,84 +406,6 @@ namespace PowerPoint
             this._redoToolStripButton.Text = "RedoButton";
             this._redoToolStripButton.Click += new System.EventHandler(this.ClickRedoToolStripButton);
             // 
-            // _saveToolStripButton
-            // 
-            this._saveToolStripButton.Font = new System.Drawing.Font("Microsoft JhengHei UI", 9F);
-            this._saveToolStripButton.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
-            this._saveToolStripButton.Name = "_saveToolStripButton";
-            this._saveToolStripButton.ReadOnly = true;
-            this._saveToolStripButton.Size = new System.Drawing.Size(41, 27);
-            this._saveToolStripButton.Text = "save";
-            this._saveToolStripButton.Click += new System.EventHandler(this._saveToolStripButton_Click);
-            // 
-            // _loadToolStripButton
-            // 
-            this._loadToolStripButton.Font = new System.Drawing.Font("Microsoft JhengHei UI", 9F);
-            this._loadToolStripButton.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
-            this._loadToolStripButton.Name = "_loadToolStripButton";
-            this._loadToolStripButton.ReadOnly = true;
-            this._loadToolStripButton.Size = new System.Drawing.Size(41, 27);
-            this._loadToolStripButton.Text = "load";
-            // 
-            // _splitContainer1
-            // 
-            this._splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this._splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this._splitContainer1.Location = new System.Drawing.Point(0, 58);
-            this._splitContainer1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this._splitContainer1.Name = "_splitContainer1";
-            // 
-            // _splitContainer1.Panel1
-            // 
-            this._splitContainer1.Panel1.Controls.Add(this._slide1);
-            // 
-            // _splitContainer1.Panel2
-            // 
-            this._splitContainer1.Panel2.Controls.Add(this._splitContainer2);
-            this._splitContainer1.Size = new System.Drawing.Size(1158, 559);
-            this._splitContainer1.SplitterDistance = 166;
-            this._splitContainer1.TabIndex = 7;
-            this._splitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.MovedSplit1);
-            // 
-            // _splitContainer2
-            // 
-            this._splitContainer2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this._splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this._splitContainer2.Location = new System.Drawing.Point(0, 0);
-            this._splitContainer2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this._splitContainer2.Name = "_splitContainer2";
-            // 
-            // _splitContainer2.Panel1
-            // 
-            this._splitContainer2.Panel1.Controls.Add(this._panel);
-            // 
-            // _splitContainer2.Panel2
-            // 
-            this._splitContainer2.Panel2.Controls.Add(this._infoGroupBox);
-            this._splitContainer2.Size = new System.Drawing.Size(988, 559);
-            this._splitContainer2.SplitterDistance = 641;
-            this._splitContainer2.TabIndex = 7;
-            this._splitContainer2.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.MovedSplit2);
-            // 
-            // _panel
-            // 
-            this._panel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this._panel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this._panel.BackColor = System.Drawing.SystemColors.Window;
-            this._panel.Location = new System.Drawing.Point(0, 0);
-            this._panel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this._panel.Name = "_panel";
-            this._panel.Size = new System.Drawing.Size(640, 300);
-            this._panel.TabIndex = 6;
-            this._panel.Paint += new System.Windows.Forms.PaintEventHandler(this.PaintPanel);
-            this._panel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.HandleCanvasPressed);
-            this._panel.MouseEnter += new System.EventHandler(this.HandleCanvasEnter);
-            this._panel.MouseLeave += new System.EventHandler(this.HandleCanvasLeave);
-            this._panel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.HandleCanvasMoved);
-            this._panel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.HandleCanvasReleased);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -441,7 +448,7 @@ namespace PowerPoint
         private System.Windows.Forms.MenuStrip _menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem _infoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem _aboutToolStripMenuItem;
-        private System.Windows.Forms.Button _slide1;
+        private System.Windows.Forms.Button _page;
         private System.Windows.Forms.DataGridViewTextBoxColumn _shape;
         private System.Windows.Forms.DataGridViewTextBoxColumn _information;
         private System.Windows.Forms.ToolStrip _toolStrip1;

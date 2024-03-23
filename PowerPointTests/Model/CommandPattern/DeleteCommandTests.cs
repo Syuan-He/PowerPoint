@@ -24,13 +24,13 @@ namespace PowerPoint.Tests
         [TestInitialize]
         public void Initialize()
         {
-            _model = new Model(new Factory(new MockRandom()));
+            _model = new Model(new Factory(new MockRandom()), new MockService());
             _shape = new Line(_point1, _point2);
-            _model.CreateShapeCommand(_shape);
-            _command = new DeleteCommand(_model, 0);
+            _model.CreateShapeCommand(_shape, 0);
+            _command = new DeleteCommand(_model, 0, 0);
             _commandPrivate = new PrivateObject(_command);
             _modelPrivate = new PrivateObject(_model);
-            _shapes = (Shapes)_modelPrivate.GetField("_shapes");
+            _shapes = (Shapes)_modelPrivate.GetProperty("CurrentShapes");
         }
 
         // Test DeleteCommand

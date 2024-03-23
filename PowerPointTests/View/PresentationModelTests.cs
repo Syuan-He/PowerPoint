@@ -285,8 +285,27 @@ namespace PowerPoint.Tests
         public void TestDrawSlide()
         {
             Graphics graphics = null;
-            _pModel.DrawSlide(graphics, 1);
+            _pModel.DrawSlide(graphics, 1, 0);
             Assert.IsInstanceOfType(_model._graphics, typeof(WindowsFormsGraphicsAdaptor));
+        }
+
+        // Test SetPanelSize
+        [TestMethod]
+        [DataRow(160, 54, 32, 0)]
+        [DataRow(640, 1280, 0, 460)]
+        public void TestSetPanelSize(int width, int height, int localX, int localY)
+        {
+            _pModel.SetPanelSize(width, height);
+            Assert.AreEqual(_pModel.PanelWidth / _pModel.PanelHeight, 16 / 9);
+            Assert.AreEqual(_pModel.PanelLocal.X, localX);
+            Assert.AreEqual(_pModel.PanelLocal.Y, localY);
+        }
+
+        // Test GetPanelHeight
+        [TestMethod]
+        public void TestGetPanelHeight()
+        {
+            Assert.AreEqual(1280 / _pModel.GetPanelHeight(1280), 16 / 9);
         }
 
         // Test NotifyPropertyChanged

@@ -15,8 +15,8 @@ namespace PowerPoint.Tests
         public int _countPressDeleteKey;
         public int _countPressDelete;
         public int _stateNumber;
-        public bool _isPanel;
         public IGraphics _graphics;
+        public int _index;
         public bool _isHasSelected;
 
         public MockModel()
@@ -80,10 +80,16 @@ namespace PowerPoint.Tests
         }
 
         // 繪製圖形
-        public void Draw(IGraphics graphics, bool isPanel)
+        public void Draw(IGraphics graphics)
         {
             _graphics = graphics;
-            _isPanel = isPanel;
+        }
+
+        // 繪製圖形
+        public void DrawSlide(IGraphics graphics, int index)
+        {
+            _graphics = graphics;
+            _index = index;
         }
     }
 }

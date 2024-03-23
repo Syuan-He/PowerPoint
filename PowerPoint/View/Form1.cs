@@ -13,12 +13,9 @@ namespace PowerPoint
 {
     public partial class Form1 : Form
     {
-        private const string LINE_PROPERTY = "IsLine";
-        private const string RECTANGLE_PROPERTY = "IsRectangle";
-        private const string CIRCLE_PROPERTY = "IsCircle";
-        private const string POINTER_PROPERTY = "IsPointer";
         private const string CHECKED_PROPERTY = "Checked";
         private const int SLIDE_BORDER = 3;
+        private const string CAPTION = "訊息";
         Model _model;
         PresentationModel _presentationModel;
         List<Button> _slides = new List<Button>();
@@ -34,23 +31,31 @@ namespace PowerPoint
             presentationModel.SetPanelSize(_splitContainer2.Panel1.Width, _splitContainer2.Panel1.Height);
             _panel.Width = presentationModel.PanelWidth;
             _panel.Height = presentationModel.PanelHeight;
-            _slide1.Width = _splitContainer1.Panel1.Width - SLIDE_BORDER;
-            _slide1.Height = _presentationModel.GetPanelHeight(_slide1.Width);
-            _lineToolStripButton.DataBindings.Add(CHECKED_PROPERTY, presentationModel, LINE_PROPERTY);
-            _rectangleToolStripButton.DataBindings.Add(CHECKED_PROPERTY, presentationModel, RECTANGLE_PROPERTY);
-            _circleToolStripButton.DataBindings.Add(CHECKED_PROPERTY, presentationModel, CIRCLE_PROPERTY);
-            _pointerToolStripButton.DataBindings.Add(CHECKED_PROPERTY, presentationModel, POINTER_PROPERTY);
+            _page.Width = _splitContainer1.Panel1.Width - SLIDE_BORDER;
+            _page.Height = _presentationModel.GetPanelHeight(_page.Width);
+            _lineToolStripButton.DataBindings.Add(CHECKED_PROPERTY, presentationModel, DataString.LINE_PROPERTY);
+            _rectangleToolStripButton.DataBindings.Add(CHECKED_PROPERTY, presentationModel, DataString.RECTANGLE_PROPERTY);
+            _circleToolStripButton.DataBindings.Add(CHECKED_PROPERTY, presentationModel, DataString.CIRCLE_PROPERTY);
+            _pointerToolStripButton.DataBindings.Add(CHECKED_PROPERTY, presentationModel, DataString.POINTER_PROPERTY);
             _infoDataGridView.DataSource = _model.GetInfoDataGridView();
             _infoDataGridView.Columns[1].HeaderText = "形狀";
             _infoDataGridView.Columns[2].HeaderText = "資訊";
-            _slide1.Paint += PaintSlide;
-            _slides.Add(_slide1);
+            _page.Paint += PaintSlide;
+            _slides.Add(_page);
         }
 
         // 資訊顯示的新增按鍵
         void ClickAddButton(object sender, EventArgs e)
         {
-            _model.PressInfoAdd(_shapeComboBox.Text);
+            Form addForm = new Form2(this, new PresentationModel2());
+            addForm.Show();
+            
+        }
+
+        // 執行資訊顯示的新增
+        public void AddShape(int x1, int y1, int x2, int y2)
+        {
+            _model.PressInfoAdd(_shapeComboBox.Text, new Coordinate(x1, y1), new Coordinate(x2, y2));
             RefreshCommandButton();
         }
 
@@ -125,6 +130,23 @@ namespace PowerPoint
             RefreshSlidesLocal();
         }
 
+        // 刷新 slides
+        public void RefreshSlide()
+        {
+            _splitContainer1.Panel1.Controls.Clear();
+            _slides.Clear();
+            for (int i = 0; i < _model.PagesCount; i++)
+            {
+                Button button = CreateNewSlide();
+                _slides.Add(button);
+                _splitContainer1.Panel1.Controls.Add(button);
+            }
+            //RefreshSlidesLocal();
+            _slides[_model.PageIndex].FlatAppearance.BorderColor = SystemColors.MenuHighlight;
+            _infoDataGridView.DataSource = _model.GetInfoDataGridView();
+            _panel.Invalidate(true);
+        }
+
         // 刷新 Slide 的排序位子
         void RefreshSlidesLocal()
         {
@@ -191,16 +213,6 @@ namespace PowerPoint
             _panel.Invalidate(true);
         }
 
-        // 移動畫面與 DataGrideView 間的分割線
-        private void MovedSplit2(object sender, SplitterEventArgs e)
-        {
-            _presentationModel.SetPanelSize(_splitContainer2.Panel1.Width, _splitContainer2.Panel1.Height);
-            _panel.Width = _presentationModel.PanelWidth;
-            _panel.Height = _presentationModel.PanelHeight;
-            _panel.Location = new Point(_presentationModel.PanelLocal.X, _presentationModel.PanelLocal.Y);
-            _panel.Invalidate(true);
-        }
-
         // 按下 ToolStrip 的 undo 按鈕
         private void ClickUndoToolStripButton(object sender, EventArgs e)
         {
@@ -226,7 +238,9 @@ namespace PowerPoint
         // 按下加 Slide(Page) 的按鈕
         private void ClickAddPageButton(object sender, EventArgs e)
         {
+            _slides[_model.PageIndex].FlatAppearance.BorderColor = SystemColors.ButtonShadow;
             _model.PressAddPage();
+            SwitchSlide();
             RefreshCommandButton();
         }
 
@@ -239,6 +253,7 @@ namespace PowerPoint
             button.FlatAppearance.BorderColor = SystemColors.ButtonShadow;
             button.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
             button.FlatStyle = FlatStyle.Flat;
+            button.Name = "_page";
             button.Width = _splitContainer1.Panel1.Width - SLIDE_BORDER;
             button.Height = _presentationModel.GetPanelHeight(button.Width);
             button.Location = new Point(0, (button.Height + SLIDE_BORDER) * _slides.Count);
@@ -255,14 +270,73 @@ namespace PowerPoint
             Debug.Assert(_model.PageIndex < _slides.Count, "Pages 的 Index 大於索引");
             _slides[_model.PageIndex].FlatAppearance.BorderColor = SystemColors.ButtonShadow;
             _model.PageIndex = _slides.IndexOf((Button)sender);
+            SwitchSlide();
+        }
+
+        // 切換完 page 後要做的動作
+        void SwitchSlide()
+        {
             _slides[_model.PageIndex].FlatAppearance.BorderColor = SystemColors.MenuHighlight;
             _panel.Invalidate(true);
             _infoDataGridView.DataSource = _model.GetInfoDataGridView();
         }
 
-        private void _saveToolStripButton_Click(object sender, EventArgs e)
+        // 按下 Save
+        private async void ClickSaveButton(object sender, EventArgs e)
         {
-            _model.SaveJson();
+            SetSaveLoadButton(false);
+            DialogResult result = MessageBox.Show("是否確定要儲存", CAPTION, MessageBoxButtons.YesNo);
+            await Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    _model.Save(result == DialogResult.Yes);
+                }
+                catch (Exception expection)
+                {
+                    MessageBox.Show(expection.Message);
+                }
+            });
+            SetSaveLoadButton(true);
+            SwitchSlide();
+            RefreshCommandButton();
+        }
+
+        // 設定 save load 的 enable
+        void SetSaveLoadButton(bool enable)
+        {
+            _saveToolStripButton.Enabled = enable;
+            _loadToolStripButton.Enabled = enable;
+        }
+
+        // 按下 Load
+        private void ClickLoadButton(object sender, EventArgs e)
+        {
+            _saveToolStripButton.Enabled = false;
+            _loadToolStripButton.Enabled = false;
+            DialogResult result = MessageBox.Show("是否要重新載入", "訊息", MessageBoxButtons.YesNo);
+            try
+            {
+                _model.Load(result == DialogResult.Yes);
+            }
+            catch (Exception expection)
+            {
+                MessageBox.Show(expection.Message);
+            }
+            _saveToolStripButton.Enabled = true;
+            _loadToolStripButton.Enabled = true;
+            RefreshSlide();
+            RefreshCommandButton();
+        }
+        
+        // 畫面大小變更時，調整 panel 的大小與位子
+        private void ChangedPanelSize(object sender, EventArgs e)
+        {
+            _presentationModel.SetPanelSize(_splitContainer2.Panel1.Width, _splitContainer2.Panel1.Height);
+            _panel.Width = _presentationModel.PanelWidth;
+            _panel.Height = _presentationModel.PanelHeight;
+            _panel.Location = new Point(_presentationModel.PanelLocal.X, _presentationModel.PanelLocal.Y);
+            _panel.Invalidate(true);
         }
     }
 }

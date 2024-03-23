@@ -115,7 +115,7 @@ namespace PowerPoint
         int NearCoordinate(int value, int x1, int x2)
         {
             int centerX = (x1 + x2) / ShapeInteger.HALF;
-            
+
             if (centerX - value > 0)
             {
                 return NearCoordinate1(value, x1, centerX);
@@ -196,6 +196,13 @@ namespace PowerPoint
         public override void DrawSelectFrame(IGraphics graphics)
         {
             graphics.DrawSelectFrame(_x1, _y1, _x2, _y2);
+        }
+
+        // 取得Shape的兩點
+        public override int[] GetCoordinateList()
+        {
+            int[] list = { _x1, _y1, _x2, _y2 };
+            return list;
         }
     }
 }

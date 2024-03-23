@@ -24,14 +24,14 @@ namespace PowerPoint.Tests
         [TestInitialize]
         public void Initialize()
         {
-            _model = new Model(new Factory(new Random()));
+            _model = new Model(new Factory(new Random()), new MockService());
             _shape = new Circle(_point1, _point1);
-            _model.CreateShapeCommand(_shape);
+            _model.CreateShapeCommand(_shape, 0);
             _modelPrivate = new PrivateObject(_model);
             _modelPrivate.SetField("_selectedIndex", 0);
-            _command = new ScalingCommand(_model, 0, _point2, _point1);
+            _command = new ScalingCommand(_model, new Coordinate(0, 0), _point2, _point1);
             _commandPrivate = new PrivateObject(_command);
-            _shapes = (Shapes)_modelPrivate.GetField("_shapes");
+            _shapes = (Shapes)_modelPrivate.GetProperty("CurrentShapes");
         }
 
         // Test MoveCommand

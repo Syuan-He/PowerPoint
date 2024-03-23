@@ -26,10 +26,10 @@ namespace PowerPoint.Tests
         [TestInitialize()]
         public void Initialize()
         {
-            _model = new Model(new MockFactory());
+            _model = new Model(new MockFactory(), new MockService());
             _modelPrivate = new PrivateObject(_model);
             _hint = new Circle(new Coordinate(X1, Y1), new Coordinate(X2, Y2));
-            _model.CreateShapeCommand(_hint);
+            _model.CreateShapeCommand(_hint, 0);
             _pointer = (IState)_modelPrivate.GetField("_pointer");
             _pointPrivate = new PrivateObject(_pointer);
         }

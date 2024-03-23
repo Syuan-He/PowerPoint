@@ -298,5 +298,13 @@ namespace PowerPoint.Tests
         {
             Assert.AreEqual(_point2.ToString(), _shape.GetPoint1().ToString());
         }
+
+        // Test GetCoordinateList
+        [TestMethod]
+        public void TestGetCoordinateList()
+        {
+            int[] array = _shape.GetCoordinateList();
+            Assert.AreEqual(String.Format("({0}, {1}), ({2}, {3})", array[0], array[1], array[2], array[3]), _shape.Information);
+        }
     }
 }

@@ -43,6 +43,15 @@ namespace PowerPoint.Tests
             Assert.AreEqual(_shapes.ShapeList, _shapesPrivate.GetFieldOrProperty("_shapeList"));
         }
 
+        // Test GetShapeListForSave
+        [TestMethod()]
+        public void TestGetShapeListForSave()
+        {
+            _shapes.CreateShape(new Line(_point1, _point2));
+            Assert.IsInstanceOfType(_shapes.GetShapeListForSave(), typeof(List<ShapeForSave>));
+            Assert.AreEqual(_shapes.ShapeList.Count, _shapes.GetShapeListForSave().Count);
+        }
+
         // Test CreateShape
         [TestMethod()]
         public void TestCreateShape()

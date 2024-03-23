@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Drawing;
-using System.Text.Json;
-using System.IO;
-using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace PowerPoint
 {
@@ -14,10 +11,8 @@ namespace PowerPoint
     {
         public event ModelChangedEventHandler _panelChanged;
         public delegate void ModelChangedEventHandler();
-
         public event SlideRemoveAtEventHandler _slideRemoveAt;
         public delegate void SlideRemoveAtEventHandler(int index);
-
         public event SlideInsertEventHandler _slideInsert;
         public delegate void SlideInsertEventHandler(int index);
 
@@ -25,18 +20,25 @@ namespace PowerPoint
         IFactory _factory;
         IState _pointer;
         CommandManager _commandManager;
-
         string _shapeType;
         bool _isPressed;
         int _selectedIndex;
+        IGoogleDriveService _service;
 
-        public Model(IFactory factory)
+        public Model(IFactory factory, IGoogleDriveService service)
         {
             _factory = factory;
             _pages = new List<Shapes>();
             _pages.Add(new Shapes(factory));
-            PageIndex = 0;
+            Initialize();
+            _service = service;
+        }
+
+        // 初始化model
+        void Initialize()
+        {
             _selectedIndex = ShapeInteger.NOT_IN_LIST;
+            PageIndex = 0;
             _isPressed = false;
             _pointer = new PointPointer(this);
             _commandManager = new CommandManager();
@@ -52,8 +54,15 @@ namespace PowerPoint
 
         public int PageIndex
         {
-            get;
-            set;
+            get; set;
+        }
+
+        public int PagesCount
+        {
+            get
+            {
+                return _pages.Count;
+            }
         }
 
         public bool IsUndoEnabled
@@ -73,9 +82,9 @@ namespace PowerPoint
         }
 
         // 按下資訊顯示的新增按鍵
-        public void PressInfoAdd(string shapeType)
+        public void PressInfoAdd(string shapeType, Coordinate point1, Coordinate point2)
         {
-            _commandManager.Execute(new AddCommand(this, _factory.GenerateShape(shapeType), PageIndex));
+            _commandManager.Execute(new AddCommand(this, _factory.GenerateShape(shapeType, point1, point2), PageIndex));
             _selectedIndex = ShapeInteger.NOT_IN_LIST;
         }
 
@@ -105,11 +114,14 @@ namespace PowerPoint
         public void PressAddPage()
         {
             _commandManager.Execute(new AddPageCommand(this, _pages.Count, new Shapes(_factory)));
+            PageIndex = _pages.Count - 1;
+            _selectedIndex = ShapeInteger.NOT_IN_LIST;
         }
 
         // 按下鍵盤 delete 鍵
         public void PressDeleteKey()
         {
+            Debug.Assert(_selectedIndex >= ShapeInteger.NOT_IN_LIST, ErrorMessage.NEGATIVE_INDEX_SHAPE);
             if (_selectedIndex == ShapeInteger.NOT_IN_LIST && _pages.Count > 1)
                 _commandManager.Execute(new DeletePageCommand(this, PageIndex));
             else if (_selectedIndex > ShapeInteger.NOT_IN_LIST)
@@ -149,7 +161,7 @@ namespace PowerPoint
             return CurrentShapes.GetAtSelectedCorner(_selectedIndex, x1, y1);
         }
 
-        // 判斷是不是位在頂點上
+        // 判斷是不是位在頂點上(多載)
         public int GetAtSelectedCorner(int x1, int y1, int index)
         {
             return _pages[index].GetAtSelectedCorner(_selectedIndex, x1, y1);
@@ -209,20 +221,6 @@ namespace PowerPoint
                 _panelChanged();
         }
 
-        // 通知 form 要刪除 Slides
-        void NotifySlideRemoveAt(int index)
-        {
-            if (_slideRemoveAt != null)
-                _slideRemoveAt(index);
-        }
-
-        // 通知 form 要注入 Slides
-        void NotifySlideInsert(int index)
-        {
-            if (_slideInsert != null)
-                _slideInsert(index);
-        }
-
         // 回傳 Shapes 的 BindingList ，給資訊顯示的 _infoDataGridView 用
         public System.ComponentModel.BindingList<Shape> GetInfoDataGridView()
         {
@@ -230,10 +228,20 @@ namespace PowerPoint
         }
 
         // 存檔
-        public void SaveJson()
+        public void Save(bool isSave)
         {
-            string jsonString = JsonConvert.SerializeObject(_pages);
-            File.WriteAllText("D:/tempJson.json", jsonString);
+            if (isSave)
+                FileManager.Save(new PagesForSave(_pages), _service);
+        }
+
+        // 讀檔
+        public void Load(bool isLoad)
+        {
+            if (isLoad)
+            {
+                _pages = FileManager.Load(_service);
+                Initialize();
+            }
         }
 
         // PointPointer 找被點選的 shape
@@ -299,11 +307,9 @@ namespace PowerPoint
         // DeleteCommand 在 shapes 插入 shape
         public void Insert(Shape shape, int index, int pageIndex)
         {
-            if (shape != null)
-            {
-                _pages[pageIndex].Insert(shape, index);
-                NotifyPanelChanged();
-            }
+            Debug.Assert(shape != null, ErrorMessage.INSERT_LOSS_SHAPE);
+            _pages[pageIndex].Insert(shape, index);
+            NotifyPanelChanged();
         }
 
         // DeletePageCommand 從 list 移除選定的物件
@@ -312,22 +318,20 @@ namespace PowerPoint
             Shapes shapes = _pages[index];
             _pages.RemoveAt(index);
             if (PageIndex >= _pages.Count)
-            {
                 PageIndex = _pages.Count - 1;
-            }
-            NotifySlideRemoveAt(index);
+            if (_slideRemoveAt != null)
+                _slideRemoveAt(index);
             NotifyPanelChanged();
             return shapes;
         }
 
-        // DeletePageCommand 在 shapes 插入 shape
+        // DeletePageCommand 在 pages 插入 shapes
         public void InsertPage(Shapes shapes, int index)
         {
-            if (shapes != null)
-            {
-                _pages.Insert(index, shapes);
-                NotifySlideInsert(index);
-            }
+            Debug.Assert(shapes != null, ErrorMessage.INSERT_LOSS_SHAPES);
+            _pages.Insert(index, shapes);
+            if (_slideInsert != null)
+                _slideInsert(index);
         }
 
         // MoveCommand 移動 shape 用

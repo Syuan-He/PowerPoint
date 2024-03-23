@@ -62,5 +62,8 @@ namespace PowerPoint
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+
+        // 取得Shape的兩點
+        public abstract int[] GetCoordinateList();
     }
 }

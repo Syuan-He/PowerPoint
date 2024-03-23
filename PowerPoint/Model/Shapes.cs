@@ -27,6 +27,15 @@ namespace PowerPoint
             }
         }
 
+        // 吐出為 json 而生的 list
+        public List<ShapeForSave> GetShapeListForSave()
+        {
+            List<ShapeForSave> shapeList = new List<ShapeForSave>();
+            foreach (Shape item in _shapeList)
+                shapeList.Add(new ShapeForSave(item));
+            return shapeList;
+        }
+
         // 為 list 創建新的 shape
         public void CreateShape(string shapeType, Coordinate point1, Coordinate point2)
         {
